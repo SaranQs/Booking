@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import {
   View,
   Text,
-  TextInput,
+  // TextInput,
   TouchableOpacity,
   StyleSheet,
   KeyboardAvoidingView,
@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 
 import { useNavigation } from '@react-navigation/native';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 import * as Animatable from 'react-native-animatable';
 import Feather from 'react-native-vector-icons/Feather';
@@ -18,10 +19,30 @@ import LinearGradient from 'react-native-linear-gradient';
 import RideTypeSwitcher from './RideTypeSwitcher';
 
 const HomeScreen = () => {
+  type RootStackParamList = {
+    Login: undefined;
+    Otp: undefined;
+    Signup: undefined;
+    Home: undefined;
+    MyRides: undefined;
+    Wallet: undefined;
+    Settings: undefined;
+    Support: undefined;
+    Profile: undefined;
+    Favourites: undefined;
+    Preferences: undefined;
+    MyRating: undefined;
+    RideDetails: undefined;
+    About: undefined;
+    Parcel: undefined;
+    AddressEntry: undefined;
+    Safety: undefined;
+  };
   const [selectedRide, setSelectedRide] = useState('Bike');
   const [showDrawer, setShowDrawer] = useState(false);
   const drawerRef = useRef<any>(null);
-  const navigation = useNavigation();
+  const navigation =
+    useNavigation<NativeStackScreenProps<RootStackParamList>['navigation']>();
   const handleRideTypeSelect = (type: string) => {
     if (type === 'Parcel') {
       navigation.navigate('Parcel');
@@ -29,6 +50,7 @@ const HomeScreen = () => {
       navigation.navigate('AddressEntry');
     }
   };
+
   const closeDrawer = () => {
     if (drawerRef.current) {
       drawerRef.current.slideOutLeft(200).then(() => setShowDrawer(false));
@@ -207,7 +229,7 @@ const HomeScreen = () => {
               </TouchableOpacity>
             </View>
 
-            <TouchableOpacity
+            {/* <TouchableOpacity
               style={styles.ratingRow}
               onPress={() => {
                 // closeDrawer();
@@ -227,8 +249,29 @@ const HomeScreen = () => {
                 color="#888"
                 style={{ marginLeft: 'auto' }}
               />
-            </TouchableOpacity>
+            </TouchableOpacity> */}
 
+            <TouchableOpacity
+              style={styles.drawerItem}
+              onPress={() => {
+                // closeDrawer();
+                (navigation as any).navigate('MyRides');
+              }}
+            >
+              <Feather
+                name="clock"
+                size={18}
+                color="#666"
+                style={styles.drawerIcon}
+              />
+              <Text style={styles.drawerLabel}>My Rides</Text>
+              <Feather
+                name="chevron-right"
+                size={20}
+                color="#888"
+                style={{ marginLeft: 'auto' }}
+              />
+            </TouchableOpacity>
             <TouchableOpacity
               style={styles.drawerItem}
               onPress={() => {
@@ -254,28 +297,6 @@ const HomeScreen = () => {
               style={styles.drawerItem}
               onPress={() => {
                 // closeDrawer();
-                (navigation as any).navigate('MyRides');
-              }}
-            >
-              <Feather
-                name="clock"
-                size={18}
-                color="#666"
-                style={styles.drawerIcon}
-              />
-              <Text style={styles.drawerLabel}>My Rides</Text>
-              <Feather
-                name="chevron-right"
-                size={20}
-                color="#888"
-                style={{ marginLeft: 'auto' }}
-              />
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={styles.drawerItem}
-              onPress={() => {
-                // closeDrawer();
                 (navigation as any).navigate('Wallet');
               }}
             >
@@ -286,6 +307,26 @@ const HomeScreen = () => {
                 style={styles.drawerIcon}
               />
               <Text style={styles.drawerLabel}>Payments</Text>
+              <Feather
+                name="chevron-right"
+                size={20}
+                color="#888"
+                style={{ marginLeft: 'auto' }}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.drawerItem}
+              onPress={() => {
+                (navigation as any).navigate('Safety');
+              }}
+            >
+              <Feather
+                name="shield"
+                size={18}
+                color="#666"
+                style={styles.drawerIcon}
+              />
+              <Text style={styles.drawerLabel}>Safety</Text>
               <Feather
                 name="chevron-right"
                 size={20}
@@ -358,11 +399,11 @@ const styles = StyleSheet.create({
     // padding: 12,
     marginRight: 12,
   },
-fakeInput: {
-  color: '#666',
-  fontSize: 14,
-  paddingLeft: 8,
-},
+  fakeInput: {
+    color: '#666',
+    fontSize: 14,
+    paddingLeft: 8,
+  },
 
   recentTitle: {
     fontSize: 16,

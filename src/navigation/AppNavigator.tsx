@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator} from '@react-navigation/native-stack';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import LoginScreen from '../screens/Auth/LoginScreen';
 import OtpScreen from '../screens/Auth/OtpScreen';
@@ -18,6 +18,7 @@ import RideDetails from '../screens/MenuScreens/RideDetailScreen';
 import AboutScreen from '../screens/MenuScreens/AboutScreen';
 import Parcel from '../screens/MenuScreens/ParcelScreen';
 import AddressEntry from '../screens/Home/AddressEntryScreen';
+import Safety from '../screens/MenuScreens/SafetyScreen';
 
 export type RootStackParamList = {
   Login: undefined;
@@ -36,6 +37,7 @@ export type RootStackParamList = {
   About: undefined;
   Parcel: undefined;
   AddressEntry: undefined;
+  Safety: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -161,20 +163,29 @@ const AppNavigator = () => {
             headerTitle: 'Parcel - Send Items',
           }}
         />
+        <Stack.Screen
+          name="Safety"
+          component={Safety}
+          options={{
+            headerShown: true,
+            headerTransparent: true,
+            headerTitleStyle: { color: '#000' },
+            headerTitle: 'Safety',
+          }}
+        />
 
-<Stack.Screen
-  name="AddressEntry"
-  component={AddressEntry}
-  options={{
-    headerShown: true,
-    headerTransparent: true,
-    headerTitleStyle: { color: '#000' },
-    headerTitle: 'Enter Address',
-    presentation: 'modal', // Makes it slide from bottom
-    animation: 'slide_from_bottom',
-  }}
-/>
-
+        <Stack.Screen
+          name="AddressEntry"
+          component={AddressEntry}
+          options={{
+            headerShown: true,
+            headerTransparent: true,
+            headerTitleStyle: { color: '#000' },
+            headerTitle: 'Enter Address',
+            presentation: 'modal', // Makes it slide from bottom
+            animation: 'slide_from_bottom',
+          }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -11,12 +11,22 @@ import { useNavigation } from '@react-navigation/native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 type RootStackParamList = {
-  Profiles: undefined;
+  Login: undefined;
+  Otp: undefined;
+  Signup: undefined;
+  Home: undefined;
+  MyRides: undefined;
+  Wallet: undefined;
+  Settings: undefined;
+  Support: undefined;
   Profile: undefined;
   Favourites: undefined;
   Preferences: undefined;
+  MyRating: undefined;
+  RideDetails: undefined;
   About: undefined;
-  Support: undefined;
+  Parcel: undefined;
+  AddressEntry: undefined;
 };
 
 const settingsData = [

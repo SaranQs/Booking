@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
+import { useNavigation } from '@react-navigation/native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const getRideTypeDetails = (type: string) => {
@@ -14,112 +15,135 @@ const getRideTypeDetails = (type: string) => {
     case 'bike':
       return {
         label: 'Bike Ride',
-        icon: <MaterialCommunityIcons name="motorbike" size={20} color="#333" />,
+        icon: (
+          <MaterialCommunityIcons name="motorbike" size={22} color="#000" />
+        ),
+        bgColor: '#fff',
       };
     case 'taxi':
       return {
         label: 'Taxi Ride',
-        icon: <MaterialCommunityIcons name="car" size={20} color="#333" />,
+        icon: <MaterialCommunityIcons name="car" size={22} color="#000" />,
+        bgColor: '#fff',
       };
     case 'parcel':
       return {
-        label: 'Parcel Ride',
-        icon: <MaterialCommunityIcons name="cube-outline" size={20} color="#333" />,
+        label: 'Parcel Delivery',
+        icon: (
+          <MaterialCommunityIcons name="cube-outline" size={22} color="#000" />
+        ),
+        bgColor: '#fff',
       };
     default:
       return {
         label: 'Ride',
-        icon: <Icon name="box" size={20} color="#999" />,
+        icon: <Icon name="box" size={20} color="#fff" />,
+        bgColor: '#999',
       };
   }
 };
 
 const RideDetailScreen = ({ route }: any) => {
   const { ride } = route.params;
-  const { label, icon } = getRideTypeDetails(ride.type);
+  const navigation = useNavigation();
+  const { label, icon, bgColor } = getRideTypeDetails(ride.type);
 
   return (
     <ScrollView style={styles.container}>
-      {/* Section 1: Ride Summary */}
-      <View style={styles.section}>
-        <View style={styles.rideTypeRow}>
-          {icon}
-          <Text style={styles.sectionTitle}>  {label}</Text>
-        </View>
-        <Text style={styles.subText}>
-          {new Date(ride.timestamp).toLocaleString()}
-        </Text>
-        <Text style={styles.costText}>
-          ₹{ride.cost} • {ride.status}
-        </Text>
-      </View>
-
-      {/* Section 2: Ride Details */}
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>
-          <Icon name="map-pin" size={16} /> Ride Details
-        </Text>
-        <View style={styles.route}>
-          <View style={styles.pinRow}>
-            <View style={styles.greenDot} />
-            <Text style={styles.address}>Chennai Central</Text>
-          </View>
-          <View style={styles.line} />
-          <View style={styles.pinRow}>
-            <View style={styles.redDot} />
-            <Text style={styles.address}>{ride.destination}</Text>
-          </View>
-        </View>
-
-        <View style={styles.detailsRow}>
-          <Text style={styles.detailLabel}>Duration</Text>
-          <Text style={styles.detailValue}>25 min</Text>
-        </View>
-        <View style={styles.detailsRow}>
-          <Text style={styles.detailLabel}>Distance</Text>
-          <Text style={styles.detailValue}>12.3 km</Text>
-        </View>
-        <View style={styles.detailsRow}>
-          <Text style={styles.detailLabel}>Ride ID</Text>
-          <Text style={styles.detailValue}>#{ride.id}</Text>
-        </View>
-      </View>
-
-      {/* Section 3: Invoice */}
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>
-          <Icon name="file-text" size={16} /> Invoice
-        </Text>
-        <View style={styles.invoiceRow}>
-          <Text style={styles.invoiceLabel}>Total Fare</Text>
-          <Text style={styles.invoiceValue}>₹{ride.cost}</Text>
-        </View>
-        <View style={styles.invoiceRow}>
-          <Text style={styles.invoiceSub}>Ride Charges</Text>
-          <Text style={styles.invoiceSubValue}>₹{ride.cost - 20}</Text>
-        </View>
-        <View style={styles.invoiceRow}>
-          <Text style={styles.invoiceSub}>Booking Fees</Text>
-          <Text style={styles.invoiceSubValue}>₹10</Text>
-        </View>
-        <View style={styles.invoiceRow}>
-          <Text style={styles.invoiceSub}>Other Charges</Text>
-          <Text style={styles.invoiceSubValue}>₹10</Text>
-        </View>
-
-        <TouchableOpacity style={styles.emailBtn}>
-          <Text style={styles.emailText}>
-            <Icon name="mail" size={16} color="#007AFF" /> Send via Email
+      {/* Ride Header */}
+      <View style={[styles.rideHeader, { backgroundColor: bgColor }]}>
+        <View style={styles.rideTypeIcon}>{icon}</View>
+        <View>
+          <Text style={styles.rideTitle}>{label}</Text>
+          <Text style={styles.rideDate}>
+            {new Date(ride.timestamp).toLocaleString()}
           </Text>
+        </View>
+        <Text style={styles.ridePrice}>₹{ride.cost}</Text>
+      </View>
+
+      {/* Your Route */}
+      <View style={styles.titleRow}>
+        <Icon name="map-pin" size={16} color="#000" />
+        <Text style={styles.cardTitle}>Your Route</Text>
+      </View>
+      <View style={styles.card}>
+        <View style={styles.routeSection}>
+          <View style={styles.dotWrapper}>
+            <View style={styles.outerDotGreen}>
+              <View style={styles.innerDotWhite} />
+            </View>
+            <View style={styles.verticalLine} />
+            <View style={styles.outerDotRed}>
+              <View style={styles.innerDotWhite} />
+            </View>
+          </View>
+          <View style={styles.addressWrapper}>
+            <Text style={styles.addressText}>Chennai Central</Text>
+            <Text style={styles.addressText}>{ride.destination}</Text>
+          </View>
+        </View>
+      </View>
+
+      {/* Ride Details */}
+      <View style={styles.titleRow}>
+        <Icon name="info" size={16} color="#000" />
+        <Text style={styles.cardTitle}>Ride Details</Text>
+      </View>
+      <View style={styles.card}>
+        <View style={styles.row}>
+          <Text style={styles.label}>Duration</Text>
+          <Text style={styles.value}>25 min</Text>
+        </View>
+        <View style={styles.row}>
+          <Text style={styles.label}>Distance</Text>
+          <Text style={styles.value}>12.3 km</Text>
+        </View>
+        <View style={styles.row}>
+          <Text style={styles.label}>Ride ID</Text>
+          <Text style={styles.value}>#{ride.id}</Text>
+        </View>
+      </View>
+
+      {/* Invoice */}
+      <View style={styles.titleRow}>
+        <Icon name="file-text" size={16} color="#000" />
+        <Text style={styles.cardTitle}>Invoice</Text>
+      </View>
+      <View style={styles.card}>
+        <View style={styles.row}>
+          <Text style={styles.label}>Total Fare</Text>
+          <Text style={styles.value}>₹{ride.cost}</Text>
+        </View>
+        <View style={styles.rowSub}>
+          <Text style={styles.subLabel}>Ride Charges</Text>
+          <Text style={styles.subValue}>₹{ride.cost - 20}</Text>
+        </View>
+        <View style={styles.rowSub}>
+          <Text style={styles.subLabel}>Booking Fees</Text>
+          <Text style={styles.subValue}>₹10</Text>
+        </View>
+        <View style={styles.rowSub}>
+          <Text style={styles.subLabel}>Other Charges</Text>
+          <Text style={styles.subValue}>₹10</Text>
+        </View>
+        <TouchableOpacity style={styles.emailButton}>
+          <Text style={styles.emailText}>Send Invoice via Email</Text>
           <Icon name="chevron-right" size={18} color="#007AFF" />
         </TouchableOpacity>
       </View>
 
-      {/* Section 4: Support */}
-      <TouchableOpacity style={styles.section}>
-        <Text style={styles.sectionTitle}>
-          <Icon name="help-circle" size={16} /> Support
-        </Text>
+      {/* Support */}
+      <View style={styles.titleRow}>
+        <Icon name="info" size={16} color="#000" />
+        <Text style={styles.cardTitle}>Support</Text>
+      </View>
+      <TouchableOpacity
+        style={styles.card}
+        onPress={() => {
+          (navigation as any).navigate('Support');
+        }}
+      >
         <Text style={styles.supportText}>
           Need help with this ride? Tap to contact support.
         </Text>
@@ -129,46 +153,128 @@ const RideDetailScreen = ({ route }: any) => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 16, paddingTop: 60, backgroundColor: '#fff' },
-  section: { marginBottom: 20 },
+  container: { flex: 1, backgroundColor: '#F8F8F8' },
 
-  rideTypeRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 4,
-  },
-  sectionTitle: { fontSize: 16, fontWeight: '600', color: '#444' },
-  subText: { fontSize: 14, color: '#666' },
-  costText: { fontSize: 16, color: '#000', fontWeight: 'bold', marginTop: 4 },
-
-  route: { marginTop: 10, marginBottom: 10 },
-  pinRow: { flexDirection: 'row', alignItems: 'center', marginBottom: 6 },
-  greenDot: { width: 10, height: 10, borderRadius: 5, backgroundColor: 'green', marginRight: 8 },
-  redDot: { width: 10, height: 10, borderRadius: 5, backgroundColor: 'red', marginRight: 8 },
-  line: { height: 12, borderLeftWidth: 2, borderColor: '#ccc', marginLeft: 4 },
-  address: { fontSize: 14, color: '#333' },
-
-  detailsRow: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 8 },
-  detailLabel: { fontSize: 14, color: '#666' },
-  detailValue: { fontSize: 14, fontWeight: '600' },
-
-  invoiceRow: { flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 4 },
-  invoiceLabel: { fontSize: 16, fontWeight: '600' },
-  invoiceValue: { fontSize: 16, fontWeight: '600' },
-  invoiceSub: { fontSize: 14, color: '#666' },
-  invoiceSubValue: { fontSize: 14, color: '#333' },
-
-  emailBtn: {
-    marginTop: 10,
-    paddingVertical: 10,
+  rideHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 16,
+    paddingTop: 50,
+  },
+  rideTypeIcon: {
+    backgroundColor: '#00000030',
+    borderRadius: 30,
+    padding: 10,
+    marginRight: 12,
+  },
+  rideTitle: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#000',
+    textAlign: 'center',
+  },
+  rideDate: { fontSize: 12, color: '#000', marginTop: 2 },
+  ridePrice: { fontSize: 20, fontWeight: 'bold', color: '#000' },
+
+  titleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginHorizontal: 16,
+    marginTop: 14,
+    marginBottom: 6,
+    gap: 6,
+  },
+  cardTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#222',
+  },
+
+  card: {
+    backgroundColor: '#fff',
+    marginHorizontal: 14,
+    marginBottom: 12,
+    padding: 16,
+    borderRadius: 12,
+    elevation: 2,
+  },
+
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginVertical: 4,
+  },
+  label: { fontSize: 14, color: '#666' },
+  value: { fontSize: 14, fontWeight: '600' },
+
+  rowSub: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 2,
+  },
+  subLabel: { fontSize: 13, color: '#aaa' },
+  subValue: { fontSize: 13, color: '#333' },
+
+  routeSection: {
+    flexDirection: 'row',
+  },
+  dotWrapper: {
+    alignItems: 'center',
+    marginRight: 12,
+  },
+  outerDotGreen: {
+    width: 12,
+    height: 12,
+    borderRadius: 6,
+    backgroundColor: 'green',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  outerDotRed: {
+    width: 12,
+    height: 12,
+    borderRadius: 6,
+    backgroundColor: 'red',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  innerDotWhite: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: '#fff',
+  },
+  verticalLine: {
+    height: 30,
+    borderLeftWidth: 2,
+    borderColor: '#ccc',
+    marginVertical: 4,
+  },
+  addressWrapper: {
+    justifyContent: 'space-between',
+    paddingVertical: 2,
+  },
+  addressText: {
+    fontSize: 14,
+    color: '#333',
+    marginBottom: 12,
+  },
+
+  emailButton: {
+    marginTop: 12,
+    paddingVertical: 12,
     borderTopWidth: 1,
     borderColor: '#eee',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
-  emailText: { fontSize: 15, color: '#007AFF' },
+  emailText: { color: '#007AFF', fontSize: 15 },
 
-  supportText: { marginTop: 6, fontSize: 14, color: '#007AFF' },
+  supportText: {
+    fontSize: 14,
+    color: '#007AFF',
+  },
 });
 
 export default RideDetailScreen;
