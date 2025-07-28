@@ -5,7 +5,6 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
-  Image,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
@@ -23,29 +22,16 @@ const HomeScreen = () => {
   const [showDrawer, setShowDrawer] = useState(false);
   const drawerRef = useRef<any>(null);
   const navigation = useNavigation();
-
-
+  const handleRideTypeSelect = (type: string) => {
+    if (type === 'Parcel') {
+      navigation.navigate('Parcel');
+    } else {
+      navigation.navigate('AddressEntry');
+    }
+  };
   const closeDrawer = () => {
     if (drawerRef.current) {
       drawerRef.current.slideOutLeft(200).then(() => setShowDrawer(false));
-    }
-  };
-
-  const getFareEstimate = () => {
-    switch (selectedRide) {
-      case 'Bike': return '₹45 - ₹60';
-      case 'Auto': return '₹70 - ₹90';
-      case 'Taxi': return '₹100 - ₹140';
-      default: return '₹0';
-    }
-  };
-
-  const getImageSource = () => {
-    switch (selectedRide) {
-      case 'Bike': return require('../../assets/bike.png');
-      case 'Auto': return require('../../assets/auto.png');
-      case 'Taxi': return require('../../assets/taxi.png');
-      default: return require('../../assets/bike.png');
     }
   };
 
@@ -68,9 +54,7 @@ const HomeScreen = () => {
       address: '789 Fitness Avenue, Wellness Block, Bangalore',
       liked: false,
     },
-
   ];
-
 
   return (
     <LinearGradient
@@ -86,30 +70,44 @@ const HomeScreen = () => {
         <ScrollView contentContainerStyle={styles.scroll}>
           {/* Header */}
           <View style={styles.header}>
-            <TouchableOpacity onPress={() => setShowDrawer(true)} style={styles.iconWrapper}>
+            <TouchableOpacity
+              onPress={() => setShowDrawer(true)}
+              style={styles.iconWrapper}
+            >
               <Feather name="menu" size={24} color="#000" />
             </TouchableOpacity>
 
-            <View style={styles.searchContainer}>
-              <TextInput
-                style={styles.searchInput}
-                placeholder="Where are you going?"
-                placeholderTextColor="#666"
+            <TouchableOpacity
+              style={styles.searchContainer}
+              onPress={() => navigation.navigate('AddressEntry')}
+            >
+              <Feather
+                name="search"
+                size={18}
+                color="#888"
+                style={styles.searchIcon}
               />
-              <TouchableOpacity style={styles.searchIcon}>
-                <Feather name="search" size={18} color="#888" />
-              </TouchableOpacity>
-            </View>
+              <Text style={styles.fakeInput}>Where are you going?</Text>
+            </TouchableOpacity>
           </View>
 
           <View style={styles.recentContainer}>
             <Text style={styles.recentTitle}>Recent Rides</Text>
             {recentRides.map(ride => (
               <View key={ride.id} style={styles.rideRow}>
-                <Feather name="map-pin" size={18} color="#555" style={{ marginRight: 12 }} />
+                <Feather
+                  name="map-pin"
+                  size={18}
+                  color="#555"
+                  style={{ marginRight: 12 }}
+                />
                 <View style={{ flex: 1 }}>
                   <Text style={styles.ridePlace}>{ride.place}</Text>
-                  <Text numberOfLines={1} ellipsizeMode="tail" style={styles.rideAddress}>
+                  <Text
+                    numberOfLines={1}
+                    ellipsizeMode="tail"
+                    style={styles.rideAddress}
+                  >
                     {ride.address}
                   </Text>
                 </View>
@@ -123,7 +121,6 @@ const HomeScreen = () => {
               </View>
             ))}
           </View>
-
 
           {/* <View style={styles.inputContainer}>
             <TextInput
@@ -166,9 +163,8 @@ const HomeScreen = () => {
 
           <View style={styles.exploreSection}>
             <Text style={styles.exploreTitle}>Explore</Text>
-            <RideTypeSwitcher onSelect={setSelectedRide} />
+            <RideTypeSwitcher onSelect={handleRideTypeSelect} />
           </View>
-
         </ScrollView>
       </KeyboardAvoidingView>
 
@@ -190,73 +186,160 @@ const HomeScreen = () => {
               </TouchableOpacity>
             </View>
 
-
             <View style={styles.drawerHeader}>
               <TouchableOpacity
                 onPress={() => {
-                  // closeDrawer();
                   (navigation as any).navigate('Profile');
                 }}
                 style={styles.profileRow}
               >
-                <Image source={require('../../assets/profile.png')} style={styles.drawerProfilePic} />
+                <Feather
+                  name="user"
+                  size={40}
+                  color="#555"
+                  style={styles.drawerProfileIcon}
+                />
                 <View style={styles.profileText}>
                   <Text style={styles.drawerName}>Saran Kathiravan</Text>
                   <Text style={styles.drawerPhone}>+91 98765 43210</Text>
                 </View>
                 <Feather name="chevron-right" size={22} color="#888" />
               </TouchableOpacity>
-
             </View>
 
-            <TouchableOpacity style={styles.ratingRow} onPress={() => {
-              // closeDrawer();
-              (navigation as any).navigate('MyRating');
-            }}>
-              <Feather name="star" size={20} color="#FFD700" style={{ marginRight: 8 }} />
+            <TouchableOpacity
+              style={styles.ratingRow}
+              onPress={() => {
+                // closeDrawer();
+                (navigation as any).navigate('MyRating');
+              }}
+            >
+              <Feather
+                name="star"
+                size={20}
+                color="#FFD700"
+                style={{ marginRight: 8 }}
+              />
               <Text style={styles.drawerLabel}>My Rating</Text>
-              <Feather name="chevron-right" size={20} color="#888" style={{ marginLeft: 'auto' }} />
+              <Feather
+                name="chevron-right"
+                size={20}
+                color="#888"
+                style={{ marginLeft: 'auto' }}
+              />
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.drawerItem} onPress={() => {
-              // closeDrawer();
-              (navigation as any).navigate('MyRides');
-            }}>
-              <Feather name="clock" size={18} color="#666" style={styles.drawerIcon} />
+            <TouchableOpacity
+              style={styles.drawerItem}
+              onPress={() => {
+                (navigation as any).navigate('Parcel');
+              }}
+            >
+              <Feather
+                name="package"
+                size={18}
+                color="#666"
+                style={styles.drawerIcon}
+              />
+              <Text style={styles.drawerLabel}>Send Parcel</Text>
+              <Feather
+                name="chevron-right"
+                size={20}
+                color="#888"
+                style={{ marginLeft: 'auto' }}
+              />
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.drawerItem}
+              onPress={() => {
+                // closeDrawer();
+                (navigation as any).navigate('MyRides');
+              }}
+            >
+              <Feather
+                name="clock"
+                size={18}
+                color="#666"
+                style={styles.drawerIcon}
+              />
               <Text style={styles.drawerLabel}>My Rides</Text>
-              <Feather name="chevron-right" size={20} color="#888" style={{ marginLeft: 'auto' }} />
+              <Feather
+                name="chevron-right"
+                size={20}
+                color="#888"
+                style={{ marginLeft: 'auto' }}
+              />
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.drawerItem} onPress={() => {
-              // closeDrawer();
-              (navigation as any).navigate('Wallet');
-            }}>
-              <Feather name="credit-card" size={18} color="#666" style={styles.drawerIcon} />
+            <TouchableOpacity
+              style={styles.drawerItem}
+              onPress={() => {
+                // closeDrawer();
+                (navigation as any).navigate('Wallet');
+              }}
+            >
+              <Feather
+                name="credit-card"
+                size={18}
+                color="#666"
+                style={styles.drawerIcon}
+              />
               <Text style={styles.drawerLabel}>Payments</Text>
-              <Feather name="chevron-right" size={20} color="#888" style={{ marginLeft: 'auto' }} />
+              <Feather
+                name="chevron-right"
+                size={20}
+                color="#888"
+                style={{ marginLeft: 'auto' }}
+              />
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.drawerItem} onPress={() => {
-              // closeDrawer();
-              (navigation as any).navigate('Settings');
-            }}>
-              <Feather name="settings" size={18} color="#666" style={styles.drawerIcon} />
+            <TouchableOpacity
+              style={styles.drawerItem}
+              onPress={() => {
+                // closeDrawer();
+                (navigation as any).navigate('Settings');
+              }}
+            >
+              <Feather
+                name="settings"
+                size={18}
+                color="#666"
+                style={styles.drawerIcon}
+              />
               <Text style={styles.drawerLabel}>Settings</Text>
-              <Feather name="chevron-right" size={20} color="#888" style={{ marginLeft: 'auto' }} />
+              <Feather
+                name="chevron-right"
+                size={20}
+                color="#888"
+                style={{ marginLeft: 'auto' }}
+              />
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.drawerItem} onPress={() => {
-              // closeDrawer();
-              (navigation as any).navigate('Support');
-            }}>
-              <Feather name="help-circle" size={18} color="#666" style={styles.drawerIcon} />
+            <TouchableOpacity
+              style={styles.drawerItem}
+              onPress={() => {
+                // closeDrawer();
+                (navigation as any).navigate('Support');
+              }}
+            >
+              <Feather
+                name="help-circle"
+                size={18}
+                color="#666"
+                style={styles.drawerIcon}
+              />
               <Text style={styles.drawerLabel}>Support</Text>
-              <Feather name="chevron-right" size={20} color="#888" style={{ marginLeft: 'auto' }} />
+              <Feather
+                name="chevron-right"
+                size={20}
+                color="#888"
+                style={{ marginLeft: 'auto' }}
+              />
             </TouchableOpacity>
           </Animatable.View>
         </View>
       )}
-
     </LinearGradient>
   );
 };
@@ -265,6 +348,22 @@ const styles = StyleSheet.create({
   recentContainer: {
     marginBottom: 20,
   },
+  drawerProfileIcon: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: '#f2f2f2',
+    textAlign: 'center',
+    textAlignVertical: 'center',
+    // padding: 12,
+    marginRight: 12,
+  },
+fakeInput: {
+  color: '#666',
+  fontSize: 14,
+  paddingLeft: 8,
+},
+
   recentTitle: {
     fontSize: 16,
     fontWeight: '600',
@@ -415,12 +514,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 30,
   },
-  drawerProfilePic: {
-    width: 70,
-    height: 70,
-    borderRadius: 35,
-    marginRight: 12,
-  },
+  // drawerProfilePic: {
+  //   width: 70,
+  //   height: 70,
+  //   borderRadius: 35,
+  //   marginRight: 12,
+  // },
   profileText: {
     flex: 1,
   },
@@ -473,8 +572,6 @@ const styles = StyleSheet.create({
     marginLeft: 8,
     color: '#000',
   },
-
 });
-
 
 export default HomeScreen;

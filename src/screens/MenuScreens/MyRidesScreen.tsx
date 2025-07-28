@@ -7,6 +7,8 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
+import FeatherIcon from 'react-native-vector-icons/Feather';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 // Sample data structured as you'd receive from backend
 const rideHistory = [
@@ -16,6 +18,7 @@ const rideHistory = [
     timestamp: '2025-07-21T10:30:00', // ISO string from backend
     cost: 120,
     status: 'Completed',
+    type: 'bike',
   },
   {
     id: '2',
@@ -23,6 +26,7 @@ const rideHistory = [
     timestamp: '2025-07-19T18:45:00',
     cost: 95,
     status: 'Cancelled',
+    type: 'taxi',
   },
   {
     id: '3',
@@ -30,6 +34,7 @@ const rideHistory = [
     timestamp: '2025-07-17T14:00:00',
     cost: 140,
     status: 'Completed',
+    type: 'parcel',
   },
   {
     id: '4',
@@ -37,6 +42,7 @@ const rideHistory = [
     timestamp: '2025-07-15T09:15:00',
     cost: 80,
     status: 'Completed',
+    type: 'bike',
   },
   {
     id: '5',
@@ -44,6 +50,7 @@ const rideHistory = [
     timestamp: '2025-07-13T16:30:00',
     cost: 110,
     status: 'Completed',
+    type: 'taxi',
   },
   {
     id: '6',
@@ -51,6 +58,7 @@ const rideHistory = [
     timestamp: '2025-07-11T12:20:00',
     cost: 105,
     status: 'Completed',
+    type: 'parcel',
   },
   {
     id: '7',
@@ -58,6 +66,7 @@ const rideHistory = [
     timestamp: '2025-07-09T19:10:00',
     cost: 130,
     status: 'Cancelled',
+    type: 'bike',
   },
   {
     id: '8',
@@ -65,6 +74,7 @@ const rideHistory = [
     timestamp: '2025-07-07T08:45:00',
     cost: 115,
     status: 'Completed',
+    type: 'bike',
   },
   {
     id: '9',
@@ -72,6 +82,7 @@ const rideHistory = [
     timestamp: '2025-07-05T17:30:00',
     cost: 90,
     status: 'Completed',
+    type: 'bike',
   },
   {
     id: '10',
@@ -79,9 +90,26 @@ const rideHistory = [
     timestamp: '2025-07-03T15:00:00',
     cost: 125,
     status: 'Completed',
+    type: 'parcel',
   },
-
 ];
+
+const renderIcon = (type: string) => {
+  switch (type) {
+    case 'bike':
+      return (
+        <MaterialCommunityIcons name="motorbike" size={24}  />
+      );
+    case 'taxi':
+      return <MaterialCommunityIcons name="car" size={24}  />;
+    case 'parcel':
+      return (
+        <MaterialCommunityIcons name="cube-outline" size={24} />
+      );
+    default:
+      return <FeatherIcon name="box" size={24} color="#aaa" />;
+  }
+};
 
 // Helper function to format date & time
 const formatDateTime = (isoString: string): string => {
@@ -106,10 +134,13 @@ const MyRidesScreen = ({ navigation }: any) => {
       style={styles.rideItem}
       onPress={() => navigation.navigate('RideDetails', { ride: item })}
     >
+      {renderIcon(item.type)}
       <View style={styles.rideDetails}>
         <Text style={styles.destination}>{item.destination}</Text>
         <Text style={styles.subText}>{formatDateTime(item.timestamp)}</Text>
-        <Text style={styles.subText}>₹{item.cost} • {item.status}</Text>
+        <Text style={styles.subText}>
+          ₹{item.cost} • {item.status}
+        </Text>
       </View>
       <Icon name="chevron-right" size={20} color="#888" />
     </TouchableOpacity>
@@ -120,7 +151,7 @@ const MyRidesScreen = ({ navigation }: any) => {
       {/* <Text style={styles.heading}>My Rides</Text> */}
       <FlatList
         data={rideHistory}
-        keyExtractor={(item) => item.id}
+        keyExtractor={item => item.id}
         renderItem={renderItem}
         contentContainerStyle={styles.listContent}
         ItemSeparatorComponent={() => <View style={styles.separator} />}
@@ -146,15 +177,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingBottom: 16,
   },
-  rideItem: {
-    backgroundColor: '#f9f9f9',
-    borderRadius: 10,
-    padding: 14,
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 12,
-    justifyContent: 'space-between',
-  },
+rideItem: {
+  backgroundColor: '#f9f9f9',
+  borderRadius: 10,
+  padding: 14,
+  flexDirection: 'row',
+  alignItems: 'center',
+  marginBottom: 12,
+  justifyContent: 'space-between',
+  gap: 15,
+},
+
   rideDetails: {
     flex: 1,
     marginRight: 10,

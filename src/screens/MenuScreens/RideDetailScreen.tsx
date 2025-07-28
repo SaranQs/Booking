@@ -1,20 +1,57 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+} from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
-import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+
+const getRideTypeDetails = (type: string) => {
+  switch (type) {
+    case 'bike':
+      return {
+        label: 'Bike Ride',
+        icon: <MaterialCommunityIcons name="motorbike" size={20} color="#333" />,
+      };
+    case 'taxi':
+      return {
+        label: 'Taxi Ride',
+        icon: <MaterialCommunityIcons name="car" size={20} color="#333" />,
+      };
+    case 'parcel':
+      return {
+        label: 'Parcel Ride',
+        icon: <MaterialCommunityIcons name="cube-outline" size={20} color="#333" />,
+      };
+    default:
+      return {
+        label: 'Ride',
+        icon: <Icon name="box" size={20} color="#999" />,
+      };
+  }
+};
 
 const RideDetailScreen = ({ route }: any) => {
   const { ride } = route.params;
+  const { label, icon } = getRideTypeDetails(ride.type);
 
   return (
     <ScrollView style={styles.container}>
       {/* Section 1: Ride Summary */}
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>
-         Bike Ride
+        <View style={styles.rideTypeRow}>
+          {icon}
+          <Text style={styles.sectionTitle}>  {label}</Text>
+        </View>
+        <Text style={styles.subText}>
+          {new Date(ride.timestamp).toLocaleString()}
         </Text>
-        <Text style={styles.subText}>{new Date(ride.timestamp).toLocaleString()}</Text>
-        <Text style={styles.costText}>₹{ride.cost} • {ride.status}</Text>
+        <Text style={styles.costText}>
+          ₹{ride.cost} • {ride.status}
+        </Text>
       </View>
 
       {/* Section 2: Ride Details */}
@@ -92,10 +129,15 @@ const RideDetailScreen = ({ route }: any) => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 16, paddingTop:60, backgroundColor: '#fff' },
+  container: { flex: 1, padding: 16, paddingTop: 60, backgroundColor: '#fff' },
   section: { marginBottom: 20 },
 
-  sectionTitle: { fontSize: 16, fontWeight: '600', marginBottom: 8, color: '#444' },
+  rideTypeRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 4,
+  },
+  sectionTitle: { fontSize: 16, fontWeight: '600', color: '#444' },
   subText: { fontSize: 14, color: '#666' },
   costText: { fontSize: 16, color: '#000', fontWeight: 'bold', marginTop: 4 },
 

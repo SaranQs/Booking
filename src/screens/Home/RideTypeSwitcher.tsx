@@ -28,7 +28,7 @@ const RideTypeSwitcher = ({ onSelect }: { onSelect: (type: string) => void }) =>
           ]}
           onPress={() => {
             setSelected(type);
-            onSelect(type);
+            onSelect(type); // parent handles navigation
           }}
         >
           <Image source={image} style={styles.image} />

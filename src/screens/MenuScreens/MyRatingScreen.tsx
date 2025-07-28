@@ -2,20 +2,21 @@ import React from 'react';
 import { View, Text, StyleSheet, FlatList } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
 
+// Dummy data: Ratings given by drivers to the user
 const ratingsData = [
   {
     id: '1',
-    title: 'Ride to Work',
+    title: 'Trip from Office to Home',
     date: 'July 21, 2025',
     rating: 5,
-    comment: 'Great rider! Smooth experience.',
+    comment: 'Polite and punctual customer.',
   },
   {
     id: '2',
-    title: 'Ride to Gym',
+    title: 'Morning Ride to Gym',
     date: 'July 18, 2025',
     rating: 4,
-    comment: 'Good behavior. On time.',
+    comment: 'Smooth ride. Good communication.',
   },
 ];
 
@@ -42,7 +43,7 @@ const MyRatingScreen = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>My Rating</Text>
+      <Text style={styles.title}>Driver Feedback</Text>
 
       <View style={styles.overallBox}>
         <Text style={styles.ratingValue}>4.8</Text>
@@ -52,14 +53,14 @@ const MyRatingScreen = () => {
               key={i}
               name="star"
               size={24}
-              color={i < 4.8 ? '#f5a623' : '#ccc'}
+              color={i < Math.floor(4.8) ? '#f5a623' : '#ccc'}
             />
           ))}
         </View>
-        <Text style={styles.ratingLabel}>Overall Rating</Text>
+        <Text style={styles.ratingLabel}>Your Overall Rating</Text>
       </View>
 
-      <Text style={styles.subTitle}>Recent Feedback</Text>
+      <Text style={styles.subTitle}>What drivers say about you</Text>
 
       <FlatList
         data={ratingsData}

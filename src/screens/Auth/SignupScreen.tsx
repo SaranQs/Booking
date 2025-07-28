@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import {
-  View,
   Text,
   TextInput,
   TouchableOpacity,
@@ -9,7 +8,7 @@ import {
   Platform,
 } from 'react-native';
 
-import LinearGradient from 'react-native-linear-gradient';
+
 
 
 const SignupScreen = ({ navigation }: any) => {
@@ -27,10 +26,10 @@ const SignupScreen = ({ navigation }: any) => {
   };
 
   return (
-    <LinearGradient
-   colors={['#FFD700', '#fde77cff']} // Customize as needed
-  style={{ flex: 1 }}
->
+//     <LinearGradient
+//    colors={['#FFD700', '#fde77cff']} // Customize as needed
+//   style={{ flex: 1 }}
+// >
     <KeyboardAvoidingView
       style={styles.container}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
@@ -63,7 +62,7 @@ const SignupScreen = ({ navigation }: any) => {
         <Text style={styles.linkText}>Already have an account? Login</Text>
       </TouchableOpacity>
     </KeyboardAvoidingView>
-    </LinearGradient>
+     // </LinearGradient>
   );
 };
 
@@ -102,7 +101,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   btn: {
-    backgroundColor: '#f7b500',
+    backgroundColor: '#000',
     height: 50,
     borderRadius: 8,
     justifyContent: 'center',

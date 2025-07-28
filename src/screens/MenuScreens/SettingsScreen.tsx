@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useLayoutEffect } from 'react';
 import {
   View,
   Text,
@@ -12,13 +12,17 @@ import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 type RootStackParamList = {
   Profiles: undefined;
-  // Add other screens as needed
+  Profile: undefined;
+  Favourites: undefined;
+  Preferences: undefined;
+  About: undefined;
+  Support: undefined;
 };
 
 const settingsData = [
   {
     title: 'General',
-    data: ['Profile', 'Favourites', 'Preferences', 'App Shortcuts'],
+    data: ['Profile', 'Favourites', 'Preferences'],
   },
   {
     title: 'Others',
@@ -27,22 +31,28 @@ const settingsData = [
 ];
 
 const SettingsScreen = () => {
-  const navigation = useNavigation<NativeStackScreenProps<RootStackParamList>>();
+  const navigation = useNavigation<NativeStackScreenProps<RootStackParamList>['navigation']>();
+
+  useLayoutEffect(() => {
+    (navigation as any).setOptions({
+      headerRight: () => (
+        <TouchableOpacity
+          style={styles.helpButton}
+          onPress={() => (navigation as any).navigate('Support')}
+        >
+          <Icon name="help-circle" size={18} color="gray" />
+          <Text style={styles.helpText}>Help</Text>
+        </TouchableOpacity>
+      ),
+    });
+  }, [navigation]);
 
   const handleItemPress = (label: string) => {
-    if (label === 'Profile') {
-      (navigation as any).navigate('Profile');
-    }
-    if (label === 'Favourites') {
-      (navigation as any).navigate('Favourites');
-    }
-    if (label === 'Preferences') {
-      (navigation as any).navigate('Preferences');
-    }
-    else {
-      console.log(`Pressed: ${label}`);
-      // Handle other items if needed
-    }
+    if (label === 'Profile') (navigation as any).navigate('Profile');
+    else if (label === 'Favourites') (navigation as any).navigate('Favourites');
+    else if (label === 'Preferences') (navigation as any).navigate('Preferences');
+    else if (label === 'About') (navigation as any).navigate('About');
+    else console.log(`Pressed: ${label}`);
   };
 
   const renderSection = (section: typeof settingsData[0]) => (
@@ -81,7 +91,7 @@ const SettingsScreen = () => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flexGrow: 1,
     padding: 16,
     paddingTop: 60,
     backgroundColor: '#fff',
@@ -112,6 +122,16 @@ const styles = StyleSheet.create({
   deleteText: {
     color: '#d00',
     fontWeight: '600',
+  },
+  helpButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginRight: 12,
+  },
+  helpText: {
+    color: 'gray',
+    fontSize: 14,
+    marginLeft: 4,
   },
 });
 

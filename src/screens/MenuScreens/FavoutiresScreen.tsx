@@ -1,14 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
   StyleSheet,
   FlatList,
   TouchableOpacity,
+  Modal,
+  TextInput,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
 
-const favouritePlaces = [
+const initialPlaces = [
   {
     id: '1',
     type: 'home',
@@ -30,17 +32,69 @@ const favouritePlaces = [
 ];
 
 const FavouritesScreen = () => {
-  const handleEdit = (id: string) => {
-    console.log('Edit', id);
-    // Future: navigate to edit form
+  const [favourites, setFavourites] = useState(initialPlaces);
+  const [selected, setSelected] = useState<any>(null);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [editLabel, setEditLabel] = useState('');
+  const [editAddress, setEditAddress] = useState('');
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [toDeleteId, setToDeleteId] = useState<string | null>(null);
+
+  const [addModalVisible, setAddModalVisible] = useState(false);
+  const [newLabel, setNewLabel] = useState('');
+  const [newAddress, setNewAddress] = useState('');
+  const [newType, setNewType] = useState<'home' | 'gym' | 'other'>('other');
+
+  const handleEdit = (item: any) => {
+    setSelected(item);
+    setEditLabel(item.label);
+    setEditAddress(item.address);
+    setModalVisible(true);
   };
 
   const handleDelete = (id: string) => {
-    console.log('Delete', id);
-    // Future: remove from backend/local state
+    setToDeleteId(id);
+    setShowDeleteModal(true);
   };
 
-  const renderItem = ({ item }: { item: typeof favouritePlaces[0] }) => (
+  const confirmDelete = () => {
+    if (toDeleteId) {
+      setFavourites(prev => prev.filter(place => place.id !== toDeleteId));
+    }
+    setShowDeleteModal(false);
+    setToDeleteId(null);
+  };
+
+  const handleAdd = () => {
+    if (!newLabel || !newAddress) return;
+
+    const newItem = {
+      id: Date.now().toString(),
+      label: newLabel,
+      address: newAddress,
+      type: newType,
+    };
+
+    setFavourites(prev => [...prev, newItem]);
+    setAddModalVisible(false);
+    setNewLabel('');
+    setNewAddress('');
+  };
+
+  const handleUpdate = () => {
+    if (!editLabel || !editAddress) return;
+
+    setFavourites(prev =>
+      prev.map(item =>
+        item.id === selected.id
+          ? { ...item, label: editLabel, address: editAddress }
+          : item,
+      ),
+    );
+    setModalVisible(false);
+  };
+
+  const renderItem = ({ item }: { item: (typeof favourites)[0] }) => (
     <View style={styles.card}>
       <View style={styles.iconWrapper}>
         <Icon
@@ -60,7 +114,7 @@ const FavouritesScreen = () => {
         <Text style={styles.address}>{item.address}</Text>
       </View>
       <View style={styles.actions}>
-        <TouchableOpacity onPress={() => handleEdit(item.id)}>
+        <TouchableOpacity onPress={() => handleEdit(item)}>
           <Icon name="edit-3" size={18} color="#444" style={styles.icon} />
         </TouchableOpacity>
         <TouchableOpacity onPress={() => handleDelete(item.id)}>
@@ -73,20 +127,155 @@ const FavouritesScreen = () => {
   return (
     <View style={styles.container}>
       <FlatList
-        data={favouritePlaces}
-        keyExtractor={(item) => item.id}
+        data={favourites}
+        keyExtractor={item => item.id}
         renderItem={renderItem}
         contentContainerStyle={{ paddingBottom: 20 }}
       />
-      <TouchableOpacity style={styles.addButton}>
+      <TouchableOpacity
+        style={styles.addButton}
+        onPress={() => setAddModalVisible(true)}
+      >
         <Icon name="plus-circle" size={18} color="#fff" />
         <Text style={styles.addText}>Add More</Text>
       </TouchableOpacity>
+
+      {/* Modal for editing favourite */}
+      <Modal
+        animationType="slide"
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.mapPlaceholder}>
+            <Text style={{ color: '#888' }}>Map Placeholder</Text>
+          </View>
+
+          <View style={styles.modalContent}>
+            <View style={styles.modalHeader}>
+              <Text style={styles.modalTitle}>Edit Favourite</Text>
+              <TouchableOpacity>
+                <Text style={styles.searchBtn}>Search</Text>
+              </TouchableOpacity>
+            </View>
+
+            <TextInput
+              placeholder="Location Label"
+              value={editLabel}
+              onChangeText={setEditLabel}
+              style={styles.input}
+            />
+            <TextInput
+              placeholder="Address"
+              value={editAddress}
+              onChangeText={setEditAddress}
+              style={styles.input}
+              multiline
+            />
+
+            <TouchableOpacity style={styles.updateBtn} onPress={handleUpdate}>
+              <Text style={styles.updateBtnText}>Update Favourite</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              onPress={() => setModalVisible(false)}
+              style={{ marginTop: 16 }}
+            >
+              <Text style={{ textAlign: 'center', color: '#555' }}>Cancel</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+      <Modal
+        transparent
+        animationType="fade"
+        visible={showDeleteModal}
+        onRequestClose={() => setShowDeleteModal(false)}
+      >
+        <View style={styles.overlay}>
+          <View style={styles.confirmBox}>
+            <Text style={styles.modalTitle}>Delete</Text>
+            <Text style={{ color: '#555', marginVertical: 10 }}>
+              Are you sure you want to delete this favourite?
+            </Text>
+            <View style={styles.rowBetween}>
+              <TouchableOpacity onPress={() => setShowDeleteModal(false)}>
+                <Text style={{ color: '#555' }}>Cancel</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={confirmDelete}>
+                <Text style={{ color: '#d00', fontWeight: '700' }}>
+                  <Icon name="trash-2" size={18} color="#d00" style={styles.icon} />  Delete
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
+      <Modal
+        animationType="slide"
+        visible={addModalVisible}
+        onRequestClose={() => setAddModalVisible(false)}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.mapPlaceholder}>
+            <Text style={{ color: '#888' }}>Map Placeholder</Text>
+          </View>
+
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Add New Favourite</Text>
+
+            <TextInput
+              placeholder="Location Label"
+              value={newLabel}
+              onChangeText={setNewLabel}
+              style={styles.input}
+            />
+            <TextInput
+              placeholder="Address"
+              value={newAddress}
+              onChangeText={setNewAddress}
+              style={styles.input}
+              multiline
+            />
+
+            <TouchableOpacity style={styles.updateBtn} onPress={handleAdd}>
+              <Text style={styles.updateBtnText}>Add Favourite</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              onPress={() => setAddModalVisible(false)}
+              style={{ marginTop: 16 }}
+            >
+              <Text style={{ textAlign: 'center', color: '#555' }}>Cancel</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  rowBetween: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  overlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.4)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  confirmBox: {
+    width: '80%',
+    backgroundColor: '#fff',
+    padding: 20,
+    borderRadius: 10,
+    elevation: 5,
+  },
+
   container: {
     padding: 16,
     paddingTop: 60,
@@ -118,7 +307,7 @@ const styles = StyleSheet.create({
   },
   actions: {
     flexDirection: 'row',
-    gap: 10,
+    gap:10,
   },
   icon: {
     marginLeft: 10,
@@ -136,6 +325,63 @@ const styles = StyleSheet.create({
     color: '#fff',
     marginLeft: 8,
     fontWeight: '600',
+  },
+  modalContainer: {
+    flex: 1,
+    backgroundColor: '#fff',
+
+  },
+  mapPlaceholder: {
+    flex: 7,
+    backgroundColor: '#ddd',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  modalContent: {
+    flex: 3,
+    padding: 16,
+    backgroundColor: '#fff',
+    borderTopLeftRadius: 16,
+    borderTopRightRadius: 16,
+    elevation: 4,
+  },
+  modalHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: '700',
+  },
+  searchBtn: {
+    borderStyle: 'solid',
+    borderWidth: 1,
+    borderColor: '#ccc',
+    paddingHorizontal: 14,
+    padding:6,
+    borderRadius: 100,
+    color: '#000',
+    fontWeight: '600',
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 10,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    marginBottom: 12,
+  },
+  updateBtn: {
+    backgroundColor: '#000',
+    paddingVertical: 12,
+    borderRadius: 10,
+    alignItems: 'center',
+  },
+  updateBtnText: {
+    color: '#fff',
+    fontWeight: '700',
   },
 });
 

@@ -7,7 +7,6 @@ import {
   Modal,
   TextInput,
   FlatList,
-  Pressable,
   Platform,
 } from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
@@ -22,10 +21,49 @@ const ProfileScreen = () => {
   const [gender, setGender] = useState('Male');
   const [dob, setDob] = useState(new Date('1990-01-01'));
   const [showDatePicker, setShowDatePicker] = useState(false);
+  const [newEmail, setNewEmail] = useState('');
+  const [otp, setOtp] = useState('');
+  const [otpSent, setOtpSent] = useState(false);
+  const [customAlert, setCustomAlert] = useState({
+    visible: false,
+    message: '',
+  });
 
+  const showAlert = (message: string) => {
+    setCustomAlert({ visible: true, message });
+    setTimeout(() => {
+      setCustomAlert({ visible: false, message: '' });
+    }, 2500); // auto-dismiss after 2.5 seconds
+  };
+const handleAddEmergency = () =>{
+  console.log('Add Emergency Contact Pressed');
+}
   const handleOpenModal = (type: string) => {
     setModalType(type);
     setModalVisible(true);
+  };
+  const handleSendOtp = () => {
+    if (!newEmail.includes('@')) {
+      showAlert('Enter a valid email');
+      return;
+    }
+    setOtpSent(true);
+    showAlert(`OTP sent to ${newEmail}`);
+  };
+
+  const handleVerifyOtp = () => {
+    if (otp.length !== 4) {
+      showAlert('Enter a 4-digit OTP');
+      return;
+    }
+
+    // For now, any 4-digit OTP is accepted
+    setEmail(newEmail);
+    setModalVisible(false);
+    setOtp('');
+    setOtpSent(false);
+    setNewEmail('');
+    showAlert('Email updated successfully');
   };
 
   const handleDateChange = (event: any, selectedDate?: Date) => {
@@ -65,27 +103,52 @@ const ProfileScreen = () => {
       case 'email':
         return (
           <>
-            <Text style={styles.modalTitle}>Edit Email</Text>
-            <TextInput
-              placeholder="Email"
-              style={styles.input}
-              value={email}
-              onChangeText={setEmail}
-              keyboardType="email-address"
-            />
-            <TouchableOpacity
-              style={styles.saveButton}
-              onPress={() => setModalVisible(false)}
-            >
-              <Text style={styles.saveText}>Save Changes</Text>
-            </TouchableOpacity>
+            <Text style={styles.modalTitle}>Change Email</Text>
+
+            {!otpSent ? (
+              <>
+                <TextInput
+                  placeholder="Enter New Email"
+                  style={styles.input}
+                  value={newEmail}
+                  onChangeText={setNewEmail}
+                  keyboardType="email-address"
+                />
+                <TouchableOpacity
+                  style={styles.saveButton}
+                  onPress={handleSendOtp}
+                >
+                  <Text style={styles.saveText}>Send OTP</Text>
+                </TouchableOpacity>
+              </>
+            ) : (
+              <>
+                <Text style={{ marginBottom: 8 }}>OTP sent to: {newEmail}</Text>
+                <TextInput
+                  placeholder="Enter OTP"
+                  style={styles.input}
+                  keyboardType="numeric"
+                  value={otp}
+                  maxLength={4}
+                  onChangeText={text => setOtp(text.replace(/[^0-9]/g, ''))}
+                />
+
+                <TouchableOpacity
+                  style={styles.saveButton}
+                  onPress={handleVerifyOtp}
+                >
+                  <Text style={styles.saveText}>Verify & Save</Text>
+                </TouchableOpacity>
+              </>
+            )}
           </>
         );
+
       case 'gender':
         return (
           <>
             <Text style={styles.modalTitle}>Select Gender</Text>
-            {genderOptions.map((option) => (
+            {genderOptions.map(option => (
               <TouchableOpacity
                 key={option}
                 style={styles.genderOption}
@@ -121,7 +184,11 @@ const ProfileScreen = () => {
               value={`${firstName} ${lastName}`}
               onPress={() => handleOpenModal('name')}
             />
-            <ProfileItem icon="phone" label="Phone Number" value="+91 98765 43210" />
+            <ProfileItem
+              icon="phone"
+              label="Phone Number"
+              value="+91 98765 43210"
+            />
             <ProfileItem
               icon="mail"
               label="Email"
@@ -140,17 +207,16 @@ const ProfileScreen = () => {
               value={dob.toDateString()}
               onPress={() => setShowDatePicker(true)}
             />
-            <ProfileItem
-              icon="clock"
-              label="Member Since"
-              value="Jan 2023"
-            />
+            <ProfileItem icon="clock" label="Member Since" value="Jan 2023" />
             <Text style={styles.sectionTitle}>Emergency</Text>
             <View style={[styles.row, styles.emergencyRow]}>
               <Feather name="alert-triangle" size={20} color="red" />
               <Text style={styles.label}>Emergency Contact</Text>
               <View style={{ flex: 1 }} />
-              <Text style={styles.redText}>+ Add</Text>
+              <TouchableOpacity onPress={handleAddEmergency}>
+  <Text style={styles.redText}>+ Add</Text>
+</TouchableOpacity>
+
             </View>
           </>
         }
@@ -161,9 +227,27 @@ const ProfileScreen = () => {
 
       {/* Modal */}
       <Modal visible={modalVisible} transparent animationType="slide">
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContainer}>{renderModalContent()}</View>
+        <TouchableOpacity
+  activeOpacity={1}
+  style={styles.modalOverlay}
+  onPress={() => setModalVisible(false)}
+>
+  <TouchableOpacity
+    activeOpacity={1}
+    style={styles.modalContainer}
+    onPress={() => {}} // prevent propagation
+  >
+    {renderModalContent()}
+  </TouchableOpacity>
+</TouchableOpacity>
+        {/* Custom Alert ABOVE modal layer */}
+    {customAlert.visible && (
+      <View style={styles.absoluteAlert}>
+        <View style={styles.customAlert}>
+          <Text style={styles.alertText}>{customAlert.message}</Text>
         </View>
+      </View>
+    )}
       </Modal>
 
       {/* Date Picker */}
@@ -176,7 +260,9 @@ const ProfileScreen = () => {
           maximumDate={new Date()}
         />
       )}
+
     </View>
+    
   );
 };
 
@@ -201,8 +287,30 @@ const ProfileItem = ({
 );
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#fff', paddingTop: 60, paddingHorizontal: 16 },
-  sectionTitle: { fontSize: 16, fontWeight: '600', color: '#888', marginBottom: 10, marginTop: 20 },
+  absoluteAlert: {
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  right: 0,
+  bottom: 0,
+  zIndex: 9999,
+  justifyContent: 'flex-end', // alert at bottom
+  alignItems: 'center',
+},
+
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    paddingTop: 60,
+    paddingHorizontal: 16,
+  },
+  sectionTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#888',
+    marginBottom: 10,
+    marginTop: 20,
+  },
   row: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -216,7 +324,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   label: { marginLeft: 10, fontSize: 15, color: '#444' },
-  value: { fontSize: 15, fontWeight: '500', color: '#000', marginHorizontal: 10 },
+  value: {
+    fontSize: 15,
+    fontWeight: '500',
+    color: '#000',
+    marginHorizontal: 10,
+  },
   redText: { color: 'red', fontWeight: '600' },
 
   modalOverlay: {
@@ -249,6 +362,27 @@ const styles = StyleSheet.create({
     padding: 12,
     borderBottomWidth: 1,
     borderBottomColor: '#eee',
+  },
+  customAlert: {
+    position: 'absolute',
+    bottom: 240,
+    // left: 20,
+    // right: 20,
+    backgroundColor: '#333',
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#000',
+    shadowOpacity: 0.2,
+    shadowOffset: { width: 0, height: 2 },
+    elevation: 5,
+    zIndex: 1000,
+  },
+  alertText: {
+    color: '#fff',
+    fontSize: 14,
   },
 });
 
