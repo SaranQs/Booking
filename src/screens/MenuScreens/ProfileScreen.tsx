@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
 import DateTimePicker from '@react-native-community/datetimepicker';
-
+import Colors from '../../constants/colors';
 const ProfileScreen = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [modalType, setModalType] = useState('');
@@ -278,7 +278,7 @@ const ProfileItem = ({
   onPress?: () => void;
 }) => (
   <TouchableOpacity style={styles.row} onPress={onPress}>
-    <Feather name={icon} size={20} color="#888" />
+    <Feather name={icon} size={20} color="#000" />
     <Text style={styles.label}>{label}</Text>
     <View style={{ flex: 1 }} />
     <Text style={styles.value}>{value}</Text>
@@ -300,34 +300,34 @@ const styles = StyleSheet.create({
 
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: Colors.white,
     paddingTop: 60,
     paddingHorizontal: 16,
   },
   sectionTitle: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#888',
+    color: Colors.black,
     marginBottom: 10,
     marginTop: 20,
   },
   row: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 14,
+    paddingVertical: 20,
     borderBottomWidth: 1,
-    borderBottomColor: '#eee',
+    borderBottomColor: Colors.borderGray,
   },
   emergencyRow: {
-    backgroundColor: '#fef3f3',
+    backgroundColor: Colors.lightRed,
     borderRadius: 8,
     paddingHorizontal: 10,
   },
-  label: { marginLeft: 10, fontSize: 15, color: '#444' },
+  label: { marginLeft: 10, fontSize: 15, color: Colors.black },
   value: {
     fontSize: 15,
     fontWeight: '500',
-    color: '#000',
+    color: Colors.black,
     marginHorizontal: 10,
   },
   redText: { color: 'red', fontWeight: '600' },
@@ -338,10 +338,10 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0,0,0,0.4)',
   },
   modalContainer: {
-    backgroundColor: '#fff',
+    backgroundColor: Colors.white,
     padding: 20,
-    borderTopLeftRadius: 16,
-    borderTopRightRadius: 16,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
   },
   modalTitle: { fontSize: 18, fontWeight: '600', marginBottom: 16 },
   input: {
@@ -352,36 +352,36 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   saveButton: {
-    backgroundColor: '#2ecc71',
+    backgroundColor: Colors.black,
     paddingVertical: 12,
     borderRadius: 8,
     alignItems: 'center',
   },
-  saveText: { color: '#fff', fontSize: 16, fontWeight: '600' },
+  saveText: { color: Colors.white, fontSize: 16, fontWeight: '600' },
   genderOption: {
     padding: 12,
     borderBottomWidth: 1,
-    borderBottomColor: '#eee',
+    borderBottomColor: Colors.borderGray,
   },
   customAlert: {
     position: 'absolute',
     bottom: 240,
     // left: 20,
     // right: 20,
-    backgroundColor: '#333',
+    backgroundColor: Colors.darkGray,
     paddingVertical: 12,
     paddingHorizontal: 20,
     borderRadius: 10,
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: '#000',
+    shadowColor: Colors.black,
     shadowOpacity: 0.2,
     shadowOffset: { width: 0, height: 2 },
     elevation: 5,
     zIndex: 1000,
   },
   alertText: {
-    color: '#fff',
+    color: Colors.white,
     fontSize: 14,
   },
 });

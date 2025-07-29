@@ -6,7 +6,7 @@ import {
   StyleSheet,
   Image,
 } from 'react-native';
-
+import Colors from '../../constants/colors'; // Adjust the path as necessary
 const rideTypes = [
   { type: 'Bike', image: require('../../assets/bike.png') },
   { type: 'Auto', image: require('../../assets/auto.png') },
@@ -14,8 +14,9 @@ const rideTypes = [
   { type: 'Parcel', image: require('../../assets/parcel.png') },
 ];
 
+
 const RideTypeSwitcher = ({ onSelect }: { onSelect: (type: string) => void }) => {
-  const [selected, setSelected] = useState('Bike');
+  const [selected, setSelected] = useState('');
 
   return (
     <View style={styles.container}>
@@ -51,21 +52,21 @@ const styles = StyleSheet.create({
   },
   optionBox: {
     width: '48%',
-    backgroundColor: '#f2f2f2',
+    backgroundColor: '#fff8cc',
     borderRadius: 16,
     alignItems: 'center',
     paddingVertical: 14,
-    borderWidth: 2,
-    borderColor: '#000',
+    borderWidth: 1.5,
+    borderColor: Colors.black,
     marginBottom: 10,
-    shadowColor: '#000',
+    shadowColor: Colors.darkGray,
     shadowOpacity: 0.1,
     shadowRadius: 4,
     shadowOffset: { width: 0, height: 2 },
     elevation: 4,
   },
   activeOptionBox: {
-    backgroundColor: '#f8c32fff',
+    backgroundColor: Colors.gold,
   },
   image: {
     width: 40,
@@ -75,11 +76,11 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 14,
-    color: '#333',
+    color: Colors.darkGray,
     fontWeight: '600',
   },
   activeText: {
-    color: '#000',
+    color: Colors.black,
   },
 });
 

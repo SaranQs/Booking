@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-
+import Colors from '../../constants/colors';
 const WalletScreen = () => {
   const handlePress = (label: string) => {
     console.log(`Pressed: ${label}`);
@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 16,
     paddingTop: 60,
-    backgroundColor: '#fff',
+    backgroundColor: Colors.white,
   },
   section: {
     marginBottom: 28,
@@ -101,11 +101,11 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#666',
+    color: Colors.black,
     marginBottom: 10,
   },
   walletCard: {
-    backgroundColor: '#f9f9f9',
+    backgroundColor: Colors.lightGray,
     padding: 14,
     borderRadius: 10,
     marginBottom: 10,
@@ -116,7 +116,7 @@ const styles = StyleSheet.create({
   walletTitle: {
     fontSize: 15,
     fontWeight: '500',
-    color: '#333',
+    color: Colors.darkGray,
   },
   walletRight: {
     alignItems: 'flex-end',
@@ -124,26 +124,27 @@ const styles = StyleSheet.create({
   balanceText: {
     fontSize: 15,
     fontWeight: 'bold',
-    color: '#000',
+    color: Colors.black,
     marginBottom: 4,
   },
   addMoneyBtn: {
-    backgroundColor: '#007BFF',
+    backgroundColor: Colors.black,
     paddingVertical: 4,
+    marginTop: 4,
     paddingHorizontal: 8,
     borderRadius: 6,
   },
   addMoneyText: {
-    color: '#fff',
+    color: Colors.white,
     fontSize: 12,
   },
   linkText: {
-    color: '#007BFF',
+    color: Colors.black,
     fontWeight: '600',
     fontSize: 14,
   },
   payLaterCard: {
-    backgroundColor: '#eee',
+    backgroundColor: Colors.lightGray,
     borderRadius: 10,
     padding: 14,
     flexDirection: 'row',
@@ -156,11 +157,11 @@ const styles = StyleSheet.create({
   },
   payLaterDesc: {
     fontSize: 13,
-    color: '#555',
+    color: Colors.gray,
     maxWidth: '90%',
   },
   faqItem: {
-    backgroundColor: '#f9f9f9',
+    backgroundColor: Colors.lightGray,
     paddingVertical: 14,
     paddingHorizontal: 12,
     borderRadius: 8,
@@ -179,7 +180,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   passbookText: {
-    color: '#007BFF',
+    color: Colors.black,
     fontSize: 14,
     fontWeight: '500',
   },

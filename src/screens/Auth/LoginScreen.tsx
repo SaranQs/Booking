@@ -12,6 +12,7 @@ import {
 import LinearGradient from 'react-native-linear-gradient';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../navigation/AppNavigator';
+import Colors from '../../constants/colors';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Login'>;
 
@@ -31,7 +32,7 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
 
   return (
     <LinearGradient
-      colors={['#FFD700', '#fde77cff']} // gold to yellow
+      colors={[Colors.gold, Colors.yellow]}
       start={{ x: 0, y: 0 }}
       end={{ x: 1, y: 1 }}
       style={styles.gradient}
@@ -72,7 +73,6 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
           </View>
         </TouchableOpacity>
 
-
         <TouchableOpacity onPress={() => navigation.navigate('Signup')}>
           <Text style={styles.linkText}>New user? Sign up</Text>
         </TouchableOpacity>
@@ -89,58 +89,46 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 24,
     justifyContent: 'center',
-    backgroundColor: '#fff',
+    backgroundColor: Colors.white,
   },
   logoText: {
     fontSize: 32,
     fontWeight: 'bold',
-    color: '#000',
+    color: Colors.black,
     textAlign: 'center',
     marginBottom: 20,
   },
-  btnContent: {
-  flexDirection: 'row',
-  alignItems: 'center',
-  justifyContent: 'center',
-},
-
-icon: {
-  width: 20,
-  height: 20,
-  marginRight: 8,
-},
-
   title: {
     fontSize: 20,
     fontWeight: '600',
     textAlign: 'center',
     marginBottom: 6,
-    color: '#000',
+    color: Colors.black,
   },
   subtitle: {
     fontSize: 14,
     textAlign: 'center',
-    color: 'gray',
+    color: Colors.gray,
     marginBottom: 20,
   },
   input: {
     height: 50,
-    backgroundColor: '#fff',
-    borderColor: '#ccc',
+    backgroundColor: Colors.white,
+    borderColor: Colors.gray,
     borderWidth: 1,
     borderRadius: 8,
     paddingHorizontal: 12,
     fontSize: 16,
   },
   errorText: {
-    color: 'red',
+    color: Colors.red,
     fontSize: 13,
     marginTop: 6,
     marginBottom: 10,
     textAlign: 'center',
   },
   btn: {
-    backgroundColor: '#000',
+    backgroundColor: Colors.black,
     height: 50,
     borderRadius: 8,
     justifyContent: 'center',
@@ -148,15 +136,25 @@ icon: {
     marginTop: 10,
     marginBottom: 15,
   },
+  btnContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   btnText: {
     fontSize: 16,
-    color: '#fff',
+    color: Colors.white,
     fontWeight: 'bold',
+  },
+  icon: {
+    width: 20,
+    height: 20,
+    marginRight: 8,
   },
   linkText: {
     fontSize: 14,
     textAlign: 'center',
-    color: 'gray',
+    color: Colors.gray,
   },
 });
 

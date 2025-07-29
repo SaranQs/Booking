@@ -9,7 +9,7 @@ import {
   TextInput,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
-
+import Colors from '../../constants/colors';
 const initialPlaces = [
   {
     id: '1',
@@ -270,7 +270,7 @@ const styles = StyleSheet.create({
   },
   confirmBox: {
     width: '80%',
-    backgroundColor: '#fff',
+    backgroundColor: Colors.white,
     padding: 20,
     borderRadius: 10,
     elevation: 5,
@@ -279,11 +279,11 @@ const styles = StyleSheet.create({
   container: {
     padding: 16,
     paddingTop: 60,
-    backgroundColor: '#fff',
+    backgroundColor: Colors.white,
     flex: 1,
   },
   card: {
-    backgroundColor: '#f7f7f7',
+    backgroundColor: Colors.lightGray,
     borderRadius: 10,
     padding: 14,
     flexDirection: 'row',
@@ -302,7 +302,7 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   address: {
-    color: '#666',
+    color: Colors.gray,
     fontSize: 13,
   },
   actions: {
@@ -313,7 +313,7 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   addButton: {
-    backgroundColor: '#000',
+    backgroundColor: Colors.black,
     borderRadius: 30,
     flexDirection: 'row',
     alignItems: 'center',
@@ -322,13 +322,13 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   addText: {
-    color: '#fff',
+    color: Colors.white,
     marginLeft: 8,
     fontWeight: '600',
   },
   modalContainer: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: Colors.white,
 
   },
   mapPlaceholder: {
@@ -340,7 +340,7 @@ const styles = StyleSheet.create({
   modalContent: {
     flex: 3,
     padding: 16,
-    backgroundColor: '#fff',
+    backgroundColor: Colors.white,
     borderTopLeftRadius: 16,
     borderTopRightRadius: 16,
     elevation: 4,
@@ -362,7 +362,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     padding:6,
     borderRadius: 100,
-    color: '#000',
+    color: Colors.black,
     fontWeight: '600',
   },
   input: {
@@ -374,13 +374,13 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   updateBtn: {
-    backgroundColor: '#000',
+    backgroundColor: Colors.black,
     paddingVertical: 12,
     borderRadius: 10,
     alignItems: 'center',
   },
   updateBtnText: {
-    color: '#fff',
+    color: Colors.white,
     fontWeight: '700',
   },
 });

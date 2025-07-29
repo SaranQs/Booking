@@ -9,7 +9,7 @@ import {
 import Icon from 'react-native-vector-icons/Feather';
 import { useNavigation } from '@react-navigation/native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-
+import Colors from '../../constants/colors';
 const getRideTypeDetails = (type: string) => {
   switch (type) {
     case 'bike':
@@ -24,6 +24,12 @@ const getRideTypeDetails = (type: string) => {
       return {
         label: 'Taxi Ride',
         icon: <MaterialCommunityIcons name="car" size={22} color="#000" />,
+        bgColor: '#fff',
+      };
+    case 'auto':
+      return {
+        label: 'Auto Ride',
+        icon: <MaterialCommunityIcons name="rickshaw" size={22} color="#000" />,
         bgColor: '#fff',
       };
     case 'parcel':
@@ -153,7 +159,7 @@ const RideDetailScreen = ({ route }: any) => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#F8F8F8' },
+  container: { flex: 1, backgroundColor: Colors.white },
 
   rideHeader: {
     flexDirection: 'row',
@@ -163,7 +169,7 @@ const styles = StyleSheet.create({
     paddingTop: 50,
   },
   rideTypeIcon: {
-    backgroundColor: '#00000030',
+    backgroundColor: Colors.borderGray,
     borderRadius: 30,
     padding: 10,
     marginRight: 12,
@@ -171,11 +177,11 @@ const styles = StyleSheet.create({
   rideTitle: {
     fontSize: 16,
     fontWeight: '700',
-    color: '#000',
+    color: Colors.black,
     textAlign: 'center',
   },
-  rideDate: { fontSize: 12, color: '#000', marginTop: 2 },
-  ridePrice: { fontSize: 20, fontWeight: 'bold', color: '#000' },
+  rideDate: { fontSize: 12, color: Colors.gray, marginTop: 2 },
+  ridePrice: { fontSize: 20, fontWeight: 'bold', color: Colors.black },
 
   titleRow: {
     flexDirection: 'row',
@@ -188,11 +194,11 @@ const styles = StyleSheet.create({
   cardTitle: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#222',
+    color: Colors.black,
   },
 
   card: {
-    backgroundColor: '#fff',
+    backgroundColor: Colors.white,
     marginHorizontal: 14,
     marginBottom: 12,
     padding: 16,
@@ -214,7 +220,7 @@ const styles = StyleSheet.create({
     marginTop: 2,
   },
   subLabel: { fontSize: 13, color: '#aaa' },
-  subValue: { fontSize: 13, color: '#333' },
+  subValue: { fontSize: 13, color: Colors.darkGray },
 
   routeSection: {
     flexDirection: 'row',
@@ -246,19 +252,19 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   verticalLine: {
-    height: 30,
+    height: 20,
+    borderStyle: 'dashed',
     borderLeftWidth: 2,
     borderColor: '#ccc',
     marginVertical: 4,
   },
   addressWrapper: {
     justifyContent: 'space-between',
-    paddingVertical: 2,
   },
   addressText: {
     fontSize: 14,
-    color: '#333',
-    marginBottom: 12,
+    color: Colors.black,
+    marginBottom: 14,
   },
 
   emailButton: {

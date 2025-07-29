@@ -13,13 +13,13 @@ import SupportScreen from '../screens/MenuScreens/SupportScreen';
 import Profile from '../screens/MenuScreens/ProfileScreen';
 import Favoutires from '../screens/MenuScreens/FavoutiresScreen';
 import Preferences from '../screens/MenuScreens/PreferencesScreen';
-import MyRating from '../screens/MenuScreens/MyRatingScreen';
 import RideDetails from '../screens/MenuScreens/RideDetailScreen';
 import AboutScreen from '../screens/MenuScreens/AboutScreen';
 import Parcel from '../screens/MenuScreens/ParcelScreen';
 import AddressEntry from '../screens/Home/AddressEntryScreen';
 import Safety from '../screens/MenuScreens/SafetyScreen';
-
+import ReferAndEarn from '../screens/MenuScreens/ReferAndEarnScreen'; // Importing the new screen
+import MyRewards from '../screens/MenuScreens/MyRewardsScreen';
 export type RootStackParamList = {
   Login: undefined;
   Otp: undefined;
@@ -32,12 +32,13 @@ export type RootStackParamList = {
   Profile: undefined;
   Favourites: undefined;
   Preferences: undefined;
-  MyRating: undefined;
   RideDetails: undefined;
   About: undefined;
   Parcel: undefined;
   AddressEntry: undefined;
   Safety: undefined;
+  ReferAndEarn: undefined;
+  MyRewards: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -123,7 +124,7 @@ const AppNavigator = () => {
             headerTitle: 'Favoutires',
           }}
         />
-        <Stack.Screen
+        {/* <Stack.Screen
           name="MyRating"
           component={MyRating}
           options={{
@@ -132,7 +133,7 @@ const AppNavigator = () => {
             headerTitleStyle: { color: '#000' },
             headerTitle: 'My Rating',
           }}
-        />
+        /> */}
         <Stack.Screen
           name="RideDetails"
           component={RideDetails}
@@ -171,6 +172,26 @@ const AppNavigator = () => {
             headerTransparent: true,
             headerTitleStyle: { color: '#000' },
             headerTitle: 'Safety',
+          }}
+        />
+        <Stack.Screen
+          name="ReferAndEarn"
+          component={ReferAndEarn}
+          options={{
+            headerShown: true,
+            headerTransparent: true,
+            headerTitleStyle: { color: '#000' },
+            headerTitle: 'Refer and Earn',
+          }}
+        />
+        <Stack.Screen
+          name="MyRewards"
+          component={MyRewards}
+          options={{
+            headerShown: true,
+            headerTransparent: true,
+            headerTitleStyle: { color: '#000' },
+            headerTitle: 'My Rewards',
           }}
         />
 

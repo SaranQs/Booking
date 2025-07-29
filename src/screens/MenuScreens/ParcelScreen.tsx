@@ -14,7 +14,7 @@ import Feather from 'react-native-vector-icons/Feather';
 import Entypo from 'react-native-vector-icons/Entypo';
 // import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-
+import Colors from '../../constants/colors'
 // const screenHeight = Dimensions.get('window').height;
 
 const ParcelScreen = () => {
@@ -74,13 +74,13 @@ const ParcelScreen = () => {
           </View>
         )}
 
-        <Text style={styles.subInfo}>John Doe · +91 9876543210</Text>
+        <Text style={styles.subInfo}>John Doe: +91 9876543210</Text>
       </View>
 
       {/* Switch Button */}
       <TouchableOpacity style={styles.switchWrapper} onPress={handleSwitch}>
-        <Feather name="repeat" size={22} color="#000" />
-        <Text style={{ color: '#000', fontSize: 16 }}>Switch</Text>
+        <Feather name="repeat" size={22} color="#fff" />
+        <Text style={{ color: '#fff', fontSize: 16 }}>Switch</Text>
       </TouchableOpacity>
 
       {/* Drop Section */}
@@ -221,7 +221,7 @@ const ParcelScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: Colors.white,
     padding: 16,
     paddingTop: 60,
   },
@@ -232,7 +232,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   locationBox: {
-    backgroundColor: '#f2f2f2',
+    backgroundColor: Colors.lightGray,
     padding: 16,
     borderRadius: 10,
     marginBottom: 16,
@@ -249,12 +249,12 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#333',
+    color: Colors.darkGray,
     marginLeft: 4,
   },
   subInfo: {
     fontSize: 14,
-    color: '#777',
+    color: Colors.gray,
     marginTop: 4,
   },
   switchWrapper: {
@@ -266,19 +266,19 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     gap: 10,
     borderRadius: 50,
-    backgroundColor: '#f2f2f2',
+    backgroundColor: Colors.black,
     marginBottom: 15,
   },
   searchContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#fff',
+    backgroundColor: Colors.white,
     borderRadius: 80,
     paddingHorizontal: 12,
     paddingVertical: 8,
     marginTop: 8,
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: Colors.borderGray,
   },
   searchInput: {
     flex: 1,
@@ -286,13 +286,13 @@ const styles = StyleSheet.create({
   },
   staticText: {
     fontSize: 15,
-    color: '#000',
+    color: Colors.black,
     marginTop: 8,
     paddingHorizontal: 4,
   },
   modalWrapper: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: Colors.white,
     borderTopLeftRadius: 18,
     borderTopRightRadius: 18,
   },
@@ -304,7 +304,7 @@ const styles = StyleSheet.create({
   handle: {
     width: 50,
     height: 5,
-    backgroundColor: '#ccc',
+    backgroundColor: Colors.borderGray,
     borderRadius: 10,
     alignSelf: 'center',
     marginVertical: 10,
@@ -322,13 +322,13 @@ const styles = StyleSheet.create({
   inputRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    borderColor: '#ddd',
+    borderColor: Colors.borderGray,
     borderWidth: 1,
     borderRadius: 8,
     marginBottom: 14,
-    color: '#000',
+    color: Colors.black,
     paddingHorizontal: 10,
-    backgroundColor: '#fafafa',
+    backgroundColor: Colors.lightGray,
   },
   iconLeft: {
     marginRight: 10,
@@ -336,14 +336,14 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     height: 44,
-     color: '#000',
+     color: Colors.black,
     fontSize: 15,
   },
   sectionTitle: {
     fontWeight: '700',
     fontSize: 16,
     marginBottom: 10,
-    color: '#000',
+    color: Colors.black,
   },
   contactsBtn: {
     fontSize: 14,
@@ -352,7 +352,7 @@ const styles = StyleSheet.create({
   },
 
   confirmBtn: {
-    backgroundColor: '#000',
+    backgroundColor: Colors.black,
     paddingVertical: 14,
     borderRadius: 10,
     alignItems: 'center',
@@ -360,7 +360,7 @@ const styles = StyleSheet.create({
   },
 
   confirmBtnText: {
-    color: '#fff',
+    color: Colors.white,
     fontSize: 16,
     fontWeight: '600',
   },

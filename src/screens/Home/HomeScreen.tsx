@@ -12,7 +12,7 @@ import {
 
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-
+import Colors from '../../constants/colors';
 import * as Animatable from 'react-native-animatable';
 import Feather from 'react-native-vector-icons/Feather';
 import LinearGradient from 'react-native-linear-gradient';
@@ -31,12 +31,12 @@ const HomeScreen = () => {
     Profile: undefined;
     Favourites: undefined;
     Preferences: undefined;
-    MyRating: undefined;
     RideDetails: undefined;
     About: undefined;
     Parcel: undefined;
     AddressEntry: undefined;
     Safety: undefined;
+    MyRewards: undefined;
   };
   const [selectedRide, setSelectedRide] = useState('Bike');
   const [showDrawer, setShowDrawer] = useState(false);
@@ -334,6 +334,46 @@ const HomeScreen = () => {
                 style={{ marginLeft: 'auto' }}
               />
             </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.drawerItem}
+              onPress={() => {
+                (navigation as any).navigate('ReferAndEarn');
+              }}
+            >
+              <Feather
+                name="gift"
+                size={18}
+                color="#666"
+                style={styles.drawerIcon}
+              />
+              <Text style={styles.drawerLabel}>Refer and Earn</Text>
+              <Feather
+                name="chevron-right"
+                size={20}
+                color="#888"
+                style={{ marginLeft: 'auto' }}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.drawerItem}
+              onPress={() => {
+                (navigation as any).navigate('MyRewards');
+              }}
+            >
+              <Feather
+                name="award"
+                size={18}
+                color="#666"
+                style={styles.drawerIcon}
+              />
+              <Text style={styles.drawerLabel}>My Rewards</Text>
+              <Feather
+                name="chevron-right"
+                size={20}
+                color="#888"
+                style={{ marginLeft: 'auto' }}
+              />
+            </TouchableOpacity>
 
             <TouchableOpacity
               style={styles.drawerItem}
@@ -400,7 +440,7 @@ const styles = StyleSheet.create({
     marginRight: 12,
   },
   fakeInput: {
-    color: '#666',
+    color: Colors.gray,
     fontSize: 14,
     paddingLeft: 8,
   },
@@ -408,13 +448,13 @@ const styles = StyleSheet.create({
   recentTitle: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#333',
+    color: Colors.darkGray,
     marginBottom: 10,
   },
   rideRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#fff',
+    backgroundColor: Colors.white,
     padding: 12,
     borderRadius: 12,
     elevation: 2,
@@ -423,11 +463,11 @@ const styles = StyleSheet.create({
   ridePlace: {
     fontSize: 15,
     fontWeight: '600',
-    color: '#000',
+    color: Colors.black,
   },
   rideAddress: {
     fontSize: 13,
-    color: '#555',
+    color: Colors.gray,
   },
   exploreSection: {
     marginBottom: 30,
@@ -435,14 +475,14 @@ const styles = StyleSheet.create({
   exploreTitle: {
     fontSize: 18,
     fontWeight: '700',
-    color: '#333',
+    color: Colors.black,
     marginBottom: 12,
   },
 
   gradient: { flex: 1 },
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: Colors.white,
   },
   scroll: {
     padding: 20,
@@ -457,7 +497,7 @@ const styles = StyleSheet.create({
   searchContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#f1f1f1',
+    backgroundColor: Colors.lightGray,
     borderRadius: 120,
     flex: 1,
     marginLeft: 5,
@@ -468,61 +508,31 @@ const styles = StyleSheet.create({
     flex: 1,
     borderRadius: 12,
     fontSize: 14,
-    color: '#000',
+    color: Colors.black,
   },
   searchIcon: { marginLeft: 8 },
   inputContainer: { marginBottom: 25 },
-  input: {
-    backgroundColor: '#f1f1f1',
-    borderRadius: 120,
-    padding: 14,
-    fontSize: 15,
-    color: '#000',
-    marginBottom: 14,
-    elevation: 6,
-  },
-  mapPlaceholderContainer: {
-    height: 200,
-    borderRadius: 16,
-    overflow: 'hidden',
-    marginBottom: 25,
-    backgroundColor: '#e6e6e6',
-    borderWidth: 1,
-    borderColor: '#ccc',
-    position: 'relative',
-  },
-  mapImage: { width: '100%', height: '100%' },
-  mapOverlay: {
-    position: 'absolute',
-    bottom: 10,
-    left: 10,
-    backgroundColor: 'rgba(0,0,0,0.6)',
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 8,
-  },
-  mapOverlayText: { color: '#fff', fontSize: 12 },
   imageContainer: { alignItems: 'center' },
   vehicleImage: { width: 150, height: 100 },
-  fareCard: {
-    backgroundColor: '#fff',
-    borderRadius: 16,
-    paddingVertical: 18,
-    paddingHorizontal: 24,
-    alignItems: 'center',
-    elevation: 6,
-    marginBottom: 25,
-  },
-  fareTitle: { fontSize: 14, color: '#999' },
-  fare: { fontSize: 20, fontWeight: 'bold', color: '#333', marginTop: 4 },
-  bookButton: {
-    backgroundColor: '#000',
-    paddingVertical: 16,
-    borderRadius: 14,
-    alignItems: 'center',
-    elevation: 6,
-  },
-  bookButtonText: { color: '#fff', fontSize: 16, fontWeight: 'bold' },
+  // fareCard: {
+  //   backgroundColor: '#fff',
+  //   borderRadius: 16,
+  //   paddingVertical: 18,
+  //   paddingHorizontal: 24,
+  //   alignItems: 'center',
+  //   elevation: 6,
+  //   marginBottom: 25,
+  // },
+  // fareTitle: { fontSize: 14, color: '#999' },
+  // fare: { fontSize: 20, fontWeight: 'bold', color: '#333', marginTop: 4 },
+  // bookButton: {
+  //   backgroundColor: '#000',
+  //   paddingVertical: 16,
+  //   borderRadius: 14,
+  //   alignItems: 'center',
+  //   elevation: 6,
+  // },
+  // bookButtonText: { color: '#fff', fontSize: 16, fontWeight: 'bold' },
 
   // Drawer styles
   drawerOverlay: {
@@ -535,21 +545,21 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
   },
   drawer: {
-    backgroundColor: '#fff',
+    backgroundColor: Colors.white,
     width: '100%',
     height: '100%',
     paddingHorizontal: 20,
     paddingTop: 20,
   },
-  closeDrawerBtn: {
-    position: 'absolute',
-    top: 20,
-    right: 15,
-  },
-  closeText: {
-    fontSize: 28,
-    color: '#888',
-  },
+  // closeDrawerBtn: {
+  //   position: 'absolute',
+  //   top: 20,
+  //   right: 15,
+  // },
+  // closeText: {
+  //   fontSize: 28,
+  //   color: '#888',
+  // },
   profileRow: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -567,11 +577,11 @@ const styles = StyleSheet.create({
   drawerName: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#000',
+    color: Colors.black,
   },
   drawerPhone: {
     fontSize: 14,
-    color: '#777',
+    color: Colors.darkGray,
   },
   ratingRow: {
     flexDirection: 'row',
@@ -583,13 +593,13 @@ const styles = StyleSheet.create({
   drawerItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 14,
-    borderBottomColor: '#eee',
+    paddingVertical: 20,
+    borderBottomColor: Colors.borderGray,
     borderBottomWidth: 1,
   },
   drawerLabel: {
     fontSize: 16,
-    color: '#333',
+    color: Colors.black,
   },
   drawerIcon: {
     marginRight: 12,

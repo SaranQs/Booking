@@ -7,9 +7,7 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
-
-
-
+import Colors from '../../constants/colors'; // update the path based on your file structure
 
 const SignupScreen = ({ navigation }: any) => {
   const [mobile, setMobile] = useState('');
@@ -26,10 +24,6 @@ const SignupScreen = ({ navigation }: any) => {
   };
 
   return (
-//     <LinearGradient
-//    colors={['#FFD700', '#fde77cff']} // Customize as needed
-//   style={{ flex: 1 }}
-// >
     <KeyboardAvoidingView
       style={styles.container}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
@@ -49,7 +43,6 @@ const SignupScreen = ({ navigation }: any) => {
         }}
       />
 
-      {/* Error Message Below Input */}
       {errorMessage.length > 0 && (
         <Text style={styles.errorText}>{errorMessage}</Text>
       )}
@@ -62,7 +55,6 @@ const SignupScreen = ({ navigation }: any) => {
         <Text style={styles.linkText}>Already have an account? Login</Text>
       </TouchableOpacity>
     </KeyboardAvoidingView>
-     // </LinearGradient>
   );
 };
 
@@ -71,37 +63,39 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 24,
     justifyContent: 'center',
-    backgroundColor: '#fff',
+    backgroundColor: Colors.white,
   },
   title: {
     fontSize: 24,
     fontWeight: '700',
     textAlign: 'center',
     marginBottom: 12,
+    color: Colors.black,
   },
   subtitle: {
     textAlign: 'center',
     fontSize: 14,
-    color: '#666',
+    color: Colors.gray,
     marginBottom: 20,
   },
   input: {
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: Colors.gray,
     padding: 12,
-    backgroundColor: '#fff',
+    backgroundColor: Colors.white,
     borderRadius: 8,
     fontSize: 16,
+    color: Colors.black,
   },
   errorText: {
-    color: 'red',
+    color: Colors.red,
     fontSize: 13,
     marginTop: 6,
     marginBottom: 10,
     textAlign: 'center',
   },
   btn: {
-    backgroundColor: '#000',
+    backgroundColor: Colors.black,
     height: 50,
     borderRadius: 8,
     justifyContent: 'center',
@@ -110,13 +104,13 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   btnText: {
-    color: '#fff',
+    color: Colors.white,
     fontWeight: 'bold',
     fontSize: 16,
   },
   linkText: {
     textAlign: 'center',
-    color: 'gray',
+    color: Colors.gray,
     fontSize: 14,
   },
 });

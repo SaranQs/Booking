@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
-
+import Colors from '../../constants/colors';
 const PreferencesScreen = () => {
   const [prefs, setPrefs] = useState({
     emailPromos: false,
@@ -60,13 +60,13 @@ const styles = StyleSheet.create({
   container: {
     padding: 16,
     paddingTop: 60,
-    backgroundColor: '#fff',
+    backgroundColor: Colors.white,
     flex: 1,
   },
   sectionTitle: {
     fontSize: 15,
     fontWeight: '600',
-    color: '#666',
+    color: Colors.black,
     marginBottom: 8,
     marginTop: 24,
   },
@@ -76,13 +76,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    backgroundColor: '#f9f9f9',
+    backgroundColor: Colors.lightGray,
     marginBottom: 10,
     borderRadius: 8,
   },
   itemText: {
     fontSize: 15,
-    color: '#333',
+    color: Colors.black,
     flex: 1,
   },
   checkbox: {

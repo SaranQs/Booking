@@ -6,7 +6,7 @@ import {
   ScrollView,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
-
+import Colors from '../../constants/colors';
 const aboutItems = [
   { label: 'Privacy Policy', onPress: () => console.log('Privacy Policy') },
   { label: 'Terms and Conditions', onPress: () => console.log('Terms and Conditions') },
@@ -37,17 +37,17 @@ const styles = StyleSheet.create({
   container: {
     padding: 16,
     paddingTop: 60,
-    backgroundColor: '#fff',
+    backgroundColor: Colors.white,
     flexGrow: 1,
   },
   title: {
     fontSize: 18,
     fontWeight: '700',
     marginBottom: 16,
-    color: '#000',
+    color: Colors.black,
   },
   item: {
-    backgroundColor: '#f9f9f9',
+    backgroundColor: Colors.lightGray,
     paddingVertical: 14,
     paddingHorizontal: 12,
     borderRadius: 8,
@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
   },
   itemText: {
     fontSize: 15,
-    color: '#333',
+    color: Colors.black,
   },
 });
 

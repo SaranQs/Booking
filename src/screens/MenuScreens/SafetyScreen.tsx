@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-
+import Colors from '../../constants/colors';
 const safetyItems = [
   {
     icon: <MaterialCommunityIcons name="alert-octagon-outline" size={24} color="#000" />,
@@ -29,7 +29,7 @@ const safetyItems = [
 const SafetyScreen = () => {
   return (
     <ScrollView style={styles.container}>
-      <Text style={styles.header}>Your Safety is Our Priority</Text>
+      
       {safetyItems.map((item, index) => (
         <TouchableOpacity key={index} style={styles.card}>
           <View style={styles.iconWrapper}>{item.icon}</View>
@@ -47,18 +47,12 @@ const SafetyScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F8F9FA',
+    backgroundColor: Colors.white,
     paddingTop: 60,
-    paddingHorizontal: 16,
-  },
-  header: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 16,
-    color: '#222',
+    padding: 16,
   },
   card: {
-    backgroundColor: '#fff',
+    backgroundColor: Colors.lightGray,
     borderRadius: 12,
     padding: 14,
     flexDirection: 'row',
@@ -67,7 +61,6 @@ const styles = StyleSheet.create({
     elevation: 1,
   },
   iconWrapper: {
-    
     padding: 10,
     borderRadius: 10,
     marginRight: 12,
@@ -82,7 +75,7 @@ const styles = StyleSheet.create({
   },
   cardSub: {
     fontSize: 13,
-    color: '#666',
+    color: Colors.gray,
     marginTop: 2,
   },
 });

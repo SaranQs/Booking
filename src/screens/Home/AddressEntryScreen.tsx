@@ -10,7 +10,7 @@ import {
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Feather from 'react-native-vector-icons/Feather';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-
+import Colors from '../../constants/colors';
 const data = [
   { id: '1', title: 'Home', subtitle: '157, S W Boag Rd, T Nagar, CIT Nagar East', icon: 'home' },
   { id: '2', title: 'Work', subtitle: 'RMZ Millenia Business Park, Perungudi', icon: 'briefcase' },
@@ -119,9 +119,9 @@ const AddressEntryScreen = () => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#fff', padding: 16, paddingTop: 60 },
+  container: { flex: 1, backgroundColor: Colors.white, padding: 16, paddingTop: 60 },
   addressCard: {
-    backgroundColor: '#F6F7FB',
+    backgroundColor: Colors.backgroundWhite,
     borderRadius: 12,
     padding: 14,
     marginBottom: 16,
@@ -129,7 +129,6 @@ const styles = StyleSheet.create({
   addressRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 8,
   },
   dotOuter: {
     width: 16,
@@ -146,17 +145,17 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   dashedLine: {
-    height: 12,
+    height: 15,
     borderLeftWidth: 1.5,
     borderColor: '#ccc',
     borderStyle: 'dashed',
     marginLeft: 7,
-    marginVertical: 8,
+    marginVertical: 2,
   },
   inputWrapper: {
     flex: 1,
     position: 'relative',
-    backgroundColor: '#f6f7fb',
+    backgroundColor: Colors.backgroundWhite,
     borderRadius: 6,
     borderWidth: 1,
     borderColor: 'transparent',
@@ -166,13 +165,13 @@ const styles = StyleSheet.create({
   input: {
     fontSize: 14,
     fontWeight: '500',
-    color: '#000',
+    color: Colors.black,
     paddingRight: 24,
   },
   clearIcon: {
     position: 'absolute',
     right: 8,
-    top: 10,
+    top: 13,
   },
   actionsRow: {
     flexDirection: 'row',
@@ -200,7 +199,7 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
     alignItems: 'center',
     borderBottomWidth: 1,
-    borderColor: '#eee',
+    borderColor: Colors.borderGray,
   },
   listIcon: {
     width: 28,
@@ -210,11 +209,11 @@ const styles = StyleSheet.create({
   itemTitle: {
     fontSize: 15,
     fontWeight: '700',
-    color: '#1A1A1A',
+    color: Colors.black,
   },
   itemSubtitle: {
     fontSize: 13,
-    color: '#666',
+    color: Colors.gray,
   },
 });
 

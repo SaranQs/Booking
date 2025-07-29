@@ -9,7 +9,7 @@ import {
 import Icon from 'react-native-vector-icons/Feather';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-
+import Colors from '../../constants/colors';
 type RootStackParamList = {
   Login: undefined;
   Otp: undefined;
@@ -22,7 +22,6 @@ type RootStackParamList = {
   Profile: undefined;
   Favourites: undefined;
   Preferences: undefined;
-  MyRating: undefined;
   RideDetails: undefined;
   About: undefined;
   Parcel: undefined;
@@ -71,7 +70,10 @@ const SettingsScreen = () => {
       {section.data.map((label) => (
         <TouchableOpacity
           key={label}
-          style={styles.item}
+           style={[
+              styles.item,
+              label === 'Delete Account' && styles.itemdel,
+            ]}
           onPress={() => handleItemPress(label)}
         >
           <Text
@@ -85,7 +87,7 @@ const SettingsScreen = () => {
           <Icon
             name="chevron-right"
             size={20}
-            color={label === 'Delete Account' ? '#d00' : '#888'}
+            color={label === 'Delete Account' ? 'red' : '#888'}
           />
         </TouchableOpacity>
       ))}
@@ -104,7 +106,7 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     padding: 16,
     paddingTop: 60,
-    backgroundColor: '#fff',
+    backgroundColor: Colors.white,
   },
   section: {
     marginBottom: 24,
@@ -112,11 +114,11 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#666',
+    color: Colors.black,
     marginBottom: 8,
   },
   item: {
-    backgroundColor: '#f9f9f9',
+    backgroundColor: Colors.lightGray,
     paddingVertical: 14,
     paddingHorizontal: 12,
     borderRadius: 8,
@@ -125,12 +127,23 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
   },
+  itemdel: {
+    backgroundColor: Colors.lightRed,
+    paddingVertical: 14,
+    paddingHorizontal: 12,
+    borderRadius: 8,
+    marginBottom: 10,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+
   itemText: {
     fontSize: 15,
-    color: '#333',
+    color: Colors.black,
   },
   deleteText: {
-    color: '#d00',
+    color: Colors.red,
     fontWeight: '600',
   },
   helpButton: {
@@ -139,7 +152,7 @@ const styles = StyleSheet.create({
     marginRight: 12,
   },
   helpText: {
-    color: 'gray',
+    color: Colors.gray,
     fontSize: 14,
     marginLeft: 4,
   },

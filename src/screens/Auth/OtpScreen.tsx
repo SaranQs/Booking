@@ -10,7 +10,7 @@ import {
     Platform,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-
+import Colors from '../../constants/colors';
 
 const OTP_LENGTH = 4;
 
@@ -136,77 +136,77 @@ const OtpScreen = ({ navigation }: any) => {
 };
 
 const styles = StyleSheet.create({
-    gradient: {
+  gradient: {
     flex: 1,
   },
-    container: {
-        flex: 1,
-        paddingHorizontal: 24,
-        justifyContent: 'center',
-        backgroundColor: '#fff',
-    },
-    title: {
-        fontSize: 22,
-        fontWeight: '700',
-        textAlign: 'center',
-        marginBottom: 8,
-    },
-      btnContent: {
-  flexDirection: 'row',
-  alignItems: 'center',
-  justifyContent: 'center',
-},
-
-icon: {
-  width: 20,
-  height: 20,
-  marginRight: 8,
-},
-    subtitle: {
-        textAlign: 'center',
-        fontSize: 14,
-        color: '#777',
-        marginBottom: 24,
-    },
-    otpRow: {
-        flexDirection: 'row',
-        justifyContent: 'space-evenly',
-        marginBottom: 16,
-    },
-    otpInput: {
-        width: 45,
-        height: 50,
-        borderWidth: 1,
-        borderColor: '#ccc',
-        backgroundColor: '#ffffffa0',
-        borderRadius: 8,
-        textAlign: 'center',
-        fontSize: 18,
-    },
-    errorText: {
-        color: '#d32f2f',
-        fontSize: 14,
-        textAlign: 'center',
-        marginBottom: 10,
-    },
-    btn: {
-        backgroundColor: '#000',
-        height: 50,
-        borderRadius: 8,
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginBottom: 20,
-    },
-    btnText: {
-        color: '#fff',
-        fontWeight: 'bold',
-        fontSize: 16,
-    },
-    linkText: {
-        textAlign: 'center',
-        color: 'gray',
-        fontSize: 14,
-    },
+  container: {
+    flex: 1,
+    paddingHorizontal: 24,
+    justifyContent: 'center',
+    backgroundColor: Colors.white,
+  },
+  title: {
+    fontSize: 22,
+    fontWeight: '700',
+    textAlign: 'center',
+    marginBottom: 8,
+  },
+  btnContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  icon: {
+    width: 20,
+    height: 20,
+    marginRight: 8,
+  },
+  subtitle: {
+    textAlign: 'center',
+    fontSize: 14,
+    color: Colors.gray,
+    marginBottom: 24,
+  },
+  otpRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+    marginBottom: 16,
+  },
+  otpInput: {
+    width: 45,
+    height: 50,
+    borderWidth: 1,
+    borderColor: Colors.gray,
+    backgroundColor: Colors.white + 'a0', // You can use transparent white here
+    borderRadius: 8,
+    textAlign: 'center',
+    fontSize: 18,
+  },
+  errorText: {
+    color: Colors.red,
+    fontSize: 14,
+    textAlign: 'center',
+    marginBottom: 10,
+  },
+  btn: {
+    backgroundColor: Colors.black,
+    height: 50,
+    borderRadius: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  btnText: {
+    color: Colors.white,
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
+  linkText: {
+    textAlign: 'center',
+    color: Colors.gray,
+    fontSize: 14,
+  },
 });
+
 
 export default OtpScreen;

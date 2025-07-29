@@ -7,8 +7,13 @@ import {
   TouchableOpacity,
   ScrollView,
 } from 'react-native';
+import Colors from '../../constants/colors'
 import Icon from 'react-native-vector-icons/Feather';
-
+import { useNavigation } from '@react-navigation/native';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+type RootStackParamList = {
+  MyRides: undefined;
+};
 const latestRide = {
   destination: 'Anna Nagar, Chennai',
   timestamp: '2025-07-21T10:30:00',
@@ -41,6 +46,7 @@ const formatDateTime = (isoString: string): string => {
 };
 
 const SupportScreen = () => {
+   const navigation = useNavigation<NativeStackScreenProps<RootStackParamList>['navigation']>();
   const [search, setSearch] = useState('');
 
   return (
@@ -60,7 +66,7 @@ const SupportScreen = () => {
           </View>
           <Icon name="chevron-right" size={20} color="#888" />
         </View>
-        <TouchableOpacity style={styles.viewAllBtn}>
+        <TouchableOpacity style={styles.viewAllBtn} onPress={() => navigation.navigate('MyRides')}>
           <Text style={styles.viewAllText}>View Full History</Text>
         </TouchableOpacity>
       </View>
@@ -96,7 +102,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 16,
     paddingTop: 60,
-    backgroundColor: '#fff',
+    backgroundColor: Colors.white,
   },
   section: {
     marginBottom: 30,
@@ -104,11 +110,11 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#666',
+    color: Colors.black,
     marginBottom: 12,
   },
   rideCard: {
-    backgroundColor: '#f9f9f9',
+    backgroundColor: Colors.lightGray,
     padding: 14,
     borderRadius: 10,
     flexDirection: 'row',
@@ -118,12 +124,12 @@ const styles = StyleSheet.create({
   destination: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#000',
+    color: Colors.black,
     marginBottom: 4,
   },
   subText: {
     fontSize: 14,
-    color: '#555',
+    color: Colors.gray,
     marginBottom: 2,
   },
   viewAllBtn: {
@@ -136,16 +142,16 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   searchInput: {
-    backgroundColor: '#f2f2f2',
+    backgroundColor: Colors.lightGray,
     borderRadius: 8,
     paddingVertical: 10,
     paddingHorizontal: 14,
     fontSize: 14,
     marginBottom: 14,
-    color: '#000',
+    color: Colors.black,
   },
   faqItem: {
-    backgroundColor: '#f9f9f9',
+    backgroundColor: Colors.lightGray,
     paddingVertical: 14,
     paddingHorizontal: 12,
     borderRadius: 8,
@@ -156,7 +162,7 @@ const styles = StyleSheet.create({
   },
   faqText: {
     fontSize: 15,
-    color: '#333',
+    color: Colors.black,
   },
 });
 
