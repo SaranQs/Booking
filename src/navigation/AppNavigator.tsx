@@ -20,6 +20,7 @@ import AddressEntry from '../screens/Home/AddressEntryScreen';
 import Safety from '../screens/MenuScreens/SafetyScreen';
 import ReferAndEarn from '../screens/MenuScreens/ReferAndEarnScreen'; // Importing the new screen
 import MyRewards from '../screens/MenuScreens/MyRewardsScreen';
+import Notification from '../screens/MenuScreens/NotificationScreen'
 export type RootStackParamList = {
   Login: undefined;
   Otp: undefined;
@@ -39,6 +40,7 @@ export type RootStackParamList = {
   Safety: undefined;
   ReferAndEarn: undefined;
   MyRewards: undefined;
+  Notification: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -192,6 +194,16 @@ const AppNavigator = () => {
             headerTransparent: true,
             headerTitleStyle: { color: '#000' },
             headerTitle: 'My Rewards',
+          }}
+        />
+        <Stack.Screen
+          name="Notification"
+          component={Notification}
+          options={{
+            headerShown: true,
+            headerTransparent: true,
+            headerTitleStyle: { color: '#000' },
+            headerTitle: 'Notifications',
           }}
         />
 

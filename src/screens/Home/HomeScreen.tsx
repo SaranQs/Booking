@@ -36,6 +36,7 @@ const HomeScreen = () => {
     Parcel: undefined;
     AddressEntry: undefined;
     Safety: undefined;
+    Notification: undefined;
     MyRewards: undefined;
   };
   const [selectedRide, setSelectedRide] = useState('Bike');
@@ -375,6 +376,27 @@ const HomeScreen = () => {
               />
             </TouchableOpacity>
 
+            <TouchableOpacity
+              style={styles.drawerItem}
+              onPress={() => {
+                // closeDrawer();
+                (navigation as any).navigate('Notification');
+              }}
+            >
+              <Feather
+                name="bell"
+                size={18}
+                color="#666"
+                style={styles.drawerIcon}
+              />
+              <Text style={styles.drawerLabel}>Notifications</Text>
+              <Feather
+                name="chevron-right"
+                size={20}
+                color="#888"
+                style={{ marginLeft: 'auto' }}
+              />
+            </TouchableOpacity>
             <TouchableOpacity
               style={styles.drawerItem}
               onPress={() => {
