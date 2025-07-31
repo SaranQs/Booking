@@ -14,7 +14,10 @@ import Colors from '../../constants/colors';
 const rideHistory = [
   {
     id: '1',
-    destination: 'No. 45, Anna Nagar, Chennai',
+    destination: 'No. 45, Anna Nagar, Chennai Lorem ipsum dolor, sit amet consectetur adipisicing elit. Sint error culpa soluta voluptates totam mollitia nemo et eos modi, rerum tempore voluptatum cupiditate illum temporibus perspiciatis, dolores aperiam accusantium corporis!',
+    
+    start: 'dskrjgerhgierhgejgnjoiuegujierngiundegiuhbdbiugdfiug',
+    
     timestamp: '2025-07-21T10:30:00',
     cost: 120,
     status: 'Completed',
@@ -24,6 +27,7 @@ const rideHistory = [
   {
     id: '2',
     destination: 'T Nagar, Chennai',
+    start: 'Chennai',
     timestamp: '2025-07-19T18:45:00',
     cost: 95,
     status: 'Cancelled',
@@ -33,6 +37,7 @@ const rideHistory = [
   {
     id: '3',
     destination: 'Velachery, Chennai',
+    start: 'Chennai',
     timestamp: '2025-07-17T14:00:00',
     cost: 140,
     status: 'Completed',
@@ -42,6 +47,7 @@ const rideHistory = [
   {
     id: '4',
     destination: 'Adyar, Chennai',
+    start: 'Chennai',
     timestamp: '2025-07-15T09:15:00',
     cost: 80,
     status: 'Completed',
@@ -51,6 +57,7 @@ const rideHistory = [
   {
     id: '5',
     destination: 'Besant Nagar, Chennai',
+    start: 'Chennai',
     timestamp: '2025-07-13T16:30:00',
     cost: 110,
     status: 'Completed',
@@ -60,6 +67,7 @@ const rideHistory = [
   {
     id: '6',
     destination: 'Kodambakkam, Chennai',
+    start: 'Chennai',
     timestamp: '2025-07-11T12:20:00',
     cost: 105,
     status: 'Completed',
@@ -69,6 +77,7 @@ const rideHistory = [
   {
     id: '7',
     destination: 'Mylapore, Chennai',
+    start: 'Chennai',
     timestamp: '2025-07-09T19:10:00',
     cost: 130,
     status: 'Cancelled',
@@ -78,6 +87,7 @@ const rideHistory = [
   {
     id: '8',
     destination: 'Guindy, Chennai',
+    start: 'Chennai',
     timestamp: '2025-07-07T08:45:00',
     cost: 115,
     status: 'Completed',
@@ -87,6 +97,7 @@ const rideHistory = [
   {
     id: '9',
     destination: 'Egmore, Chennai',
+    start: 'Chennai',
     timestamp: '2025-07-05T17:30:00',
     cost: 90,
     status: 'Completed',
@@ -96,6 +107,7 @@ const rideHistory = [
   {
     id: '10',
     destination: 'Nungambakkam, Chennai',
+    start: 'Chennai',
     timestamp: '2025-07-03T15:00:00',
     cost: 125,
     status: 'Completed',
@@ -143,6 +155,8 @@ const TABS = [
 const MyRidesScreen = ({ navigation }: any) => {
   const [activeTab, setActiveTab] = useState<'Rides' | 'Parcels'>('Rides');
 
+const truncate = (text: string, length = 30) =>
+  text.length > length ? text.slice(0, length) + '...' : text;
 
 
   const [selectedRide, setSelectedRide] = useState<any | null>(null);
@@ -180,7 +194,7 @@ const renderItem = ({ item }: any) => (
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
         {renderIcon(item.type)}
         <View style={styles.rideDetails}>
-          <Text style={styles.destination}>{item.destination}</Text>
+          <Text style={styles.destination}>{truncate(item.destination)}</Text>
           <Text style={styles.subText}>{formatDateTime(item.timestamp)}</Text>
           <Text style={styles.subText}>
             ₹{item.cost} • {item.status}

@@ -85,7 +85,8 @@ const RideDetailScreen = ({ route }: any) => {
             </View>
           </View>
           <View style={styles.addressWrapper}>
-            <Text style={styles.addressText}>Chennai Central</Text>
+            <Text style={styles.addressText}>{ride.start}</Text>
+            <Text></Text>
             <Text style={styles.addressText}>{ride.destination}</Text>
           </View>
         </View>
@@ -228,6 +229,7 @@ const styles = StyleSheet.create({
   dotWrapper: {
     alignItems: 'center',
     marginRight: 12,
+      flexDirection: 'column',
   },
   outerDotGreen: {
     width: 12,
@@ -252,7 +254,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   verticalLine: {
-    height: 20,
+    flex:1,
     borderStyle: 'dashed',
     borderLeftWidth: 2,
     borderColor: '#ccc',
@@ -260,11 +262,13 @@ const styles = StyleSheet.create({
   },
   addressWrapper: {
     justifyContent: 'space-between',
+    flex:1,
   },
   addressText: {
     fontSize: 14,
     color: Colors.black,
-    marginBottom: 14,
+    paddingHorizontal:5,
+    // marginBottom: 14,
   },
 
   emailButton: {

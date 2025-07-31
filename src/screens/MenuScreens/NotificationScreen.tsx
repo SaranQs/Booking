@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import {
   View,
@@ -26,7 +25,8 @@ const notifications: Notification[] = [
   {
     id: '1',
     title: 'Ride Completed',
-    message: 'Your ride from Downtown to Airport has been completed successfully.',
+    message:
+      'Your ride from Downtown to Airport has been completed successfully. ',
     date: 'Jul 30, 2025, 10:00 AM',
     isUrgent: false,
     isRead: false,
@@ -42,7 +42,8 @@ const notifications: Notification[] = [
   {
     id: '3',
     title: 'Payment Issue',
-    message: 'There was an issue processing your recent payment. Please update your payment method.',
+    message:
+      'There was an issue processing your recent payment. Please update your payment method.',
     date: 'Jul 28, 2025, 9:15 AM',
     isUrgent: true,
     isRead: false,
@@ -50,7 +51,8 @@ const notifications: Notification[] = [
   {
     id: '4',
     title: 'App Update Available',
-    message: 'A new version of the app is available. Update now for the latest features.',
+    message:
+      'A new version of the app is available. Update now for the latest features.',
     date: 'Jul 27, 2025, 4:20 PM',
     isUrgent: false,
     isRead: true,
@@ -67,10 +69,11 @@ const notifications: Notification[] = [
 
 const NotificationsScreen: React.FC = () => {
   const [modalVisible, setModalVisible] = useState(false);
-  const [selectedNotification, setSelectedNotification] = useState<Notification | null>(null);
-  const [notificationData, setNotificationData] = useState<Notification[]>(notifications);
-
-
+  const [selectedNotification, setSelectedNotification] =
+    useState<Notification | null>(null);
+  const [notificationData, setNotificationData] =
+    useState<Notification[]>(notifications);
+  const [modalHeight, setModalHeight] = useState(0);
 
   const handleOpenModal = (notification: Notification) => {
     setSelectedNotification(notification);
@@ -85,17 +88,17 @@ const NotificationsScreen: React.FC = () => {
     }
   };
 
-  const handleMarkAsRead = () => {
-    if (selectedNotification && !selectedNotification.isRead) {
-      setNotificationData(prev =>
-        prev.map(item =>
-          item.id === selectedNotification.id ? { ...item, isRead: true } : item,
-        ),
-      );
-    //   showAlert('Notification marked as read');
-    }
-    setModalVisible(false);
-  };
+  // const handleMarkAsRead = () => {
+  //   if (selectedNotification && !selectedNotification.isRead) {
+  //     setNotificationData(prev =>
+  //       prev.map(item =>
+  //         item.id === selectedNotification.id ? { ...item, isRead: true } : item,
+  //       ),
+  //     );
+  //   //   showAlert('Notification marked as read');
+  //   }
+  //   setModalVisible(false);
+  // };
 
   const renderModalContent = () => {
     if (!selectedNotification) return null;
@@ -104,7 +107,7 @@ const NotificationsScreen: React.FC = () => {
         <Text style={styles.modalTitle}>{selectedNotification.title}</Text>
         <Text style={styles.modalMessage}>{selectedNotification.message}</Text>
         <Text style={styles.modalDate}>{selectedNotification.date}</Text>
-        <TouchableOpacity
+        {/* <TouchableOpacity
           style={styles.markAsReadButton}
           onPress={handleMarkAsRead}
           disabled={selectedNotification.isRead}
@@ -127,15 +130,15 @@ const NotificationsScreen: React.FC = () => {
           >
             {selectedNotification.isRead ? 'Already Read' : 'Mark as Read'}
           </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
+        </TouchableOpacity> */}
+        {/* <TouchableOpacity
           style={styles.closeButton}
           onPress={() => setModalVisible(false)}
           accessibilityLabel="Close notification modal"
           accessibilityHint="Tap to close the notification details"
         >
           <Text style={styles.closeText}>Close</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </>
     );
   };
@@ -165,17 +168,25 @@ const NotificationsScreen: React.FC = () => {
 
       {/* Modal */}
       <Modal visible={modalVisible} transparent animationType="fade">
-        <TouchableOpacity
-          activeOpacity={1}
-          style={styles.modalOverlay}
-          onPress={() => setModalVisible(false)}
-          accessibilityLabel="Close notification modal"
-          accessibilityHint="Tap outside the modal to close it"
-        >
-          <View style={styles.modalContainer}>{renderModalContent()}</View>
-        </TouchableOpacity>
+        <View style={styles.modalOverlay}>
+          <TouchableOpacity
+            style={[styles.closeIconContainer, { bottom: modalHeight + 10 }]}
+            onPress={() => setModalVisible(false)}
+          >
+            <Feather name="x" size={24} color={Colors.white} />
+          </TouchableOpacity>
+          <View
+            style={styles.modalContainer}
+            onLayout={event => {
+              const { height } = event.nativeEvent.layout;
+              setModalHeight(height);
+            }}
+          >
+            {renderModalContent()}
+          </View>
+        </View>
+
         {/* Custom Alert ABOVE modal layer */}
-       
       </Modal>
     </View>
   );
@@ -197,16 +208,16 @@ const NotificationItem = ({
   onPress: () => void;
 }) => (
   <TouchableOpacity
-    style={[styles.row, isUrgent && styles.urgentRow, !isRead && styles.unreadRow]}
+    style={[
+      styles.row,
+      isUrgent && styles.urgentRow,
+      !isRead && styles.unreadRow,
+    ]}
     onPress={onPress}
     accessibilityLabel={`Notification: ${title}`}
     accessibilityHint="Tap to view notification details"
   >
-    <Feather
-      name={icon}
-      size={20}
-      color={isUrgent ? 'red' : Colors.black}
-    />
+    <Feather name={icon} size={20} color={isUrgent ? 'red' : Colors.black} />
     <View style={styles.notificationContent}>
       <Text style={[styles.title, !isRead && styles.unreadTitle]}>{title}</Text>
       <Text style={styles.date}>{date}</Text>
@@ -233,13 +244,22 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginVertical:5,
-    paddingHorizontal:10,
-    borderRadius:16,
+    marginVertical: 5,
+    paddingHorizontal: 10,
+    borderRadius: 16,
     paddingVertical: 20,
     borderBottomWidth: 1,
     borderBottomColor: Colors.borderGray,
   },
+  closeIconContainer: {
+    position: 'absolute',
+    right: 15,
+    zIndex: 10,
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+    borderRadius: 20,
+    padding: 6,
+  },
+
   urgentRow: {
     backgroundColor: Colors.lightRed,
     borderRadius: 8,
