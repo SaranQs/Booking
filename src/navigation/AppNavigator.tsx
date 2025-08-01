@@ -21,6 +21,7 @@ import Safety from '../screens/MenuScreens/SafetyScreen';
 import ReferAndEarn from '../screens/MenuScreens/ReferAndEarnScreen'; // Importing the new screen
 import MyRewards from '../screens/MenuScreens/MyRewardsScreen';
 import Notification from '../screens/MenuScreens/NotificationScreen'
+import ConfirmRide from '../screens/Ride/ConfirmRideScreen'
 export type RootStackParamList = {
   Login: undefined;
   Otp: undefined;
@@ -41,6 +42,7 @@ export type RootStackParamList = {
   ReferAndEarn: undefined;
   MyRewards: undefined;
   Notification: undefined;
+  ConfirmRide: undefined,
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -204,6 +206,16 @@ const AppNavigator = () => {
             headerTransparent: true,
             headerTitleStyle: { color: '#000' },
             headerTitle: 'Notifications',
+          }}
+        />
+        <Stack.Screen
+          name="ConfirmRide"
+          component={ConfirmRide}
+          options={{
+            headerShown: true,
+            headerTransparent: true,
+            headerTitleStyle: { color: '#000' },
+            headerTitle: 'Confirm Your Ride',
           }}
         />
 

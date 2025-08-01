@@ -1,126 +1,121 @@
 import React, { useRef, useState, useEffect } from 'react';
 import {
-    View,
-    Text,
-    Image,
-    TextInput,
-    TouchableOpacity,
-    StyleSheet,
-    KeyboardAvoidingView,
-    Platform,
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import Colors from '../../constants/colors';
+import Icons from 'react-native-vector-icons/Feather';
 
 const OTP_LENGTH = 4;
 
 const OtpScreen = ({ navigation }: any) => {
-    const [otp, setOtp] = useState<string[]>(new Array(OTP_LENGTH).fill(''));
-    const [validationMessage, setValidationMessage] = useState('');
-    const inputs = useRef<(TextInput | null)[]>([]);
+  const [otp, setOtp] = useState<string[]>(new Array(OTP_LENGTH).fill(''));
+  const [validationMessage, setValidationMessage] = useState('');
+  const inputs = useRef<(TextInput | null)[]>([]);
 
-    useEffect(() => {
-        // Auto-focus the first input once mounted
-        inputs.current[0]?.focus();
-    }, []);
-    const handleChange = (text: string, index: number) => {
-        const newOtp = [...otp];
+  useEffect(() => {
+    // Auto-focus the first input once mounted
+    inputs.current[0]?.focus();
+  }, []);
+  const handleChange = (text: string, index: number) => {
+    const newOtp = [...otp];
 
-        if (text === '') {
-            newOtp[index] = '';
-            setOtp(newOtp);
+    if (text === '') {
+      newOtp[index] = '';
+      setOtp(newOtp);
 
-            // If user pressed backspace, go to previous input
-            if (index > 0) {
-                inputs.current[index - 1]?.focus();
-            }
-        } else if (/^\d$/.test(text)) {
-            newOtp[index] = text;
-            setOtp(newOtp);
+      // If user pressed backspace, go to previous input
+      if (index > 0) {
+        inputs.current[index - 1]?.focus();
+      }
+    } else if (/^\d$/.test(text)) {
+      newOtp[index] = text;
+      setOtp(newOtp);
 
-            // Move to next input if not last
-            if (index < OTP_LENGTH - 1) {
-                inputs.current[index + 1]?.focus();
-            }
-        }
-    };
+      // Move to next input if not last
+      if (index < OTP_LENGTH - 1) {
+        inputs.current[index + 1]?.focus();
+      }
+    }
+  };
 
+  const handleVerify = () => {
+    const finalOtp = otp.join('');
+    if (finalOtp.length !== OTP_LENGTH || !/^\d{4}$/.test(finalOtp)) {
+      setValidationMessage('Please enter a valid 4-digit OTP');
+      setTimeout(() => setValidationMessage(''), 3000);
+      return;
+    }
 
-    const handleVerify = () => {
-        const finalOtp = otp.join('');
-        if (finalOtp.length !== OTP_LENGTH || !/^\d{4}$/.test(finalOtp)) {
-            setValidationMessage('Please enter a valid 4-digit OTP');
-            setTimeout(() => setValidationMessage(''), 3000);
-            return;
-        }
+    // Proceed only if valid
+    setValidationMessage('');
+    navigation.navigate('Home');
+  };
 
-        // Proceed only if valid
-        setValidationMessage('');
-        navigation.navigate('Home');
-    };
+  return (
+    <LinearGradient
+      colors={['#FFD700', '#fde77cff']} // gold to yellow
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 1 }}
+      style={styles.gradient}
+    >
+      <KeyboardAvoidingView
+        style={styles.container}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      >
+        <Text style={styles.title}>Verify OTP</Text>
+        <Text style={styles.subtitle}>
+          Enter the 4-digit code sent to your number
+        </Text>
 
-    return (
-        <LinearGradient
-              colors={['#FFD700', '#fde77cff']} // gold to yellow
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 1 }}
-              style={styles.gradient}
-            >
-        <KeyboardAvoidingView
-            style={styles.container}
-            behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        >
-            <Text style={styles.title}>Verify OTP</Text>
-            <Text style={styles.subtitle}>Enter the 4-digit code sent to your number</Text>
+        <View style={styles.otpRow}>
+          {otp.map((digit, index) => (
+            <TextInput
+              key={index}
+              ref={ref => {
+                inputs.current[index] = ref;
+              }}
+              value={digit}
+              keyboardType="number-pad"
+              maxLength={1}
+              style={styles.otpInput}
+              onChangeText={text => handleChange(text, index)}
+              onKeyPress={({ nativeEvent }) => {
+                if (nativeEvent.key === 'Backspace' && otp[index] === '') {
+                  if (index > 0) {
+                    inputs.current[index - 1]?.focus();
+                    const newOtp = [...otp];
+                    newOtp[index - 1] = '';
+                    setOtp(newOtp);
+                  }
+                }
+              }}
+            />
+          ))}
+        </View>
 
-            <View style={styles.otpRow}>
-                {otp.map((digit, index) => (
-                    <TextInput
-                        key={index}
-                        ref={(ref) => {
-                            inputs.current[index] = ref;
-                        }}
-                        value={digit}
-                        keyboardType="number-pad"
-                        maxLength={1}
-                        style={styles.otpInput}
-                        onChangeText={(text) => handleChange(text, index)}
-                        onKeyPress={({ nativeEvent }) => {
-                            if (nativeEvent.key === 'Backspace' && otp[index] === '') {
-                                if (index > 0) {
-                                    inputs.current[index - 1]?.focus();
-                                    const newOtp = [...otp];
-                                    newOtp[index - 1] = '';
-                                    setOtp(newOtp);
-                                }
-                            }
-                        }}
-                    />
+        {validationMessage ? (
+          <Text style={styles.errorText}>{validationMessage}</Text>
+        ) : null}
 
+        <TouchableOpacity style={styles.btn} onPress={handleVerify}>
+          <View style={styles.btnContent}>
+            <Icons name="check-circle" size={20} color="#fff" />
+            <Text style={styles.btnText}>Verify & Continue</Text>
+          </View>
+        </TouchableOpacity>
 
-                ))}
-            </View>
+        <TouchableOpacity onPress={() => console.log('Resend')}>
+          <Text style={styles.linkText}>Didn't get the code? Resend</Text>
+        </TouchableOpacity>
 
-            {validationMessage ? (
-                <Text style={styles.errorText}>{validationMessage}</Text>
-            ) : null}
-
-            <TouchableOpacity style={styles.btn} onPress={handleVerify}>
-                <View style={styles.btnContent}>
-                    <Image
-                        source={require('../../assets/verify.png')}
-                        style={styles.icon}
-                        resizeMode="contain"
-                    />
-                    <Text style={styles.btnText}>Verify & Continue</Text>
-                </View>
-            </TouchableOpacity>
-
-            <TouchableOpacity onPress={() => console.log('Resend')}>
-                <Text style={styles.linkText}>Didn't get the code? Resend</Text>
-            </TouchableOpacity>
-
-            {/* <TouchableOpacity style={styles.btn} onPress={handleContinue}>
+        {/* <TouchableOpacity style={styles.btn} onPress={handleContinue}>
                       <View style={styles.btnContent}>
                         <Text style={styles.btnText}>Continue </Text>
                         <Image
@@ -130,9 +125,9 @@ const OtpScreen = ({ navigation }: any) => {
                         />
                       </View>
                     </TouchableOpacity> */}
-        </KeyboardAvoidingView>
-        </LinearGradient>
-    );
+      </KeyboardAvoidingView>
+    </LinearGradient>
+  );
 };
 
 const styles = StyleSheet.create({
@@ -154,6 +149,7 @@ const styles = StyleSheet.create({
   btnContent: {
     flexDirection: 'row',
     alignItems: 'center',
+    gap:10,
     justifyContent: 'center',
   },
   icon: {
@@ -207,6 +203,5 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
 });
-
 
 export default OtpScreen;

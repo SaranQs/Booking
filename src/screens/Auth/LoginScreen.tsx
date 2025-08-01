@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import {
   View,
   Text,
-  Image,
   StyleSheet,
   TextInput,
   TouchableOpacity,
@@ -10,6 +9,7 @@ import {
   Platform,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
+import Icons from 'react-native-vector-icons/MaterialIcons';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../navigation/AppNavigator';
 import Colors from '../../constants/colors';
@@ -65,11 +65,7 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
         <TouchableOpacity style={styles.btn} onPress={handleContinue}>
           <View style={styles.btnContent}>
             <Text style={styles.btnText}>Continue </Text>
-            <Image
-              source={require('../../assets/login.png')}
-              style={styles.icon}
-              resizeMode="contain"
-            />
+           <Icons name="login" size={20} color='#fff' />
           </View>
         </TouchableOpacity>
 
@@ -139,6 +135,7 @@ const styles = StyleSheet.create({
   btnContent: {
     flexDirection: 'row',
     alignItems: 'center',
+    gap:5,
     justifyContent: 'center',
   },
   btnText: {

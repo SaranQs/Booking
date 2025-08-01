@@ -62,7 +62,16 @@ const RideDetailScreen = ({ route }: any) => {
         <View>
           <Text style={styles.rideTitle}>{label}</Text>
           <Text style={styles.rideDate}>
-            {new Date(ride.timestamp).toLocaleString()}
+            {new Date(ride.timestamp)
+              .toLocaleString('en-IN', {
+                month: 'short',
+                day: 'numeric',
+                year: 'numeric',
+                hour: 'numeric',
+                minute: '2-digit',
+                hour12: true,
+              })
+              .replace(',', ' •')}
           </Text>
         </View>
         <Text style={styles.ridePrice}>₹{ride.cost}</Text>
@@ -229,7 +238,7 @@ const styles = StyleSheet.create({
   dotWrapper: {
     alignItems: 'center',
     marginRight: 12,
-      flexDirection: 'column',
+    flexDirection: 'column',
   },
   outerDotGreen: {
     width: 12,
@@ -254,7 +263,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   verticalLine: {
-    flex:1,
+    flex: 1,
     borderStyle: 'dashed',
     borderLeftWidth: 2,
     borderColor: '#ccc',
@@ -262,12 +271,12 @@ const styles = StyleSheet.create({
   },
   addressWrapper: {
     justifyContent: 'space-between',
-    flex:1,
+    flex: 1,
   },
   addressText: {
     fontSize: 14,
     color: Colors.black,
-    paddingHorizontal:5,
+    paddingHorizontal: 5,
     // marginBottom: 14,
   },
 

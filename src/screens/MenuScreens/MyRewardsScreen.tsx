@@ -6,11 +6,11 @@ import {
   FlatList,
   TouchableOpacity,
   Modal,
-  Image,
+  // Image,
   Dimensions,
 } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import { ScratchCard } from 'rn-scratch-card';
+// import { ScratchCard } from 'rn-scratch-card';
 import Colors from '../../constants/colors';
 
 // Define interfaces for data structures
@@ -21,10 +21,10 @@ interface RewardHistory {
   date: string;
 }
 
-interface ScratchCardItem {
-  id: string;
-  reward: string;
-}
+// interface ScratchCardItem {
+//   id: string;
+//   reward: string;
+// }
 
 // Data for reward history
 const rewardHistory: RewardHistory[] = [
@@ -109,9 +109,9 @@ const rewardHistory: RewardHistory[] = [
 ];
 
 // Data for scratch cards
-const scratchCards: ScratchCardItem[] = [
-  { id: 'sc1', reward: '₹10' },
-  { id: 'sc2', reward: 'Better luck next time' },
+// const scratchCards: ScratchCardItem[] = [
+//   { id: 'sc1', reward: '₹10' },
+//   { id: 'sc2', reward: 'Better luck next time' },
   // { id: 'sc3', reward: 'Better luck next time' },
   // { id: 'sc4', reward: 'Better luck next time' },
   // { id: 'sc5', reward: 'Better luck next time' },
@@ -124,32 +124,32 @@ const scratchCards: ScratchCardItem[] = [
   // { id: 'sc12', reward: 'Better luck next time' },
   // { id: 'sc13', reward: 'Better luck next time' },
   // { id: 'sc14', reward: 'Better luck next time' },
-];
+// ];
 
 const MyRewardsScreen: React.FC = () => {
   const [historyVisible, setHistoryVisible] = useState<boolean>(false);
-  const [scratched, setScratched] = useState<{ [key: string]: boolean }>({});
-  const [selectedCard, setSelectedCard] = useState<ScratchCardItem | null>(
-    null,
-  );
+  // const [scratched, setScratched] = useState<{ [key: string]: boolean }>({});
+  // const [selectedCard, setSelectedCard] = useState<ScratchCardItem | null>(
+  //   null,
+  // );
 
-  const handleScratch = (id: string, scratchPercentage: number): void => {
-    if (scratchPercentage >= 50) {
-      // Reveal when 50% scratched
-      setScratched(prev => ({ ...prev, [id]: true }));
-    }
-  };
+  // const handleScratch = (id: string, scratchPercentage: number): void => {
+  //   if (scratchPercentage >= 50) {
+  //     // Reveal when 50% scratched
+  //     setScratched(prev => ({ ...prev, [id]: true }));
+  //   }
+  // };
 
-  const handleCardPress = (item: ScratchCardItem): void => {
-    setSelectedCard(item);
-  };
+  // const handleCardPress = (item: ScratchCardItem): void => {
+  //   setSelectedCard(item);
+  // };
 
-  const closeScratchModal = (): void => {
-    setSelectedCard(null);
-  };
+  // const closeScratchModal = (): void => {
+  //   setSelectedCard(null);
+  // };
 
-  const cardWidth = (Dimensions.get('window').width - 48) / 2;
-  const modalCardWidth = Dimensions.get('window').width * 0.8; // 80% of screen width for modal card
+  // const cardWidth = (Dimensions.get('window').width - 48) / 2;
+  // const modalCardWidth = Dimensions.get('window').width * 0.8; // 80% of screen width for modal card
 
   return (
     <View style={styles.container}>
@@ -180,7 +180,7 @@ const MyRewardsScreen: React.FC = () => {
       </TouchableOpacity>
 
       {/* Scratch Cards Section */}
-      <Text style={styles.sectionTitle}>Scratch & Win</Text>
+      {/* <Text style={styles.sectionTitle}>Scratch & Win</Text>
       <FlatList<ScratchCardItem>
         data={scratchCards}
         keyExtractor={item => item.id}
@@ -222,7 +222,7 @@ const MyRewardsScreen: React.FC = () => {
   );
 }}
 
-      />
+      /> */}
       <TouchableOpacity
         style={styles.showHistoryBtn}
         onPress={() => setHistoryVisible(true)}
@@ -232,7 +232,7 @@ const MyRewardsScreen: React.FC = () => {
       </TouchableOpacity>
 
       {/* Scratch Card Modal */}
-      <Modal
+      {/* <Modal
         visible={selectedCard !== null}
         animationType="fade"
         transparent
@@ -279,7 +279,7 @@ const MyRewardsScreen: React.FC = () => {
             )}
           </View>
         </View>
-      </Modal>
+      </Modal> */}
 
       {/* History Modal */}
       <Modal
