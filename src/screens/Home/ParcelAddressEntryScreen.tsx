@@ -93,7 +93,7 @@ const data = [
   },
 ];
 
-const AddressEntryScreen = ({ navigation, route }: any) => {
+const ParcelAddressEntryScreen = ({ navigation, route }: any) => {
   const { initialAddress, field } = route.params || {};
 const [pickup, setPickup] = useState(field === 'pickup' ? initialAddress : '157, S W Boag Rd, T Nagar, CIT Nagar East');
   const [drop, setDrop] = useState(field === 'drop' ? initialAddress : '');
@@ -157,7 +157,7 @@ const [pickup, setPickup] = useState(field === 'pickup' ? initialAddress : '157,
           const finalDrop = focusedField === 'drop' ? item.subtitle : drop;
 
           if (finalPickup && finalDrop) {
-            navigation.navigate('ConfirmRide', {
+            navigation.navigate('ParcelRide', {
               pickup: finalPickup,
               drop: finalDrop,
             });
@@ -403,4 +403,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AddressEntryScreen;
+export default ParcelAddressEntryScreen;

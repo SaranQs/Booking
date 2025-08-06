@@ -20,8 +20,10 @@ import AddressEntry from '../screens/Home/AddressEntryScreen';
 import Safety from '../screens/MenuScreens/SafetyScreen';
 import ReferAndEarn from '../screens/MenuScreens/ReferAndEarnScreen'; // Importing the new screen
 import MyRewards from '../screens/MenuScreens/MyRewardsScreen';
-import Notification from '../screens/MenuScreens/NotificationScreen'
-import ConfirmRide from '../screens/Ride/ConfirmRideScreen'
+import Notification from '../screens/MenuScreens/NotificationScreen';
+import ConfirmRide from '../screens/Ride/ConfirmRideScreen';
+import ParcelEntry from '../screens/Home/ParcelAddressEntryScreen';
+import ParcelRide from '../screens/Ride/ConfirmParcelRideScreen';
 export type RootStackParamList = {
   Login: undefined;
   Otp: undefined;
@@ -43,6 +45,8 @@ export type RootStackParamList = {
   MyRewards: undefined;
   Notification: undefined;
   ConfirmRide: undefined,
+  ParcelEntry: undefined;
+  ParcelRide: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -216,6 +220,26 @@ const AppNavigator = () => {
             headerTransparent: true,
             headerTitleStyle: { color: '#000' },
             headerTitle: 'Confirm Your Ride',
+          }}
+        />
+        <Stack.Screen
+          name="ParcelEntry"
+          component={ParcelEntry}
+          options={{
+            headerShown: true,
+            headerTransparent: true,
+            headerTitleStyle: { color: '#000' },
+            headerTitle: 'Pickup & Drop',
+          }}
+        />
+        <Stack.Screen
+          name="ParcelRide"
+          component={ParcelRide}
+          options={{
+            headerShown: true,
+            headerTransparent: true,
+            headerTitleStyle: { color: '#000' },
+            headerTitle: 'Pick your Vehicle',
           }}
         />
 

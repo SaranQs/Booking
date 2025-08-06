@@ -9,30 +9,12 @@ import {
   Dimensions,
 } from 'react-native';
 import Colors from '../../constants/colors';
-import { useNavigation } from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import WalletScreen from '../MenuScreens/WalletScreen';
-import BottomModal from './BottomModal';
 import Feather from 'react-native-vector-icons/Feather';
 
-type RootStackParamList = {
-  Wallet: undefined;
-};
-const WalletScreenWrapper = () => {
-  const navigation =
-    useNavigation<NativeStackScreenProps<RootStackParamList>['navigation']>();
-  const route = { params: {} };
-  return <WalletScreen navigation={navigation} route={route} />;
-};
-
-const ConfirmRideScreen = ({ route }: any) => {
-  const [walletVisible, setWalletVisible] = useState(false);
-
-  const { pickup, drop } = route.params; //will beused for esdtimating fare
-  const [selectedMode, setSelectedMode] = useState<'bike' | 'auto' | 'taxi'>(
-    'bike',
-  );
+const ConfirmParcelRideScreen = ({ route, navigation }: any) => { // Added navigation prop
+  const { pickup, drop } = route.params || {}; // Safely access route.params
+  const [selectedMode, setSelectedMode] = useState<'bike' | 'truck_small' | 'truck_large'>('bike');
 
   const rideOptions = {
     bike: {
@@ -40,26 +22,31 @@ const ConfirmRideScreen = ({ route }: any) => {
       time: 10,
       image: require('../../assets/bike.png'),
     },
-    auto: {
+    truck_small: {
       cost: 60,
-      time: 15,
-      image: require('../../assets/auto.png'),
-    },
-    taxi: {
-      cost: 90,
       time: 20,
-      image: require('../../assets/taxi.png'),
+      image: require('../../assets/truck_s.png'),
+    },
+    truck_large: {
+      cost: 90,
+      time: 15,
+      image: require('../../assets/truck_l.png'),
     },
   };
 
   const getDropTime = (minutes: number) => {
     const date = new Date();
     date.setMinutes(date.getMinutes() + minutes);
-    return date.toLocaleTimeString([], { 
-      hour: '2-digit', 
-      minute: '2-digit', 
-      hour12: true 
+    return date.toLocaleTimeString([], {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true,
     });
+  };
+
+  const handleConfirm = () => {
+    // Navigate to a confirmation screen or perform booking logic
+    navigation.navigate('BookingConfirmation', { pickup, drop, selectedMode });
   };
 
   return (
@@ -86,12 +73,12 @@ const ConfirmRideScreen = ({ route }: any) => {
                 styles.transportCard,
                 selectedMode === key && styles.selectedCard,
               ]}
-              onPress={() => setSelectedMode(key as 'bike' | 'auto' | 'taxi')}
+              onPress={() => setSelectedMode(key as 'bike' | 'truck_small' | 'truck_large')}
             >
               <Image source={option.image} style={styles.icon} />
               <View style={{ flex: 1 }}>
                 <Text style={styles.transportName}>
-                  {key.charAt(0).toUpperCase() + key.slice(1)}
+                  {key.replace('_', ' ').charAt(0).toUpperCase() + key.replace('_', ' ').slice(1)}
                 </Text>
                 <Text style={styles.estimate}>
                   {option.time} min • Drop by {getDropTime(option.time)}
@@ -106,37 +93,33 @@ const ConfirmRideScreen = ({ route }: any) => {
         <View style={styles.optionsRow}>
           <TouchableOpacity
             style={styles.optionBlock}
-            onPress={() => setWalletVisible(true)}
+            onPress={() => navigation.navigate('PaymentScreen')}
           >
             <Ionicons name="cash-outline" size={20} color={Colors.black} />
             <Text style={styles.optionTitle}>Mode of Payment</Text>
             <Text style={styles.optionArrow}>›</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.optionBlock}>
-               <Feather name="gift" size={20} color={Colors.black} />
+          <TouchableOpacity
+            style={styles.optionBlock}
+            onPress={() => navigation.navigate('OffersScreen')}
+          >
+            <Feather name="gift" size={20} color={Colors.black} />
             <Text style={styles.optionTitle}>Offers</Text>
             <Text style={styles.optionArrow}>›</Text>
           </TouchableOpacity>
         </View>
 
         {/* Confirm Button */}
-        <TouchableOpacity style={styles.confirmButton}>
-          <Text style={styles.confirmText}>Book {selectedMode}</Text>
+        <TouchableOpacity style={styles.confirmButton} onPress={handleConfirm}>
+          <Text style={styles.confirmText}>Book {selectedMode.replace('_', ' ')}</Text>
         </TouchableOpacity>
       </View>
-
-      <BottomModal
-        visible={walletVisible}
-        onClose={() => setWalletVisible(false)}
-      >
-        <WalletScreenWrapper />
-      </BottomModal>
     </View>
   );
 };
 
-export default ConfirmRideScreen;
+export default ConfirmParcelRideScreen;
 
 const { height } = Dimensions.get('window');
 const styles = StyleSheet.create({
@@ -147,7 +130,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.white,
   },
   mapPlaceholder: {
-    height: height * 0.6, // Match reference map size
+    height: height * 0.6, // Same map size
     backgroundColor: '#e0e0e0',
     borderRadius: 8,
     alignItems: 'center',
@@ -171,6 +154,7 @@ const styles = StyleSheet.create({
     elevation: 8, // Increased for Android shadow
     paddingHorizontal: 16,
     paddingTop: 8,
+    // paddingBottom: 16,
     height: height * 0.5, // Bottom sheet takes half the screen
   },
   handle: {

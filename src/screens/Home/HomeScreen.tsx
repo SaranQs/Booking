@@ -2,7 +2,6 @@ import React, { useState, useRef } from 'react';
 import {
   View,
   Text,
-  // TextInput,
   TouchableOpacity,
   StyleSheet,
   KeyboardAvoidingView,
@@ -144,45 +143,6 @@ const HomeScreen = () => {
               </View>
             ))}
           </View>
-
-          {/* <View style={styles.inputContainer}>
-            <TextInput
-              style={styles.input}
-              placeholder="Pickup Location"
-              placeholderTextColor="#777"
-            />
-            <TextInput
-              style={styles.input}
-              placeholder="Drop Location"
-              placeholderTextColor="#777"
-            />
-          </View> */}
-
-          {/* <View style={styles.mapPlaceholderContainer}>
-            <Image
-              source={require('../../assets/map-placeholder.png')}
-              style={styles.mapImage}
-              resizeMode="cover"
-            />
-            <View style={styles.mapOverlay}>
-              <Text style={styles.mapOverlayText}>Map View (Coming Soon)</Text>
-            </View>
-          </View>
-
-          <RideTypeSwitcher onSelect={setSelectedRide} />
-
-          <View style={styles.imageContainer}>
-            <Image source={getImageSource()} style={styles.vehicleImage} resizeMode="contain" />
-          </View>
-
-          <View style={styles.fareCard}>
-            <Text style={styles.fareTitle}>Estimated Fare</Text>
-            <Text style={styles.fare}>{getFareEstimate()}</Text>
-          </View>
-
-          <TouchableOpacity style={styles.bookButton}>
-            <Text style={styles.bookButtonText}>Book Ride</Text>
-          </TouchableOpacity> */}
 
           <View style={styles.exploreSection}>
             <Text style={styles.exploreTitle}>Explore</Text>
