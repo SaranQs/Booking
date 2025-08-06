@@ -304,7 +304,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: Colors.white,
     padding: 16,
-    paddingTop: 60,
   },
   addressCard: {
     backgroundColor: Colors.backgroundWhite,

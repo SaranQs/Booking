@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import {
   View,
   Text,
@@ -9,30 +9,17 @@ import {
   Dimensions,
 } from 'react-native';
 import Colors from '../../constants/colors';
-import { useNavigation } from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import WalletScreen from '../MenuScreens/WalletScreen';
-import BottomModal from './BottomModal';
 import Feather from 'react-native-vector-icons/Feather';
-
-type RootStackParamList = {
-  Wallet: undefined;
-};
-const WalletScreenWrapper = () => {
-  const navigation =
-    useNavigation<NativeStackScreenProps<RootStackParamList>['navigation']>();
-  const route = { params: {} };
-  return <WalletScreen navigation={navigation} route={route} />;
-};
+import WalletModalWrapper from './WalletModalWrapper';
+import WalletScreen from '../MenuScreens/WalletScreen';
+import OffersScreen from '../Ride/OffersScreen';
 
 const ConfirmRideScreen = ({ route }: any) => {
+  const { pickup, drop } = route.params;
+  const [selectedMode, setSelectedMode] = useState<'bike' | 'auto' | 'taxi'>('bike');
   const [walletVisible, setWalletVisible] = useState(false);
-
-  const { pickup, drop } = route.params; //will beused for esdtimating fare
-  const [selectedMode, setSelectedMode] = useState<'bike' | 'auto' | 'taxi'>(
-    'bike',
-  );
+  const [offersVisible, setOffersVisible] = useState(false);
 
   const rideOptions = {
     bike: {
@@ -52,15 +39,23 @@ const ConfirmRideScreen = ({ route }: any) => {
     },
   };
 
-  const getDropTime = (minutes: number) => {
+  // Memoize drop times for each ride option on component mount
+  const dropTimes = useMemo(() => {
     const date = new Date();
-    date.setMinutes(date.getMinutes() + minutes);
-    return date.toLocaleTimeString([], { 
-      hour: '2-digit', 
-      minute: '2-digit', 
-      hour12: true 
-    });
-  };
+    return Object.fromEntries(
+      Object.entries(rideOptions).map(([key, option]) => {
+        const dropDate = new Date(date.getTime() + option.time * 60 * 1000);
+        return [
+          key,
+          dropDate.toLocaleTimeString([], {
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: true,
+          }),
+        ];
+      })
+    );
+  }); // Empty dependency array ensures this runs only once on mount
 
   return (
     <View style={styles.container}>
@@ -94,7 +89,7 @@ const ConfirmRideScreen = ({ route }: any) => {
                   {key.charAt(0).toUpperCase() + key.slice(1)}
                 </Text>
                 <Text style={styles.estimate}>
-                  {option.time} min • Drop by {getDropTime(option.time)}
+                  {option.time} min • Drop by {dropTimes[key]}
                 </Text>
               </View>
               <Text style={styles.price}>₹{option.cost}</Text>
@@ -113,8 +108,11 @@ const ConfirmRideScreen = ({ route }: any) => {
             <Text style={styles.optionArrow}>›</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.optionBlock}>
-               <Feather name="gift" size={20} color={Colors.black} />
+          <TouchableOpacity
+            style={styles.optionBlock}
+            onPress={() => setOffersVisible(true)}
+          >
+            <Feather name="gift" size={20} color={Colors.black} />
             <Text style={styles.optionTitle}>Offers</Text>
             <Text style={styles.optionArrow}>›</Text>
           </TouchableOpacity>
@@ -126,12 +124,21 @@ const ConfirmRideScreen = ({ route }: any) => {
         </TouchableOpacity>
       </View>
 
-      <BottomModal
+      {/* Wallet Modal */}
+      <WalletModalWrapper
         visible={walletVisible}
         onClose={() => setWalletVisible(false)}
       >
-        <WalletScreenWrapper />
-      </BottomModal>
+        <WalletScreen />
+      </WalletModalWrapper>
+
+      {/* Offers Modal */}
+      <WalletModalWrapper
+        visible={offersVisible}
+        onClose={() => setOffersVisible(false)}
+      >
+        <OffersScreen />
+      </WalletModalWrapper>
     </View>
   );
 };
@@ -143,11 +150,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
-    paddingTop: 60,
     backgroundColor: Colors.white,
   },
   mapPlaceholder: {
-    height: height * 0.6, // Match reference map size
+    height: height * 0.6,
     backgroundColor: '#e0e0e0',
     borderRadius: 8,
     alignItems: 'center',
@@ -168,10 +174,10 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: -2 },
     shadowOpacity: 0.3,
     shadowRadius: 6,
-    elevation: 8, // Increased for Android shadow
+    elevation: 8,
     paddingHorizontal: 16,
     paddingTop: 8,
-    height: height * 0.5, // Bottom sheet takes half the screen
+    height: height * 0.5,
   },
   handle: {
     width: 40,
@@ -182,7 +188,7 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   transportScroll: {
-    maxHeight: height * 0.30, // Adjusted for transport options
+    maxHeight: height * 0.30,
     marginBottom: 12,
   },
   transportCard: {

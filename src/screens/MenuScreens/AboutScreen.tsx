@@ -36,7 +36,6 @@ const AboutScreen = () => {
 const styles = StyleSheet.create({
   container: {
     padding: 16,
-    paddingTop: 60,
     backgroundColor: Colors.white,
     flexGrow: 1,
   },

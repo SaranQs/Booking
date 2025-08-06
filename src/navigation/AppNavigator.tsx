@@ -39,7 +39,7 @@ export type RootStackParamList = {
   RideDetails: undefined;
   About: undefined;
   Parcel: undefined;
-  AddressEntry: undefined;
+  AddressEntry:  { initialAddress: string; field: string } | undefined;
   Safety: undefined;
   ReferAndEarn: undefined;
   MyRewards: undefined;
@@ -67,9 +67,11 @@ const AppNavigator = () => {
           component={MyRidesScreen}
           options={{
             headerShown: true,
-            headerTransparent: true,
+            // headerTransparent: true,
+            headerShadowVisible:false,
             headerTitleStyle: { color: '#000' },
             title: 'My Rides',
+            animation: 'slide_from_right',
           }}
         />
         <Stack.Screen
@@ -77,9 +79,12 @@ const AppNavigator = () => {
           component={WalletScreen}
           options={{
             headerShown: true,
-            headerTransparent: true,
+            // headerTransparent: true,
+            headerShadowVisible:false,
+            presentation: 'modal', 
             headerTitleStyle: { color: '#000' },
             title: 'Payments',
+            animation: 'slide_from_right',
           }}
         />
         <Stack.Screen
@@ -87,9 +92,11 @@ const AppNavigator = () => {
           component={SettingsScreen}
           options={{
             headerShown: true,
-            headerTransparent: true,
+            // headerTransparent: true,
+            headerShadowVisible:false,
             headerTitleStyle: { color: '#000' },
             title: 'Settings',
+            animation: 'slide_from_right',
           }}
         />
         <Stack.Screen
@@ -97,9 +104,11 @@ const AppNavigator = () => {
           component={SupportScreen}
           options={{
             headerShown: true,
-            headerTransparent: true,
+            // headerTransparent: true,
+            headerShadowVisible:false,
             headerTitleStyle: { color: '#000' },
             headerTitle: 'Support',
+            animation: 'slide_from_right',
           }}
         />
         <Stack.Screen
@@ -107,9 +116,11 @@ const AppNavigator = () => {
           component={Profile}
           options={{
             headerShown: true,
-            headerTransparent: true,
+            // headerTransparent: true,
+            headerShadowVisible:false,
             headerTitleStyle: { color: '#000' },
             headerTitle: 'Profile',
+            animation: 'slide_from_right',
           }}
         />
         <Stack.Screen
@@ -117,9 +128,11 @@ const AppNavigator = () => {
           component={Favoutires}
           options={{
             headerShown: true,
-            headerTransparent: true,
+            // headerTransparent: true,
+            headerShadowVisible:false,
             headerTitleStyle: { color: '#000' },
             headerTitle: 'Favoutires',
+
           }}
         />
         <Stack.Screen
@@ -127,9 +140,9 @@ const AppNavigator = () => {
           component={Preferences}
           options={{
             headerShown: true,
-            headerTransparent: true,
+            // headerTransparent: true,
+            headerShadowVisible:false,
             headerTitleStyle: { color: '#000' },
-            headerTitle: 'Favoutires',
           }}
         />
         {/* <Stack.Screen
@@ -147,7 +160,8 @@ const AppNavigator = () => {
           component={RideDetails}
           options={{
             headerShown: true,
-            headerTransparent: true,
+            // headerTransparent: true,
+            headerShadowVisible:false,
             headerTitleStyle: { color: '#000' },
             headerTitle: 'Ride Details',
           }}
@@ -157,7 +171,8 @@ const AppNavigator = () => {
           component={AboutScreen}
           options={{
             headerShown: true,
-            headerTransparent: true,
+            // headerTransparent: true,
+            headerShadowVisible:false,
             headerTitleStyle: { color: '#000' },
             headerTitle: 'About',
           }}
@@ -167,9 +182,11 @@ const AppNavigator = () => {
           component={Parcel}
           options={{
             headerShown: true,
-            headerTransparent: true,
+            // headerTransparent: true,
+            headerShadowVisible:false,
             headerTitleStyle: { color: '#000' },
             headerTitle: 'Parcel - Send Items',
+            animation: 'slide_from_right',
           }}
         />
         <Stack.Screen
@@ -177,9 +194,12 @@ const AppNavigator = () => {
           component={Safety}
           options={{
             headerShown: true,
-            headerTransparent: true,
+            // headerTransparent: true,
+            headerShadowVisible:false,
             headerTitleStyle: { color: '#000' },
             headerTitle: 'Safety',
+            animation: 'slide_from_right',
+
           }}
         />
         <Stack.Screen
@@ -187,9 +207,12 @@ const AppNavigator = () => {
           component={ReferAndEarn}
           options={{
             headerShown: true,
-            headerTransparent: true,
+            // headerTransparent: true,
+            headerShadowVisible:false,
             headerTitleStyle: { color: '#000' },
             headerTitle: 'Refer and Earn',
+            animation: 'slide_from_right',
+
           }}
         />
         <Stack.Screen
@@ -197,9 +220,12 @@ const AppNavigator = () => {
           component={MyRewards}
           options={{
             headerShown: true,
-            headerTransparent: true,
+            // headerTransparent: true,
+            headerShadowVisible:false,
             headerTitleStyle: { color: '#000' },
             headerTitle: 'My Rewards',
+            animation: 'slide_from_right',
+
           }}
         />
         <Stack.Screen
@@ -207,9 +233,12 @@ const AppNavigator = () => {
           component={Notification}
           options={{
             headerShown: true,
-            headerTransparent: true,
+            // headerTransparent: true,
+            headerShadowVisible:false,
             headerTitleStyle: { color: '#000' },
             headerTitle: 'Notifications',
+            animation: 'slide_from_right',
+
           }}
         />
         <Stack.Screen
@@ -217,7 +246,8 @@ const AppNavigator = () => {
           component={ConfirmRide}
           options={{
             headerShown: true,
-            headerTransparent: true,
+            // headerTransparent: true,
+            headerShadowVisible:false,
             headerTitleStyle: { color: '#000' },
             headerTitle: 'Confirm Your Ride',
           }}
@@ -227,7 +257,8 @@ const AppNavigator = () => {
           component={ParcelEntry}
           options={{
             headerShown: true,
-            headerTransparent: true,
+            // headerTransparent: true,
+            headerShadowVisible:false,
             headerTitleStyle: { color: '#000' },
             headerTitle: 'Pickup & Drop',
           }}
@@ -237,7 +268,8 @@ const AppNavigator = () => {
           component={ParcelRide}
           options={{
             headerShown: true,
-            headerTransparent: true,
+            // headerTransparent: true,
+            headerShadowVisible:false,
             headerTitleStyle: { color: '#000' },
             headerTitle: 'Pick your Vehicle',
           }}
@@ -248,7 +280,8 @@ const AppNavigator = () => {
           component={AddressEntry}
           options={{
             headerShown: true,
-            headerTransparent: true,
+            // headerTransparent: true,
+            headerShadowVisible:false,
             headerTitleStyle: { color: '#000' },
             headerTitle: 'Enter Address',
             presentation: 'modal', // Makes it slide from bottom

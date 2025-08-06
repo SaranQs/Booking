@@ -59,7 +59,6 @@ const PreferencesScreen = () => {
 const styles = StyleSheet.create({
   container: {
     padding: 16,
-    paddingTop: 60,
     backgroundColor: Colors.white,
     flex: 1,
   },
@@ -68,7 +67,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: Colors.black,
     marginBottom: 8,
-    marginTop: 24,
+    marginTop: 20,
   },
   item: {
     paddingVertical: 14,

@@ -24,7 +24,7 @@ const ParcelScreen = ({ navigation}: any) => { // Add navigation prop
     setModalVisible(true);
     Animated.timing(slideAnim, {
       toValue: 0,
-      duration: 300,
+      duration: 10,
       easing: Easing.out(Easing.ease),
       useNativeDriver: true,
     }).start();
@@ -33,7 +33,7 @@ const ParcelScreen = ({ navigation}: any) => { // Add navigation prop
   const closeModal = () => {
     Animated.timing(slideAnim, {
       toValue: Dimensions.get('window').width,
-      duration: 300,
+      duration: 10,
       easing: Easing.in(Easing.ease),
       useNativeDriver: true,
     }).start(() => {
@@ -230,7 +230,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: Colors.white,
     padding: 16,
-    paddingTop: 60,
   },
   banner: {
     width: '100%',

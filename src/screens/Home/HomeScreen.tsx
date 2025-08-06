@@ -33,10 +33,11 @@ const HomeScreen = () => {
     RideDetails: undefined;
     About: undefined;
     Parcel: undefined;
-    AddressEntry: undefined;
+    AddressEntry: { initialAddress: string; field: string } | undefined;
     Safety: undefined;
     Notification: undefined;
     MyRewards: undefined;
+    ReferAndEarn: undefined;
   };
   const [selectedRide, setSelectedRide] = useState('Bike');
   const [showDrawer, setShowDrawer] = useState(false);
@@ -116,7 +117,16 @@ const HomeScreen = () => {
           <View style={styles.recentContainer}>
             <Text style={styles.recentTitle}>Recent Rides</Text>
             {recentRides.map(ride => (
-              <View key={ride.id} style={styles.rideRow}>
+              <TouchableOpacity
+                key={ride.id}
+                style={styles.rideRow}
+                onPress={() => {
+                  navigation.navigate('AddressEntry', {
+                    initialAddress: ride.address,
+                    field: 'drop',
+                  });
+                }}
+              >
                 <Feather
                   name="map-pin"
                   size={18}
@@ -140,7 +150,7 @@ const HomeScreen = () => {
                     color={ride.liked ? '#E53935' : '#aaa'}
                   />
                 </TouchableOpacity>
-              </View>
+              </TouchableOpacity>
             ))}
           </View>
 
@@ -151,7 +161,6 @@ const HomeScreen = () => {
         </ScrollView>
       </KeyboardAvoidingView>
 
-      {/* Drawer */}
       {/* Drawer */}
       {showDrawer && (
         <View style={styles.drawerOverlay}>
@@ -190,32 +199,9 @@ const HomeScreen = () => {
               </TouchableOpacity>
             </View>
 
-            {/* <TouchableOpacity
-              style={styles.ratingRow}
-              onPress={() => {
-                // closeDrawer();
-                (navigation as any).navigate('MyRating');
-              }}
-            >
-              <Feather
-                name="star"
-                size={20}
-                color="#FFD700"
-                style={{ marginRight: 8 }}
-              />
-              <Text style={styles.drawerLabel}>My Rating</Text>
-              <Feather
-                name="chevron-right"
-                size={20}
-                color="#888"
-                style={{ marginLeft: 'auto' }}
-              />
-            </TouchableOpacity> */}
-
             <TouchableOpacity
               style={styles.drawerItem}
               onPress={() => {
-                // closeDrawer();
                 (navigation as any).navigate('MyRides');
               }}
             >
@@ -257,7 +243,6 @@ const HomeScreen = () => {
             <TouchableOpacity
               style={styles.drawerItem}
               onPress={() => {
-                // closeDrawer();
                 (navigation as any).navigate('Wallet');
               }}
             >
@@ -339,7 +324,6 @@ const HomeScreen = () => {
             <TouchableOpacity
               style={styles.drawerItem}
               onPress={() => {
-                // closeDrawer();
                 (navigation as any).navigate('Notification');
               }}
             >
@@ -360,7 +344,6 @@ const HomeScreen = () => {
             <TouchableOpacity
               style={styles.drawerItem}
               onPress={() => {
-                // closeDrawer();
                 (navigation as any).navigate('Settings');
               }}
             >
@@ -382,7 +365,6 @@ const HomeScreen = () => {
             <TouchableOpacity
               style={styles.drawerItem}
               onPress={() => {
-                // closeDrawer();
                 (navigation as any).navigate('Support');
               }}
             >
@@ -418,7 +400,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#f2f2f2',
     textAlign: 'center',
     textAlignVertical: 'center',
-    // padding: 12,
     marginRight: 12,
   },
   fakeInput: {
@@ -426,7 +407,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     paddingLeft: 8,
   },
-
   recentTitle: {
     fontSize: 16,
     fontWeight: '600',
@@ -460,7 +440,6 @@ const styles = StyleSheet.create({
     color: Colors.black,
     marginBottom: 12,
   },
-
   gradient: { flex: 1 },
   container: {
     flex: 1,
@@ -496,27 +475,6 @@ const styles = StyleSheet.create({
   inputContainer: { marginBottom: 25 },
   imageContainer: { alignItems: 'center' },
   vehicleImage: { width: 150, height: 100 },
-  // fareCard: {
-  //   backgroundColor: '#fff',
-  //   borderRadius: 16,
-  //   paddingVertical: 18,
-  //   paddingHorizontal: 24,
-  //   alignItems: 'center',
-  //   elevation: 6,
-  //   marginBottom: 25,
-  // },
-  // fareTitle: { fontSize: 14, color: '#999' },
-  // fare: { fontSize: 20, fontWeight: 'bold', color: '#333', marginTop: 4 },
-  // bookButton: {
-  //   backgroundColor: '#000',
-  //   paddingVertical: 16,
-  //   borderRadius: 14,
-  //   alignItems: 'center',
-  //   elevation: 6,
-  // },
-  // bookButtonText: { color: '#fff', fontSize: 16, fontWeight: 'bold' },
-
-  // Drawer styles
   drawerOverlay: {
     position: 'absolute',
     top: 0,
@@ -533,26 +491,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingTop: 20,
   },
-  // closeDrawerBtn: {
-  //   position: 'absolute',
-  //   top: 20,
-  //   right: 15,
-  // },
-  // closeText: {
-  //   fontSize: 28,
-  //   color: '#888',
-  // },
   profileRow: {
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 30,
   },
-  // drawerProfilePic: {
-  //   width: 70,
-  //   height: 70,
-  //   borderRadius: 35,
-  //   marginRight: 12,
-  // },
   profileText: {
     flex: 1,
   },

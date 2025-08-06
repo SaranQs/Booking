@@ -91,6 +91,24 @@ const data = [
     subtitle: 'Connemara Public Library, Egmore',
     icon: 'clock',
   },
+  {
+    id: '15',
+    title: 'Somewhere',
+    subtitle: '123 Business Park, Tech Road, City Center',
+    icon: 'clock',
+  },
+  {
+    id: '16',
+    title: 'Somewhere',
+    subtitle: '456 Serenity Lane, Suburbia, New Delhi',
+    icon: 'clock',
+  },
+  {
+  id: '17',
+    title: 'Gym 2',
+    subtitle: '789 Fitness Avenue, Wellness Block, Bangalore',
+    icon: 'clock',
+  },
 ];
 
 const AddressEntryScreen = ({ navigation, route }: any) => {
@@ -304,7 +322,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: Colors.white,
     padding: 16,
-    paddingTop: 60,
   },
   addressCard: {
     backgroundColor: Colors.backgroundWhite,

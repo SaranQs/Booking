@@ -93,7 +93,7 @@ const ReferAndEarnScreen = () => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: Colors.white, padding: 16, paddingTop: 60 },
+  container: { flex: 1, backgroundColor: Colors.white, padding: 16 },
 
   banner: {
     backgroundColor: Colors.lightGray,
@@ -102,7 +102,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     padding: 16,
-    marginTop: 20,
     elevation: 1,
   },
   bannerTitle: { fontSize: 20, fontWeight: 'bold', color: Colors.black },

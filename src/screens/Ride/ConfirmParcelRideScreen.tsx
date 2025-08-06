@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import {
   View,
   Text,
@@ -11,10 +11,15 @@ import {
 import Colors from '../../constants/colors';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Feather from 'react-native-vector-icons/Feather';
+import WalletModalWrapper from './WalletModalWrapper';
+import WalletScreen from '../MenuScreens/WalletScreen';
+import OffersScreen from '../Ride/OffersScreen';
 
-const ConfirmParcelRideScreen = ({ route, navigation }: any) => { // Added navigation prop
-  const { pickup, drop } = route.params || {}; // Safely access route.params
-  const [selectedMode, setSelectedMode] = useState<'bike' | 'truck_small' | 'truck_large'>('bike');
+const ConfirmParcelRideScreen = ({ route }: any) => {
+  const { pickup, drop } = route.params || {};
+  const [selectedMode, setSelectedMode] = useState<'bike' | 'truck small' | 'truck large'>('bike');
+  const [walletVisible, setWalletVisible] = useState(false);
+  const [offersVisible, setOffersVisible] = useState(false);
 
   const rideOptions = {
     bike: {
@@ -22,32 +27,35 @@ const ConfirmParcelRideScreen = ({ route, navigation }: any) => { // Added navig
       time: 10,
       image: require('../../assets/bike.png'),
     },
-    truck_small: {
+    'truck small': {
       cost: 60,
-      time: 20,
+      time: 15,
       image: require('../../assets/truck_s.png'),
     },
-    truck_large: {
+    'truck large': {
       cost: 90,
-      time: 15,
+      time: 20,
       image: require('../../assets/truck_l.png'),
     },
   };
 
-  const getDropTime = (minutes: number) => {
+  // Memoize drop times for each ride option on component mount
+  const dropTimes = useMemo(() => {
     const date = new Date();
-    date.setMinutes(date.getMinutes() + minutes);
-    return date.toLocaleTimeString([], {
-      hour: '2-digit',
-      minute: '2-digit',
-      hour12: true,
-    });
-  };
-
-  const handleConfirm = () => {
-    // Navigate to a confirmation screen or perform booking logic
-    navigation.navigate('BookingConfirmation', { pickup, drop, selectedMode });
-  };
+    return Object.fromEntries(
+      Object.entries(rideOptions).map(([key, option]) => {
+        const dropDate = new Date(date.getTime() + option.time * 60 * 1000);
+        return [
+          key,
+          dropDate.toLocaleTimeString([], {
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: true,
+          }),
+        ];
+      })
+    );
+  }, []); // Empty dependency array ensures this runs only once on mount
 
   return (
     <View style={styles.container}>
@@ -73,15 +81,15 @@ const ConfirmParcelRideScreen = ({ route, navigation }: any) => { // Added navig
                 styles.transportCard,
                 selectedMode === key && styles.selectedCard,
               ]}
-              onPress={() => setSelectedMode(key as 'bike' | 'truck_small' | 'truck_large')}
+              onPress={() => setSelectedMode(key as 'bike' | 'truck small' | 'truck large')}
             >
               <Image source={option.image} style={styles.icon} />
               <View style={{ flex: 1 }}>
                 <Text style={styles.transportName}>
-                  {key.replace('_', ' ').charAt(0).toUpperCase() + key.replace('_', ' ').slice(1)}
+                  {key.charAt(0).toUpperCase() + key.slice(1)}
                 </Text>
                 <Text style={styles.estimate}>
-                  {option.time} min • Drop by {getDropTime(option.time)}
+                  {option.time} min • Drop by {dropTimes[key]}
                 </Text>
               </View>
               <Text style={styles.price}>₹{option.cost}</Text>
@@ -93,7 +101,7 @@ const ConfirmParcelRideScreen = ({ route, navigation }: any) => { // Added navig
         <View style={styles.optionsRow}>
           <TouchableOpacity
             style={styles.optionBlock}
-            onPress={() => navigation.navigate('PaymentScreen')}
+            onPress={() => setWalletVisible(true)}
           >
             <Ionicons name="cash-outline" size={20} color={Colors.black} />
             <Text style={styles.optionTitle}>Mode of Payment</Text>
@@ -102,7 +110,7 @@ const ConfirmParcelRideScreen = ({ route, navigation }: any) => { // Added navig
 
           <TouchableOpacity
             style={styles.optionBlock}
-            onPress={() => navigation.navigate('OffersScreen')}
+            onPress={() => setOffersVisible(true)}
           >
             <Feather name="gift" size={20} color={Colors.black} />
             <Text style={styles.optionTitle}>Offers</Text>
@@ -111,10 +119,26 @@ const ConfirmParcelRideScreen = ({ route, navigation }: any) => { // Added navig
         </View>
 
         {/* Confirm Button */}
-        <TouchableOpacity style={styles.confirmButton} onPress={handleConfirm}>
-          <Text style={styles.confirmText}>Book {selectedMode.replace('_', ' ')}</Text>
+        <TouchableOpacity style={styles.confirmButton}>
+          <Text style={styles.confirmText}>Book {selectedMode}</Text>
         </TouchableOpacity>
       </View>
+
+      {/* Wallet Modal */}
+      <WalletModalWrapper
+        visible={walletVisible}
+        onClose={() => setWalletVisible(false)}
+      >
+        <WalletScreen />
+      </WalletModalWrapper>
+
+      {/* Offers Modal */}
+      <WalletModalWrapper
+        visible={offersVisible}
+        onClose={() => setOffersVisible(false)}
+      >
+        <OffersScreen />
+      </WalletModalWrapper>
     </View>
   );
 };
@@ -126,11 +150,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
-    paddingTop: 60,
     backgroundColor: Colors.white,
   },
   mapPlaceholder: {
-    height: height * 0.6, // Same map size
+    height: height * 0.6,
     backgroundColor: '#e0e0e0',
     borderRadius: 8,
     alignItems: 'center',
@@ -151,11 +174,10 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: -2 },
     shadowOpacity: 0.3,
     shadowRadius: 6,
-    elevation: 8, // Increased for Android shadow
+    elevation: 8,
     paddingHorizontal: 16,
     paddingTop: 8,
-    // paddingBottom: 16,
-    height: height * 0.5, // Bottom sheet takes half the screen
+    height: height * 0.5,
   },
   handle: {
     width: 40,
@@ -166,7 +188,7 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   transportScroll: {
-    maxHeight: height * 0.30, // Adjusted for transport options
+    maxHeight: height * 0.30,
     marginBottom: 12,
   },
   transportCard: {
