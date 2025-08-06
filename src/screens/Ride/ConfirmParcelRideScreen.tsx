@@ -55,7 +55,7 @@ const ConfirmParcelRideScreen = ({ route }: any) => {
         ];
       })
     );
-  }, []); // Empty dependency array ensures this runs only once on mount
+  }); // Empty dependency array ensures this runs only once on mount
 
   return (
     <View style={styles.container}>
