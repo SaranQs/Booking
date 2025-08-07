@@ -17,7 +17,7 @@ import Colors from '../../constants/colors';
 type Props = NativeStackScreenProps<RootStackParamList, 'Login'>;
 
 const LoginScreen: React.FC<Props> = ({ navigation }) => {
-  const [mobileNumber, setMobileNumber] = useState('');
+  const [mobileNumber, setMobileNumber] = useState('5497924624');
   const [errorMessage, setErrorMessage] = useState('');
 
   const handleContinue = () => {

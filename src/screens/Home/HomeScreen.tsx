@@ -1,3 +1,4 @@
+// HomeScreen.tsx
 import React, { useState, useRef } from 'react';
 import {
   View,
@@ -8,7 +9,6 @@ import {
   Platform,
   ScrollView,
 } from 'react-native';
-
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import Colors from '../../constants/colors';
@@ -16,34 +16,58 @@ import * as Animatable from 'react-native-animatable';
 import Feather from 'react-native-vector-icons/Feather';
 import LinearGradient from 'react-native-linear-gradient';
 import RideTypeSwitcher from './RideTypeSwitcher';
+import { useFavorites } from '../MenuScreens/FavouritesContext';
+
+type RootStackParamList = {
+  Login: undefined;
+  Otp: undefined;
+  Signup: undefined;
+  Home: undefined;
+  MyRides: undefined;
+  Wallet: undefined;
+  Settings: undefined;
+  Support: undefined;
+  Profile: undefined;
+  Favourites: undefined;
+  Preferences: undefined;
+  RideDetails: undefined;
+  About: undefined;
+  Parcel: undefined;
+  AddressEntry: { initialAddress: string; field: string } | undefined;
+  Safety: undefined;
+  Notification: undefined;
+  MyRewards: undefined;
+  ReferAndEarn: undefined;
+};
 
 const HomeScreen = () => {
-  type RootStackParamList = {
-    Login: undefined;
-    Otp: undefined;
-    Signup: undefined;
-    Home: undefined;
-    MyRides: undefined;
-    Wallet: undefined;
-    Settings: undefined;
-    Support: undefined;
-    Profile: undefined;
-    Favourites: undefined;
-    Preferences: undefined;
-    RideDetails: undefined;
-    About: undefined;
-    Parcel: undefined;
-    AddressEntry: { initialAddress: string; field: string } | undefined;
-    Safety: undefined;
-    Notification: undefined;
-    MyRewards: undefined;
-    ReferAndEarn: undefined;
-  };
   const [selectedRide, setSelectedRide] = useState('Bike');
   const [showDrawer, setShowDrawer] = useState(false);
   const drawerRef = useRef<any>(null);
-  const navigation =
-    useNavigation<NativeStackScreenProps<RootStackParamList>['navigation']>();
+  const navigation = useNavigation<NativeStackScreenProps<RootStackParamList>['navigation']>();
+  const { addFavorite, favorites } = useFavorites();
+
+  const [recentRides, setRecentRides] = useState([
+    {
+      id: 1,
+      place: 'Office',
+      address: '123 Business Park, Tech Road, City Center',
+      liked: false,
+    },
+    {
+      id: 2,
+      place: 'Home',
+      address: '456 Serenity Lane, Suburbia, New Delhi',
+      liked: false,
+    },
+    {
+      id: 3,
+      place: 'Gym',
+      address: '789 Fitness Avenue, Wellness Block, Bangalore',
+      liked: false,
+    },
+  ]);
+
   const handleRideTypeSelect = (type: string) => {
     if (type === 'Parcel') {
       navigation.navigate('Parcel');
@@ -58,26 +82,27 @@ const HomeScreen = () => {
     }
   };
 
-  const recentRides = [
-    {
-      id: 1,
-      place: 'Office',
-      address: '123 Business Park, Tech Road, City Center',
-      liked: true,
-    },
-    {
-      id: 2,
-      place: 'Home',
-      address: '456 Serenity Lane, Suburbia, New Delhi',
-      liked: false,
-    },
-    {
-      id: 3,
-      place: 'Gym',
-      address: '789 Fitness Avenue, Wellness Block, Bangalore',
-      liked: false,
-    },
-  ];
+  const handleLike = (ride: { id: number; place: string; address: string; liked: boolean }) => {
+    // Toggle liked state
+    setRecentRides(prev =>
+      prev.map(item =>
+        item.id === ride.id ? { ...item, liked: !item.liked } : item
+      )
+    );
+
+    // If liked, add to favorites
+    if (!ride.liked) {
+      const isAlreadyFavorite = favorites.some(fav => fav.address === ride.address);
+      if (!isAlreadyFavorite) {
+        addFavorite({
+          id: Date.now().toString(),
+          type: 'other', // Default type, can be customized based on place
+          label: ride.place,
+          address: ride.address,
+        });
+      }
+    }
+  };
 
   return (
     <LinearGradient
@@ -143,9 +168,9 @@ const HomeScreen = () => {
                     {ride.address}
                   </Text>
                 </View>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => handleLike(ride)}>
                   <Feather
-                    name={ride.liked ? 'heart' : 'heart'}
+                    name="heart"
                     size={18}
                     color={ride.liked ? '#E53935' : '#aaa'}
                   />
@@ -180,9 +205,7 @@ const HomeScreen = () => {
 
             <View style={styles.drawerHeader}>
               <TouchableOpacity
-                onPress={() => {
-                  (navigation as any).navigate('Profile');
-                }}
+                onPress={() => navigation.navigate('Profile')}
                 style={styles.profileRow}
               >
                 <Feather
@@ -198,12 +221,10 @@ const HomeScreen = () => {
                 <Feather name="chevron-right" size={22} color="#888" />
               </TouchableOpacity>
             </View>
-
+            <ScrollView>
             <TouchableOpacity
               style={styles.drawerItem}
-              onPress={() => {
-                (navigation as any).navigate('MyRides');
-              }}
+              onPress={() => navigation.navigate('MyRides')}
             >
               <Feather
                 name="clock"
@@ -221,9 +242,7 @@ const HomeScreen = () => {
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.drawerItem}
-              onPress={() => {
-                (navigation as any).navigate('Parcel');
-              }}
+              onPress={() => navigation.navigate('Parcel')}
             >
               <Feather
                 name="package"
@@ -239,12 +258,9 @@ const HomeScreen = () => {
                 style={{ marginLeft: 'auto' }}
               />
             </TouchableOpacity>
-
             <TouchableOpacity
               style={styles.drawerItem}
-              onPress={() => {
-                (navigation as any).navigate('Wallet');
-              }}
+              onPress={() => navigation.navigate('Wallet')}
             >
               <Feather
                 name="credit-card"
@@ -262,9 +278,7 @@ const HomeScreen = () => {
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.drawerItem}
-              onPress={() => {
-                (navigation as any).navigate('Safety');
-              }}
+              onPress={() => navigation.navigate('Safety')}
             >
               <Feather
                 name="shield"
@@ -282,9 +296,7 @@ const HomeScreen = () => {
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.drawerItem}
-              onPress={() => {
-                (navigation as any).navigate('ReferAndEarn');
-              }}
+              onPress={() => navigation.navigate('ReferAndEarn')}
             >
               <Feather
                 name="gift"
@@ -302,9 +314,7 @@ const HomeScreen = () => {
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.drawerItem}
-              onPress={() => {
-                (navigation as any).navigate('MyRewards');
-              }}
+              onPress={() => navigation.navigate('MyRewards')}
             >
               <Feather
                 name="award"
@@ -320,12 +330,9 @@ const HomeScreen = () => {
                 style={{ marginLeft: 'auto' }}
               />
             </TouchableOpacity>
-
             <TouchableOpacity
               style={styles.drawerItem}
-              onPress={() => {
-                (navigation as any).navigate('Notification');
-              }}
+              onPress={() => navigation.navigate('Notification')}
             >
               <Feather
                 name="bell"
@@ -343,9 +350,7 @@ const HomeScreen = () => {
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.drawerItem}
-              onPress={() => {
-                (navigation as any).navigate('Settings');
-              }}
+              onPress={() => navigation.navigate('Settings')}
             >
               <Feather
                 name="settings"
@@ -361,12 +366,9 @@ const HomeScreen = () => {
                 style={{ marginLeft: 'auto' }}
               />
             </TouchableOpacity>
-
             <TouchableOpacity
               style={styles.drawerItem}
-              onPress={() => {
-                (navigation as any).navigate('Support');
-              }}
+              onPress={() => navigation.navigate('Support')}
             >
               <Feather
                 name="help-circle"
@@ -382,6 +384,25 @@ const HomeScreen = () => {
                 style={{ marginLeft: 'auto' }}
               />
             </TouchableOpacity>
+            {/* <TouchableOpacity
+              style={styles.drawerItem}
+              onPress={() => navigation.navigate('Favourites')}
+            >
+              <Feather
+                name="heart"
+                size={18}
+                color="#666"
+                style={styles.drawerIcon}
+              />
+              <Text style={styles.drawerLabel}>Favourites</Text>
+              <Feather
+                name="chevron-right"
+                size={20}
+                color="#888"
+                style={{ marginLeft: 'auto' }}
+              />
+            </TouchableOpacity> */}
+            </ScrollView>
           </Animatable.View>
         </View>
       )}
@@ -389,6 +410,7 @@ const HomeScreen = () => {
   );
 };
 
+// Styles remain unchanged
 const styles = StyleSheet.create({
   recentContainer: {
     marginBottom: 20,

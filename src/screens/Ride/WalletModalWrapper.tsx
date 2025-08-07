@@ -131,7 +131,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.white,
     borderTopLeftRadius: 16, // Match ConfirmRideScreen
     borderTopRightRadius: 16,
-    height: screenHeight * 0.8, // Match ConfirmRideScreen
+    height: screenHeight * 0.5, // Match ConfirmRideScreen
     shadowColor: '#000',
     shadowOffset: { width: 0, height: -2 },
     shadowOpacity: 0.3,

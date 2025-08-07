@@ -15,7 +15,7 @@ import WalletModalWrapper from './WalletModalWrapper';
 import WalletScreen from '../MenuScreens/WalletScreen';
 import OffersScreen from '../Ride/OffersScreen';
 
-const ConfirmRideScreen = ({ route }: any) => {
+const ConfirmRideScreen = ({ route, navigation }: any) => {
   const { pickup, drop } = route.params;
   const [selectedMode, setSelectedMode] = useState<'bike' | 'auto' | 'taxi'>('bike');
   const [walletVisible, setWalletVisible] = useState(false);
@@ -55,7 +55,15 @@ const ConfirmRideScreen = ({ route }: any) => {
         ];
       })
     );
-  }); // Empty dependency array ensures this runs only once on mount
+  }, []); // Empty dependency array ensures this runs only once on mount
+
+  const handleConfirm = () => {
+    navigation.navigate('CaptainSearch', {
+      pickup,
+      drop,
+      selectedMode,
+    });
+  };
 
   return (
     <View style={styles.container}>
@@ -119,7 +127,7 @@ const ConfirmRideScreen = ({ route }: any) => {
         </View>
 
         {/* Confirm Button */}
-        <TouchableOpacity style={styles.confirmButton}>
+        <TouchableOpacity style={styles.confirmButton} onPress={handleConfirm}>
           <Text style={styles.confirmText}>Book {selectedMode}</Text>
         </TouchableOpacity>
       </View>
@@ -143,13 +151,11 @@ const ConfirmRideScreen = ({ route }: any) => {
   );
 };
 
-export default ConfirmRideScreen;
-
 const { height } = Dimensions.get('window');
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16,
+    // padding: 16,
     backgroundColor: Colors.white,
   },
   mapPlaceholder: {
@@ -176,7 +182,7 @@ const styles = StyleSheet.create({
     shadowRadius: 6,
     elevation: 8,
     paddingHorizontal: 16,
-    paddingTop: 8,
+    padding: 8,
     height: height * 0.5,
   },
   handle: {
@@ -259,3 +265,5 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
 });
+
+export default ConfirmRideScreen;

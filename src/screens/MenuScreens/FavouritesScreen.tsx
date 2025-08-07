@@ -1,3 +1,4 @@
+// FavouritesScreen.tsx
 import React, { useState } from 'react';
 import {
   View,
@@ -7,48 +8,34 @@ import {
   TouchableOpacity,
   Modal,
   TextInput,
+  KeyboardAvoidingView,
+  Platform,
+  Dimensions,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
 import Colors from '../../constants/colors';
-const initialPlaces = [
-  {
-    id: '1',
-    type: 'home',
-    label: 'Home',
-    address: '123 Main Street, Chennai',
-  },
-  {
-    id: '2',
-    type: 'gym',
-    label: 'Gym',
-    address: '45 Fitness Blvd, Chennai',
-  },
-  {
-    id: '3',
-    type: 'other',
-    label: 'Work',
-    address: 'Tech Park, Taramani, Chennai',
-  },
-];
+import { useFavorites } from './FavouritesContext';
 
+const Height = Dimensions.get('window').height;
 const FavouritesScreen = () => {
-  const [favourites, setFavourites] = useState(initialPlaces);
+  const { favorites, addFavorite, updateFavorite, deleteFavorite } = useFavorites();
   const [selected, setSelected] = useState<any>(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [editLabel, setEditLabel] = useState('');
   const [editAddress, setEditAddress] = useState('');
+  const [editType, setEditType] = useState<'home' | 'gym' | 'office' | 'other'>('other');
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [toDeleteId, setToDeleteId] = useState<string | null>(null);
 
   const [addModalVisible, setAddModalVisible] = useState(false);
   const [newLabel, setNewLabel] = useState('');
   const [newAddress, setNewAddress] = useState('');
-  const [newType, setNewType] = useState<'home' | 'gym' | 'other'>('other');
-
+  const [newType, setNewType] = useState<'home' | 'gym' | 'office' | 'other'>('other');
   const handleEdit = (item: any) => {
     setSelected(item);
     setEditLabel(item.label);
     setEditAddress(item.address);
+    setEditType(item.type);
     setModalVisible(true);
   };
 
@@ -59,7 +46,7 @@ const FavouritesScreen = () => {
 
   const confirmDelete = () => {
     if (toDeleteId) {
-      setFavourites(prev => prev.filter(place => place.id !== toDeleteId));
+      deleteFavorite(toDeleteId);
     }
     setShowDeleteModal(false);
     setToDeleteId(null);
@@ -68,33 +55,27 @@ const FavouritesScreen = () => {
   const handleAdd = () => {
     if (!newLabel || !newAddress) return;
 
-    const newItem = {
+    addFavorite({
       id: Date.now().toString(),
       label: newLabel,
       address: newAddress,
       type: newType,
-    };
+    });
 
-    setFavourites(prev => [...prev, newItem]);
     setAddModalVisible(false);
     setNewLabel('');
     setNewAddress('');
+    setNewType('other');
   };
 
   const handleUpdate = () => {
     if (!editLabel || !editAddress) return;
 
-    setFavourites(prev =>
-      prev.map(item =>
-        item.id === selected.id
-          ? { ...item, label: editLabel, address: editAddress }
-          : item,
-      ),
-    );
+    updateFavorite(selected.id, editLabel, editAddress);
     setModalVisible(false);
   };
 
-  const renderItem = ({ item }: { item: (typeof favourites)[0] }) => (
+  const renderItem = ({ item }: { item: (typeof favorites)[0] }) => (
     <View style={styles.card}>
       <View style={styles.iconWrapper}>
         <Icon
@@ -103,6 +84,8 @@ const FavouritesScreen = () => {
               ? 'home'
               : item.type === 'gym'
               ? 'activity'
+              : item.type === 'office'
+              ? 'briefcase'
               : 'map-pin'
           }
           size={20}
@@ -127,7 +110,7 @@ const FavouritesScreen = () => {
   return (
     <View style={styles.container}>
       <FlatList
-        data={favourites}
+        data={favorites}
         keyExtractor={item => item.id}
         renderItem={renderItem}
         contentContainerStyle={{ paddingBottom: 20 }}
@@ -146,7 +129,10 @@ const FavouritesScreen = () => {
         visible={modalVisible}
         onRequestClose={() => setModalVisible(false)}
       >
-        <View style={styles.modalContainer}>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          style={styles.modalContainer}
+        >
           <View style={styles.mapPlaceholder}>
             <Text style={{ color: '#888' }}>Map Placeholder</Text>
           </View>
@@ -164,6 +150,7 @@ const FavouritesScreen = () => {
               value={editLabel}
               onChangeText={setEditLabel}
               style={styles.input}
+              placeholderTextColor={Colors.gray}
             />
             <TextInput
               placeholder="Address"
@@ -171,21 +158,50 @@ const FavouritesScreen = () => {
               onChangeText={setEditAddress}
               style={styles.input}
               multiline
+              placeholderTextColor={Colors.gray}
             />
-
-            <TouchableOpacity style={styles.updateBtn} onPress={handleUpdate}>
-              <Text style={styles.updateBtnText}>Update Favourite</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              onPress={() => setModalVisible(false)}
-              style={{ marginTop: 16 }}
-            >
-              <Text style={{ textAlign: 'center', color: '#555' }}>Cancel</Text>
-            </TouchableOpacity>
+            <View style={styles.typeButtons}>
+              <TouchableOpacity
+                style={[styles.typeButton, editType === 'home' && styles.selectedTypeButton]}
+                onPress={() => setEditType('home')}
+              >
+                <Text style={[styles.typeButtonText, editType === 'home' && styles.selectedTypeText]}>Home</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.typeButton, editType === 'gym' && styles.selectedTypeButton]}
+                onPress={() => setEditType('gym')}
+              >
+                <Text style={[styles.typeButtonText, editType === 'gym' && styles.selectedTypeText]}>Gym</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.typeButton, editType === 'office' && styles.selectedTypeButton]}
+                onPress={() => setEditType('office')}
+              >
+                <Text style={[styles.typeButtonText, editType === 'office' && styles.selectedTypeText]}>Office</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.typeButton, editType === 'other' && styles.selectedTypeButton]}
+                onPress={() => setEditType('other')}
+              >
+                <Text style={[styles.typeButtonText, editType === 'other' && styles.selectedTypeText]}>Other</Text>
+              </TouchableOpacity>
+            </View>
+            <View style={styles.bottom}>
+              <TouchableOpacity style={styles.updateBtn} onPress={handleUpdate}>
+                <Text style={styles.updateBtnText}>Update Favourite</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => setModalVisible(false)}
+                style={{ marginTop: 16 }}
+              >
+                <Text style={{ textAlign: 'center', color: '#555' }}>Cancel</Text>
+              </TouchableOpacity>
+            </View>
           </View>
-        </View>
+        </KeyboardAvoidingView>
       </Modal>
+
+      {/* Modal for deleting favourite */}
       <Modal
         transparent
         animationType="fade"
@@ -204,19 +220,24 @@ const FavouritesScreen = () => {
               </TouchableOpacity>
               <TouchableOpacity onPress={confirmDelete}>
                 <Text style={{ color: '#d00', fontWeight: '700' }}>
-                  <Icon name="trash-2" size={18} color="#d00" style={styles.icon} />  Delete
+                  <Icon name="trash-2" size={18} color="#d00" style={styles.icon} /> Delete
                 </Text>
               </TouchableOpacity>
             </View>
           </View>
         </View>
       </Modal>
+
+      {/* Modal for adding new favourite */}
       <Modal
         animationType="slide"
         visible={addModalVisible}
         onRequestClose={() => setAddModalVisible(false)}
       >
-        <View style={styles.modalContainer}>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          style={styles.modalContainer}
+        >
           <View style={styles.mapPlaceholder}>
             <Text style={{ color: '#888' }}>Map Placeholder</Text>
           </View>
@@ -227,29 +248,57 @@ const FavouritesScreen = () => {
             <TextInput
               placeholder="Location Label"
               value={newLabel}
+              placeholderTextColor={Colors.gray}
               onChangeText={setNewLabel}
               style={styles.input}
             />
             <TextInput
               placeholder="Address"
               value={newAddress}
+              placeholderTextColor={Colors.gray}
               onChangeText={setNewAddress}
               style={styles.input}
               multiline
             />
-
-            <TouchableOpacity style={styles.updateBtn} onPress={handleAdd}>
-              <Text style={styles.updateBtnText}>Add Favourite</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              onPress={() => setAddModalVisible(false)}
-              style={{ marginTop: 16 }}
-            >
-              <Text style={{ textAlign: 'center', color: '#555' }}>Cancel</Text>
-            </TouchableOpacity>
+            <View style={styles.typeButtons}>
+              <TouchableOpacity
+                style={[styles.typeButton, newType === 'home' && styles.selectedTypeButton]}
+                onPress={() => setNewType('home')}
+              >
+                <Text style={[styles.typeButtonText, newType === 'home' && styles.selectedTypeText]}>Home</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.typeButton, newType === 'gym' && styles.selectedTypeButton]}
+                onPress={() => setNewType('gym')}
+              >
+                <Text style={[styles.typeButtonText, newType === 'gym' && styles.selectedTypeText]}>Gym</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.typeButton, newType === 'office' && styles.selectedTypeButton]}
+                onPress={() => setNewType('office')}
+              >
+                <Text style={[styles.typeButtonText, newType === 'office' && styles.selectedTypeText]}>Office</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.typeButton, newType === 'other' && styles.selectedTypeButton]}
+                onPress={() => setNewType('other')}
+              >
+                <Text style={[styles.typeButtonText, newType === 'other' && styles.selectedTypeText]}>Other</Text>
+              </TouchableOpacity>
+            </View>
+            <View style={styles.bottom}>
+              <TouchableOpacity style={styles.updateBtn} onPress={handleAdd}>
+                <Text style={styles.updateBtnText}>Add Favourite</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => setAddModalVisible(false)}
+                style={{ marginTop: 16 }}
+              >
+                <Text style={{ textAlign: 'center', color: '#555' }}>Cancel</Text>
+              </TouchableOpacity>
+            </View>
           </View>
-        </View>
+        </KeyboardAvoidingView>
       </Modal>
     </View>
   );
@@ -275,7 +324,10 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     elevation: 5,
   },
-
+  bottom: {
+    flex: 1,
+    justifyContent: 'flex-end',
+  },
   container: {
     padding: 16,
     backgroundColor: Colors.white,
@@ -306,7 +358,7 @@ const styles = StyleSheet.create({
   },
   actions: {
     flexDirection: 'row',
-    gap:10,
+    gap: 10,
   },
   icon: {
     marginLeft: 10,
@@ -328,21 +380,21 @@ const styles = StyleSheet.create({
   modalContainer: {
     flex: 1,
     backgroundColor: Colors.white,
-
   },
   mapPlaceholder: {
-    flex: 7,
+    height: Height * 0.5,
     backgroundColor: '#ddd',
     alignItems: 'center',
     justifyContent: 'center',
   },
   modalContent: {
-    flex: 3,
+    height: Height * 0.5,
     padding: 16,
     backgroundColor: Colors.white,
     borderTopLeftRadius: 16,
     borderTopRightRadius: 16,
-    elevation: 4,
+    elevation: 20,
+    zIndex:100,
   },
   modalHeader: {
     flexDirection: 'row',
@@ -359,7 +411,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#ccc',
     paddingHorizontal: 14,
-    padding:6,
+    padding: 6,
     borderRadius: 100,
     color: Colors.black,
     fontWeight: '600',
@@ -381,6 +433,33 @@ const styles = StyleSheet.create({
   updateBtnText: {
     color: Colors.white,
     fontWeight: '700',
+  },
+  typeButtons: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginVertical: 12,
+  },
+  typeButton: {
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 8,
+    flex: 1,
+    alignItems: 'center',
+    marginHorizontal: 4,
+  },
+  selectedTypeButton: {
+    backgroundColor: Colors.black,
+    borderColor: Colors.black,
+  },
+  typeButtonText: {
+    fontSize: 14,
+    color: Colors.black,
+  },
+  selectedTypeText: {
+    color: Colors.white,
+    fontWeight: '600',
   },
 });
 

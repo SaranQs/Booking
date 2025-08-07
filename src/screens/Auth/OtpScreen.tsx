@@ -15,7 +15,7 @@ import Icons from 'react-native-vector-icons/Feather';
 const OTP_LENGTH = 4;
 
 const OtpScreen = ({ navigation }: any) => {
-  const [otp, setOtp] = useState<string[]>(new Array(OTP_LENGTH).fill(''));
+  const [otp, setOtp] = useState<string[]>(new Array(OTP_LENGTH).fill('1'));
   const [validationMessage, setValidationMessage] = useState('');
   const inputs = useRef<(TextInput | null)[]>([]);
 

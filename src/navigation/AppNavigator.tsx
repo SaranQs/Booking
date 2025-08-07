@@ -11,7 +11,7 @@ import WalletScreen from '../screens/MenuScreens/WalletScreen';
 import SettingsScreen from '../screens/MenuScreens/SettingsScreen';
 import SupportScreen from '../screens/MenuScreens/SupportScreen';
 import Profile from '../screens/MenuScreens/ProfileScreen';
-import Favoutires from '../screens/MenuScreens/FavoutiresScreen';
+import Favourites from '../screens/MenuScreens/FavouritesScreen';
 import Preferences from '../screens/MenuScreens/PreferencesScreen';
 import RideDetails from '../screens/MenuScreens/RideDetailScreen';
 import AboutScreen from '../screens/MenuScreens/AboutScreen';
@@ -24,6 +24,11 @@ import Notification from '../screens/MenuScreens/NotificationScreen';
 import ConfirmRide from '../screens/Ride/ConfirmRideScreen';
 import ParcelEntry from '../screens/Home/ParcelAddressEntryScreen';
 import ParcelRide from '../screens/Ride/ConfirmParcelRideScreen';
+import CaptainSearch from '../screens/Ride/CaptainSearchScreen';
+
+
+import { FavoritesProvider } from '../screens/MenuScreens/FavouritesContext';
+
 export type RootStackParamList = {
   Login: undefined;
   Otp: undefined;
@@ -39,20 +44,22 @@ export type RootStackParamList = {
   RideDetails: undefined;
   About: undefined;
   Parcel: undefined;
-  AddressEntry:  { initialAddress: string; field: string } | undefined;
+  AddressEntry: { initialAddress?: string; field?: string } | undefined;
   Safety: undefined;
   ReferAndEarn: undefined;
   MyRewards: undefined;
   Notification: undefined;
-  ConfirmRide: undefined,
+  ConfirmRide: { pickup: string; drop: string };
   ParcelEntry: undefined;
   ParcelRide: undefined;
+  CaptainSearch: { pickup: string; drop: string; selectedMode: string };
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 const AppNavigator = () => {
   return (
+    <FavoritesProvider>
     <NavigationContainer>
       <Stack.Navigator
         initialRouteName="Login"
@@ -125,7 +132,7 @@ const AppNavigator = () => {
         />
         <Stack.Screen
           name="Favourites"
-          component={Favoutires}
+          component={Favourites}
           options={{
             headerShown: true,
             // headerTransparent: true,
@@ -253,6 +260,17 @@ const AppNavigator = () => {
           }}
         />
         <Stack.Screen
+          name="CaptainSearch"
+          component={CaptainSearch}
+          options={{
+            headerShown: false,
+            // headerTransparent: true,
+            headerShadowVisible:false,
+            headerTitleStyle: { color: '#000' },
+            headerTitle: 'Confirm Your Ride',
+          }}
+        />
+        <Stack.Screen
           name="ParcelEntry"
           component={ParcelEntry}
           options={{
@@ -290,6 +308,7 @@ const AppNavigator = () => {
         />
       </Stack.Navigator>
     </NavigationContainer>
+    </FavoritesProvider>
   );
 };
 

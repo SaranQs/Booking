@@ -50,10 +50,7 @@ const OffersScreen = () => {
         <Text style={styles.sectionTitle}>Available Offers</Text>
 
         {/* Offer 1 */}
-        <TouchableOpacity
-          style={styles.offerCard}
-          onPress={() => handlePress('SAVE10')}
-        >
+        <View style={styles.offerCard}>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <Icon name="tag" size={20} color="#333" />
             <View style={{ marginLeft: 10 }}>
@@ -61,23 +58,28 @@ const OffersScreen = () => {
               <Text style={styles.offerDesc}>Get 10% off up to ₹50 on your next ride</Text>
             </View>
           </View>
+        <TouchableOpacity
+          onPress={() => handlePress('SAVE10')}
+        >
           <Text style={styles.applyText}>Apply</Text>
         </TouchableOpacity>
+    </View>
 
         {/* Offer 2 */}
-        <TouchableOpacity
-          style={styles.offerCard}
-          onPress={() => handlePress('RIDE20')}
-        >
+        <View style={styles.offerCard}>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <Icon name="tag" size={20} color="#333" />
             <View style={{ marginLeft: 10 }}>
-              <Text style={styles.offerTitle}>RIDE20</Text>
-              <Text style={styles.offerDesc}>₹20 off on rides above ₹100</Text>
+              <Text style={styles.offerTitle}>SAVE20</Text>
+              <Text style={styles.offerDesc}>Get 20% off up to ₹100 on your next ride</Text>
             </View>
           </View>
+        <TouchableOpacity
+          onPress={() => handlePress('SAVE20')}
+        >
           <Text style={styles.applyText}>Apply</Text>
         </TouchableOpacity>
+    </View>
       </View>
 
       {/* Section: Expired Offers */}

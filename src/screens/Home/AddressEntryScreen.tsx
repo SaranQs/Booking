@@ -6,11 +6,14 @@ import {
   TouchableOpacity,
   FlatList,
   TextInput,
+  Alert,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Feather from 'react-native-vector-icons/Feather';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Colors from '../../constants/colors';
+import { useFavorites } from '../MenuScreens/FavouritesContext';
+
 const data = [
   {
     id: '1',
@@ -104,7 +107,7 @@ const data = [
     icon: 'clock',
   },
   {
-  id: '17',
+    id: '17',
     title: 'Gym 2',
     subtitle: '789 Fitness Avenue, Wellness Block, Bangalore',
     icon: 'clock',
@@ -113,14 +116,19 @@ const data = [
 
 const AddressEntryScreen = ({ navigation, route }: any) => {
   const { initialAddress, field } = route.params || {};
-const [pickup, setPickup] = useState(field === 'pickup' ? initialAddress : '157, S W Boag Rd, T Nagar, CIT Nagar East');
+  const { favorites, addFavorite, deleteFavorite } = useFavorites();
+  const [pickup, setPickup] = useState(field === 'pickup' ? initialAddress : '157, S W Boag Rd, T Nagar, CIT Nagar East');
   const [drop, setDrop] = useState(field === 'drop' ? initialAddress : '');
   const [stops, setStops] = useState<string[]>([]);
   const [filteredData, setFilteredData] = useState(data);
-
-  const [focusedField, setFocusedField] = useState<'pickup' | 'drop' | null>(
-    null,
+  const [focusedField, setFocusedField] = useState<'pickup' | 'drop' | null>(null);
+  const [likedItems, setLikedItems] = useState<{ [key: string]: boolean }>(
+    data.reduce((acc, item) => ({
+      ...acc,
+      [item.id]: favorites.some(fav => fav.address === item.subtitle),
+    }), {})
   );
+
   const addStop = () => {
     if (stops.length >= 3) return;
     setStops([...stops, '']);
@@ -142,8 +150,8 @@ const [pickup, setPickup] = useState(field === 'pickup' ? initialAddress : '157,
     setPickup(text);
     setFilteredData(
       data.filter(item =>
-        item.subtitle.toLowerCase().includes(text.toLowerCase()),
-      ),
+        item.subtitle.toLowerCase().includes(text.toLowerCase())
+      )
     );
   };
 
@@ -151,9 +159,28 @@ const [pickup, setPickup] = useState(field === 'pickup' ? initialAddress : '157,
     setDrop(text);
     setFilteredData(
       data.filter(item =>
-        item.subtitle.toLowerCase().includes(text.toLowerCase()),
-      ),
+        item.subtitle.toLowerCase().includes(text.toLowerCase())
+      )
     );
+  };
+
+  const handleLike = (item: { id: string; title: string; subtitle: string; icon: string }) => {
+    const isLiked = !likedItems[item.id];
+    setLikedItems(prev => ({ ...prev, [item.id]: isLiked }));
+
+    const favorite = favorites.find(fav => fav.address === item.subtitle);
+    if (isLiked) {
+      if (!favorite) {
+        addFavorite({
+          id: Date.now().toString(),
+          type: item.title.toLowerCase() === 'home' ? 'home' : item.title.toLowerCase() === 'gym' ? 'gym' : 'other',
+          label: item.title,
+          address: item.subtitle,
+        });
+      }
+    } else if (favorite) {
+      deleteFavorite(favorite.id);
+    }
   };
 
   const renderItem = ({ item }: any) => (
@@ -162,17 +189,25 @@ const [pickup, setPickup] = useState(field === 'pickup' ? initialAddress : '157,
       onPress={() => {
         if (focusedField === 'pickup') {
           setPickup(item.subtitle);
-          handlePickupChange(item.subtitle); // updates filtered list
+          handlePickupChange(item.subtitle);
         } else if (focusedField === 'drop') {
           setDrop(item.subtitle);
-          handleDropChange(item.subtitle); // updates filtered list
+          handleDropChange(item.subtitle);
         }
 
-        // Delay and navigate only if both fields are filled
         setTimeout(() => {
-          const finalPickup =
-            focusedField === 'pickup' ? item.subtitle : pickup;
+          const finalPickup = focusedField === 'pickup' ? item.subtitle : pickup;
           const finalDrop = focusedField === 'drop' ? item.subtitle : drop;
+
+          // Check if pickup and drop are the same
+          if (finalPickup && finalDrop && finalPickup.trim().toLowerCase() === finalDrop.trim().toLowerCase()) {
+            Alert.alert(
+              'Invalid Input',
+              'Pickup and drop locations cannot be the same.',
+              [{ text: 'OK' }]
+            );
+            return;
+          }
 
           if (finalPickup && finalDrop) {
             navigation.navigate('ConfirmRide', {
@@ -190,8 +225,12 @@ const [pickup, setPickup] = useState(field === 'pickup' ? initialAddress : '157,
         <Text style={styles.itemTitle}>{item.title}</Text>
         <Text style={styles.itemSubtitle}>{item.subtitle}</Text>
       </View>
-      <TouchableOpacity>
-        <Feather name="heart" size={18} color="#888" />
+      <TouchableOpacity onPress={() => handleLike(item)}>
+        <Feather
+          name="heart"
+          size={18}
+          color={likedItems[item.id] ? '#E53935' : '#888'}
+        />
       </TouchableOpacity>
     </TouchableOpacity>
   );
@@ -220,7 +259,6 @@ const [pickup, setPickup] = useState(field === 'pickup' ? initialAddress : '157,
               placeholderTextColor="#aaa"
               onFocus={() => setFocusedField('pickup')}
             />
-
             {pickup.length > 0 && (
               <TouchableOpacity
                 onPress={() => setPickup('')}
@@ -243,11 +281,10 @@ const [pickup, setPickup] = useState(field === 'pickup' ? initialAddress : '157,
               <View style={styles.inputWrapper}>
                 <TextInput
                   style={styles.input}
-                  value={stops[index]} // <-- Use the correct stop value
-                  onChangeText={text => updateStop(text, index)} // <-- Update only that stop
+                  value={stops[index]}
+                  onChangeText={text => updateStop(text, index)}
                   placeholder={`Stop ${index + 1}`}
                   placeholderTextColor="#aaa"
-                  // onFocus={() => setFocusedField('stop')} // optional, if you want
                 />
                 {stop.length > 0 && (
                   <TouchableOpacity
@@ -363,7 +400,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'transparent',
     paddingHorizontal: 12,
-    // paddingVertical: 4,
   },
   input: {
     fontSize: 14,
