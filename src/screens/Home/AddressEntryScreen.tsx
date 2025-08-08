@@ -10,9 +10,10 @@ import {
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Feather from 'react-native-vector-icons/Feather';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Colors from '../../constants/colors';
-import { useFavorites } from '../MenuScreens/FavouritesContext';
+import { useFavorites } from '../../context/FavouritesContext';
 
 const data = [
   {
@@ -121,7 +122,7 @@ const AddressEntryScreen = ({ navigation, route }: any) => {
   const [drop, setDrop] = useState(field === 'drop' ? initialAddress : '');
   const [stops, setStops] = useState<string[]>([]);
   const [filteredData, setFilteredData] = useState(data);
-  const [focusedField, setFocusedField] = useState<'pickup' | 'drop' | null>(null);
+  const [focusedField, setFocusedField] = useState<'pickup' | 'drop' | null>('drop');
   const [likedItems, setLikedItems] = useState<{ [key: string]: boolean }>(
     data.reduce((acc, item) => ({
       ...acc,
@@ -241,6 +242,10 @@ const AddressEntryScreen = ({ navigation, route }: any) => {
     }
   }, [pickup, drop]);
 
+  function getCurrentLocation(){
+    console.log('getCurrentLocation');
+  }
+
   return (
     <View style={styles.container}>
       {/* Pickup/Drop Input Card */}
@@ -268,6 +273,10 @@ const AddressEntryScreen = ({ navigation, route }: any) => {
               </TouchableOpacity>
             )}
           </View>
+          <TouchableOpacity style={styles.locationIcon} onPress={getCurrentLocation}>
+              <MaterialCommunityIcons name="crosshairs-gps" size={20} color={Colors.blue} />
+
+            </TouchableOpacity>
         </View>
 
         {/* Stops */}
@@ -335,11 +344,11 @@ const AddressEntryScreen = ({ navigation, route }: any) => {
       {/* Action Buttons */}
       <View style={styles.actionsRow}>
         <TouchableOpacity style={styles.actionButton}>
-          <Ionicons name="location-outline" size={18} color="#000" />
+          <Ionicons name="location-outline" size={18} color={Colors.black} />
           <Text style={styles.actionText}>Select on map</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.actionButton} onPress={addStop}>
-          <MaterialIcons name="add" size={18} color="#000" />
+          <MaterialIcons name="add" size={18} color={Colors.black}  />
           <Text style={styles.actionText}>Add stop</Text>
         </TouchableOpacity>
       </View>
@@ -360,12 +369,18 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.white,
     padding: 16,
   },
-  addressCard: {
-    backgroundColor: Colors.backgroundWhite,
-    borderRadius: 12,
-    padding: 14,
-    marginBottom: 16,
-  },
+addressCard: {
+  backgroundColor: Colors.white,
+  borderRadius: 12,
+  padding: 16,
+  marginBottom: 16,
+  shadowColor: '#000',
+  shadowOffset: { width: 0, height: 2 },
+  shadowOpacity: 0.05,
+  shadowRadius: 4,
+  elevation: 2,
+},
+
   addressRow: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -395,7 +410,7 @@ const styles = StyleSheet.create({
   inputWrapper: {
     flex: 1,
     position: 'relative',
-    backgroundColor: Colors.backgroundWhite,
+    backgroundColor: Colors.blue + '10',
     borderRadius: 6,
     borderWidth: 1,
     borderColor: 'transparent',
@@ -406,11 +421,21 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     color: Colors.black,
     paddingRight: 24,
+    textAlign: 'left',
   },
+  
   clearIcon: {
     position: 'absolute',
     right: 8,
     top: 13,
+  },
+  locationIcon:{
+    backgroundColor: Colors.blue + '10',
+    borderRadius: 6,
+    padding: 10,
+    marginLeft: 5,
+
+
   },
   actionsRow: {
     flexDirection: 'row',
@@ -424,7 +449,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     borderRadius: 24,
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: Colors.blue + '70',
     width: '48%',
     justifyContent: 'center',
   },
@@ -432,13 +457,14 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '600',
     marginLeft: 6,
+    color: Colors.black,
   },
   listItem: {
     flexDirection: 'row',
     paddingVertical: 14,
     alignItems: 'center',
-    borderBottomWidth: 1,
-    borderColor: Colors.borderGray,
+    borderBottomWidth: 0.5,
+    borderColor: Colors.blue + '0f',
   },
   listIcon: {
     width: 28,

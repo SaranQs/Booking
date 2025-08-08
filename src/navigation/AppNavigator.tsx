@@ -25,9 +25,12 @@ import ConfirmRide from '../screens/Ride/ConfirmRideScreen';
 import ParcelEntry from '../screens/Home/ParcelAddressEntryScreen';
 import ParcelRide from '../screens/Ride/ConfirmParcelRideScreen';
 import CaptainSearch from '../screens/Ride/CaptainSearchScreen';
+import RateRide from '../screens/Ride/RateRideScreen';
+import TripCompleted from '../screens/Ride/TripCompletedScreen';
 
 
-import { FavoritesProvider } from '../screens/MenuScreens/FavouritesContext';
+import { FavoritesProvider } from '../context/FavouritesContext';
+import { UserProvider } from '../context/UserContext';
 
 export type RootStackParamList = {
   Login: undefined;
@@ -53,6 +56,17 @@ export type RootStackParamList = {
   ParcelEntry: undefined;
   ParcelRide: undefined;
   CaptainSearch: { pickup: string; drop: string; selectedMode: string };
+  TripCompleted: {
+    pickup: string;
+    drop: string;
+    distance: string;
+    duration: string;
+    completedTime: string;
+    driver: string;
+    fare: string;
+    paymentMethod: string;
+  };
+  RateRide: undefined; 
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -60,15 +74,17 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 const AppNavigator = () => {
   return (
     <FavoritesProvider>
+    <UserProvider>
+
     <NavigationContainer>
       <Stack.Navigator
         initialRouteName="Login"
         screenOptions={{ headerShown: false }}
       >
-        <Stack.Screen name="Login" component={LoginScreen} />
+        <Stack.Screen name="Login" component={LoginScreen} options={{animation: 'fade'}}/>
         <Stack.Screen name="Home" component={HomeScreen} />
-        <Stack.Screen name="Otp" component={OtpScreen} />
-        <Stack.Screen name="Signup" component={SignupScreen} />
+        <Stack.Screen name="Otp" component={OtpScreen} options={{animation: 'fade'}}/>
+        <Stack.Screen name="Signup" component={SignupScreen} options={{animation: 'fade'}}/>
         <Stack.Screen
           name="MyRides"
           component={MyRidesScreen}
@@ -292,6 +308,30 @@ const AppNavigator = () => {
             headerTitle: 'Pick your Vehicle',
           }}
         />
+        <Stack.Screen
+          name="TripCompleted"
+          component={TripCompleted}
+          options={{
+            headerShown: true,
+            // headerTransparent: true,
+            headerShadowVisible:false,
+            headerTitleStyle: { color: '#000' },
+            headerTitle: 'Trip Completed',
+
+          }}
+        />
+        <Stack.Screen
+          name="RateRide"
+          component={RateRide}
+          options={{
+            headerShown: true,
+            // headerTransparent: true,
+            headerShadowVisible:false,
+            headerTitleStyle: { color: '#000' },
+            headerTitle: 'Rate & Tip',
+
+          }}
+        />
 
         <Stack.Screen
           name="AddressEntry"
@@ -308,6 +348,7 @@ const AppNavigator = () => {
         />
       </Stack.Navigator>
     </NavigationContainer>
+    </UserProvider>
     </FavoritesProvider>
   );
 };

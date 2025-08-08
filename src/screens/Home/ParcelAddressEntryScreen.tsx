@@ -12,6 +12,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import Feather from 'react-native-vector-icons/Feather';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Colors from '../../constants/colors';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const data = [
   {
@@ -192,6 +193,10 @@ const ParcelAddressEntryScreen = ({ navigation, route }: any) => {
     }
   }, [pickup, drop]);
 
+  function getCurrentLocation(){
+    console.log('getCurrentLocation');
+  }
+
   return (
     <View style={styles.container}>
       {/* Pickup/Drop Input Card */}
@@ -219,6 +224,10 @@ const ParcelAddressEntryScreen = ({ navigation, route }: any) => {
               </TouchableOpacity>
             )}
           </View>
+          <TouchableOpacity style={styles.locationIcon} onPress={getCurrentLocation}>
+              <MaterialCommunityIcons name="crosshairs-gps" size={20} color={Colors.blue} />
+
+            </TouchableOpacity>
         </View>
 
         {/* Stops */}
@@ -312,10 +321,15 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   addressCard: {
-    backgroundColor: Colors.backgroundWhite,
+    backgroundColor: Colors.white,
     borderRadius: 12,
-    padding: 14,
+    padding: 16,
     marginBottom: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
+    elevation: 2,
   },
   addressRow: {
     flexDirection: 'row',
@@ -346,7 +360,7 @@ const styles = StyleSheet.create({
   inputWrapper: {
     flex: 1,
     position: 'relative',
-    backgroundColor: Colors.backgroundWhite,
+    backgroundColor: Colors.blue + '10',
     borderRadius: 6,
     borderWidth: 1,
     borderColor: 'transparent',
@@ -357,6 +371,14 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     color: Colors.black,
     paddingRight: 24,
+  },
+    locationIcon:{
+    backgroundColor: Colors.blue + '10',
+    borderRadius: 6,
+    padding: 10,
+    marginLeft: 5,
+
+
   },
   clearIcon: {
     position: 'absolute',
@@ -375,7 +397,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     borderRadius: 24,
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: Colors.blue + '70',
     width: '48%',
     justifyContent: 'center',
   },
@@ -383,13 +405,14 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '600',
     marginLeft: 6,
+    color: Colors.black,
   },
   listItem: {
     flexDirection: 'row',
     paddingVertical: 14,
     alignItems: 'center',
-    borderBottomWidth: 1,
-    borderColor: Colors.borderGray,
+    borderBottomWidth: 0.5,
+    borderColor: Colors.blue + '0f',
   },
   listIcon: {
     width: 28,
@@ -406,5 +429,6 @@ const styles = StyleSheet.create({
     color: Colors.gray,
   },
 });
+
 
 export default ParcelAddressEntryScreen;

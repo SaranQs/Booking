@@ -10,7 +10,8 @@ import {
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import Colors from '../../constants/colors';
-import Icons from 'react-native-vector-icons/Feather';
+import Feather from 'react-native-vector-icons/Feather';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const OTP_LENGTH = 4;
 
@@ -20,9 +21,9 @@ const OtpScreen = ({ navigation }: any) => {
   const inputs = useRef<(TextInput | null)[]>([]);
 
   useEffect(() => {
-    // Auto-focus the first input once mounted
     inputs.current[0]?.focus();
   }, []);
+
   const handleChange = (text: string, index: number) => {
     const newOtp = [...otp];
 
@@ -30,18 +31,12 @@ const OtpScreen = ({ navigation }: any) => {
       newOtp[index] = '';
       setOtp(newOtp);
 
-      // If user pressed backspace, go to previous input
-      if (index > 0) {
-        inputs.current[index - 1]?.focus();
-      }
+      if (index > 0) inputs.current[index - 1]?.focus();
     } else if (/^\d$/.test(text)) {
       newOtp[index] = text;
       setOtp(newOtp);
 
-      // Move to next input if not last
-      if (index < OTP_LENGTH - 1) {
-        inputs.current[index + 1]?.focus();
-      }
+      if (index < OTP_LENGTH - 1) inputs.current[index + 1]?.focus();
     }
   };
 
@@ -53,78 +48,104 @@ const OtpScreen = ({ navigation }: any) => {
       return;
     }
 
-    // Proceed only if valid
     setValidationMessage('');
     navigation.navigate('Home');
   };
 
   return (
     <LinearGradient
-      colors={['#FFD700', '#fde77cff']} // gold to yellow
+      colors={[Colors.gold, Colors.yellow]}
       start={{ x: 0, y: 0 }}
       end={{ x: 1, y: 1 }}
       style={styles.gradient}
     >
       <KeyboardAvoidingView
         style={styles.container}
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 0}
       >
-        <Text style={styles.title}>Verify OTP</Text>
-        <Text style={styles.subtitle}>
-          Enter the 4-digit code sent to your number
-        </Text>
+        <View style={styles.headerBox}>
+          <View style={styles.logoWrapper}>
+            <Ionicons name="bicycle-outline" size={18} color={Colors.black} />
+            <Ionicons name="cube-outline" size={18} color={Colors.black} />
+          </View>
+          <Text style={styles.appTitle}>RidePorter</Text>
+          <Text style={styles.appTagline}>Your one-stop mobility solution</Text>
 
-        <View style={styles.otpRow}>
-          {otp.map((digit, index) => (
-            <TextInput
-              key={index}
-              ref={ref => {
-                inputs.current[index] = ref;
-              }}
-              value={digit}
-              keyboardType="number-pad"
-              maxLength={1}
-              style={styles.otpInput}
-              onChangeText={text => handleChange(text, index)}
-              onKeyPress={({ nativeEvent }) => {
-                if (nativeEvent.key === 'Backspace' && otp[index] === '') {
-                  if (index > 0) {
-                    inputs.current[index - 1]?.focus();
-                    const newOtp = [...otp];
-                    newOtp[index - 1] = '';
-                    setOtp(newOtp);
-                  }
-                }
-              }}
-            />
-          ))}
+          <View style={styles.featureIcons}>
+            <View style={styles.featureItem}>
+              <View style={styles.iconbg}>
+                <Ionicons name="bicycle-outline" size={30} color={Colors.white} />
+              </View>
+              <Text style={styles.featureText}>Quick Rides</Text>
+            </View>
+            <View style={styles.featureItem}>
+              <View style={styles.iconbg}>
+                <Ionicons name="cube-outline" size={30} color={Colors.white} />
+              </View>
+              <Text style={styles.featureText}>Goods Transport</Text>
+            </View>
+            <View style={styles.featureItem}>
+              <View style={styles.iconbg}>
+                <Ionicons name="location-outline" size={30} color={Colors.white} />
+              </View>
+              <Text style={styles.featureText}>Live Tracking</Text>
+            </View>
+          </View>
         </View>
 
-        {validationMessage ? (
-          <Text style={styles.errorText}>{validationMessage}</Text>
-        ) : null}
+        <View style={styles.otpBoxContainer}>
+          <View style={styles.otpBox}>
+            <Text style={styles.logoText}>Enter OTP</Text>
+            <Text style={styles.subtitle}>
+              Enter the 4-digit code sent to your mobile number
+            </Text>
 
-        <TouchableOpacity style={styles.btn} onPress={handleVerify}>
-          <View style={styles.btnContent}>
-            <Icons name="check-circle" size={20} color="#fff" />
-            <Text style={styles.btnText}>Verify & Continue</Text>
+            <View style={styles.otpRow}>
+              {otp.map((digit, index) => (
+                <TextInput
+                  key={index}
+                  ref={ref => {
+                    inputs.current[index] = ref;
+                  }}
+                  value={digit}
+                  keyboardType="number-pad"
+                  maxLength={1}
+                  style={styles.otpInput}
+                  onChangeText={text => handleChange(text, index)}
+                  onKeyPress={({ nativeEvent }) => {
+                    if (nativeEvent.key === 'Backspace' && otp[index] === '') {
+                      if (index > 0) {
+                        inputs.current[index - 1]?.focus();
+                        const newOtp = [...otp];
+                        newOtp[index - 1] = '';
+                        setOtp(newOtp);
+                      }
+                    }
+                  }}
+                />
+              ))}
+            </View>
+
+            {validationMessage.length > 0 && (
+              <Text style={styles.errorText}>{validationMessage}</Text>
+            )}
+
+            <TouchableOpacity style={styles.btn} onPress={handleVerify}>
+              <View style={styles.btnContent}>
+                <Text style={styles.btnText}>Verify & Continue</Text>
+                <Feather name="check-circle" size={20} color="#fff" />
+              </View>
+            </TouchableOpacity>
+
+            <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+              <Text style={styles.linkText}>Change Number</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => console.log('Resend')}>
+              <Text style={styles.linkText}>Didn't receive the code? Resend</Text>
+            </TouchableOpacity>
           </View>
-        </TouchableOpacity>
-
-        <TouchableOpacity onPress={() => console.log('Resend')}>
-          <Text style={styles.linkText}>Didn't get the code? Resend</Text>
-        </TouchableOpacity>
-
-        {/* <TouchableOpacity style={styles.btn} onPress={handleContinue}>
-                      <View style={styles.btnContent}>
-                        <Text style={styles.btnText}>Continue </Text>
-                        <Image
-                          source={require('../../assets/login.png')}
-                          style={styles.icon}
-                          resizeMode="contain"
-                        />
-                      </View>
-                    </TouchableOpacity> */}
+        </View>
       </KeyboardAvoidingView>
     </LinearGradient>
   );
@@ -136,53 +157,105 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    paddingHorizontal: 24,
-    justifyContent: 'center',
     backgroundColor: Colors.white,
   },
-  title: {
-    fontSize: 22,
-    fontWeight: '700',
-    textAlign: 'center',
-    marginBottom: 8,
-  },
-  btnContent: {
-    flexDirection: 'row',
+  headerBox: {
+    backgroundColor: Colors.blue,
     alignItems: 'center',
-    gap:10,
-    justifyContent: 'center',
+    paddingTop: 40,
+    paddingBottom: 30,
+    height: '80%',
   },
-  icon: {
-    width: 20,
-    height: 20,
-    marginRight: 8,
+  logoWrapper: {
+    flexDirection: 'row',
+    backgroundColor: Colors.white,
+    padding: 10,
+    borderRadius: 25,
+    marginBottom: 10,
+  },
+  appTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: Colors.white,
+  },
+  appTagline: {
+    fontSize: 13,
+    color: Colors.white,
+    marginBottom: 25,
+  },
+  featureIcons: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    width: '90%',
+  },
+  featureItem: {
+    alignItems: 'center',
+  },
+  featureText: {
+    color: Colors.white,
+    fontSize: 12,
+    marginTop: 6,
+  },
+  iconbg: {
+    width: 40,
+    height: 40,
+    borderRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#abbdfe5e',
+  },
+  otpBoxContainer: {
+    position: 'absolute',
+    top: '45%',
+    left: 0,
+    right: 0,
+    height: '100%',
+  },
+  otpBox: {
+    flex: 1,
+    backgroundColor: Colors.white,
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
+    paddingHorizontal: 24,
+    paddingVertical: 30,
+    shadowColor: '#000',
+    elevation: 20,
+  },
+  logoText: {
+    fontSize: 26,
+    fontWeight: 'bold',
+    color: Colors.black,
+    textAlign: 'center',
+    marginBottom: 10,
   },
   subtitle: {
-    textAlign: 'center',
     fontSize: 14,
+    textAlign: 'center',
     color: Colors.gray,
-    marginBottom: 24,
+    marginBottom: 20,
   },
   otpRow: {
     flexDirection: 'row',
-    justifyContent: 'space-evenly',
-    marginBottom: 16,
+    justifyContent: 'space-between',
+    marginBottom: 20,
+    paddingHorizontal: 30,
   },
   otpInput: {
-    width: 45,
+    width: 50,
     height: 50,
     borderWidth: 1,
     borderColor: Colors.gray,
-    backgroundColor: Colors.white + 'a0', // You can use transparent white here
     borderRadius: 8,
     textAlign: 'center',
-    fontSize: 18,
+    fontSize: 20,
+    backgroundColor: Colors.white,
   },
   errorText: {
     color: Colors.red,
-    fontSize: 14,
-    textAlign: 'center',
+    fontSize: 13,
+    marginTop: 6,
     marginBottom: 10,
+    textAlign: 'center',
   },
   btn: {
     backgroundColor: Colors.black,
@@ -190,17 +263,25 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 20,
+    marginTop: 10,
+    marginBottom: 15,
+  },
+  btnContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 5,
+    justifyContent: 'center',
   },
   btnText: {
+    fontSize: 16,
     color: Colors.white,
     fontWeight: 'bold',
-    fontSize: 16,
   },
   linkText: {
+    fontSize: 14,
     textAlign: 'center',
     color: Colors.gray,
-    fontSize: 14,
+    marginVertical: 5,
   },
 });
 

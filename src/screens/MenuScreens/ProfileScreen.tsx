@@ -1,3 +1,4 @@
+// ProfileScreen.tsx
 import React, { useState } from 'react';
 import {
   View,
@@ -12,14 +13,17 @@ import {
 import Feather from 'react-native-vector-icons/Feather';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Colors from '../../constants/colors';
+import { useUser } from '../../context/UserContext';
+
 const ProfileScreen = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [modalType, setModalType] = useState('');
-  const [firstName, setFirstName] = useState('Saran');
-  const [lastName, setLastName] = useState('Kathiravan');
+  const [firstName, setFirstName] = useState('SSK');
+  const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('saran@example.com');
   const [gender, setGender] = useState('Male');
-  const [dob, setDob] = useState(new Date('1990-01-01'));
+  const [dob, setDob] = useState(new Date('2000-01-01'));
+
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [newEmail, setNewEmail] = useState('');
   const [otp, setOtp] = useState('');
@@ -29,19 +33,24 @@ const ProfileScreen = () => {
     message: '',
   });
 
+  const { setUserName } = useUser(); // Access setUserName from context
+
   const showAlert = (message: string) => {
     setCustomAlert({ visible: true, message });
     setTimeout(() => {
       setCustomAlert({ visible: false, message: '' });
-    }, 2500); // auto-dismiss after 2.5 seconds
+    }, 2500);
   };
-const handleAddEmergency = () =>{
-  console.log('Add Emergency Contact Pressed');
-}
+
+  const handleAddEmergency = () => {
+    console.log('Add Emergency Contact Pressed');
+  };
+
   const handleOpenModal = (type: string) => {
     setModalType(type);
     setModalVisible(true);
   };
+
   const handleSendOtp = () => {
     if (!newEmail.includes('@')) {
       showAlert('Enter a valid email');
@@ -56,8 +65,6 @@ const handleAddEmergency = () =>{
       showAlert('Enter a 4-digit OTP');
       return;
     }
-
-    // For now, any 4-digit OTP is accepted
     setEmail(newEmail);
     setModalVisible(false);
     setOtp('');
@@ -94,7 +101,10 @@ const handleAddEmergency = () =>{
             />
             <TouchableOpacity
               style={styles.saveButton}
-              onPress={() => setModalVisible(false)}
+              onPress={() => {
+                setModalVisible(false);
+                setUserName(`${firstName} ${lastName}`); // Update context with new name
+              }}
             >
               <Text style={styles.saveText}>Save Changes</Text>
             </TouchableOpacity>
@@ -104,7 +114,6 @@ const handleAddEmergency = () =>{
         return (
           <>
             <Text style={styles.modalTitle}>Change Email</Text>
-
             {!otpSent ? (
               <>
                 <TextInput
@@ -132,7 +141,6 @@ const handleAddEmergency = () =>{
                   maxLength={4}
                   onChangeText={text => setOtp(text.replace(/[^0-9]/g, ''))}
                 />
-
                 <TouchableOpacity
                   style={styles.saveButton}
                   onPress={handleVerifyOtp}
@@ -143,7 +151,6 @@ const handleAddEmergency = () =>{
             )}
           </>
         );
-
       case 'gender':
         return (
           <>
@@ -214,9 +221,8 @@ const handleAddEmergency = () =>{
               <Text style={styles.label}>Emergency Contact</Text>
               <View style={{ flex: 1 }} />
               <TouchableOpacity onPress={handleAddEmergency}>
-  <Text style={styles.redText}>+ Add</Text>
-</TouchableOpacity>
-
+                <Text style={styles.redText}>+ Add</Text>
+              </TouchableOpacity>
             </View>
           </>
         }
@@ -227,27 +233,22 @@ const handleAddEmergency = () =>{
 
       {/* Modal */}
       <Modal visible={modalVisible} transparent animationType="slide">
-        <TouchableOpacity
-  activeOpacity={1}
-  style={styles.modalOverlay}
-  onPress={() => setModalVisible(false)}
->
+        <View style={styles.modalOverlay}>
   <TouchableOpacity
     activeOpacity={1}
     style={styles.modalContainer}
-    onPress={() => {}} // prevent propagation
+    onPress={() => {}}
   >
     {renderModalContent()}
   </TouchableOpacity>
-</TouchableOpacity>
-        {/* Custom Alert ABOVE modal layer */}
-    {customAlert.visible && (
-      <View style={styles.absoluteAlert}>
-        <View style={styles.customAlert}>
-          <Text style={styles.alertText}>{customAlert.message}</Text>
-        </View>
-      </View>
-    )}
+</View>
+        {customAlert.visible && (
+          <View style={styles.absoluteAlert}>
+            <View style={styles.customAlert}>
+              <Text style={styles.alertText}>{customAlert.message}</Text>
+            </View>
+          </View>
+        )}
       </Modal>
 
       {/* Date Picker */}
@@ -260,9 +261,7 @@ const handleAddEmergency = () =>{
           maximumDate={new Date()}
         />
       )}
-
     </View>
-    
   );
 };
 
@@ -288,16 +287,15 @@ const ProfileItem = ({
 
 const styles = StyleSheet.create({
   absoluteAlert: {
-  position: 'absolute',
-  top: 0,
-  left: 0,
-  right: 0,
-  bottom: 0,
-  zIndex: 9999,
-  justifyContent: 'flex-end', // alert at bottom
-  alignItems: 'center',
-},
-
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    zIndex: 9999,
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+  },
   container: {
     flex: 1,
     backgroundColor: Colors.white,
@@ -330,7 +328,6 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
   },
   redText: { color: 'red', fontWeight: '600' },
-
   modalOverlay: {
     flex: 1,
     justifyContent: 'flex-end',
@@ -365,8 +362,6 @@ const styles = StyleSheet.create({
   customAlert: {
     position: 'absolute',
     bottom: 240,
-    // left: 20,
-    // right: 20,
     backgroundColor: Colors.darkGray,
     paddingVertical: 12,
     paddingHorizontal: 20,

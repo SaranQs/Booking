@@ -14,7 +14,7 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
 import Colors from '../../constants/colors';
-import { useFavorites } from './FavouritesContext';
+import { useFavorites } from '../../context/FavouritesContext';
 
 const Height = Dimensions.get('window').height;
 const FavouritesScreen = () => {

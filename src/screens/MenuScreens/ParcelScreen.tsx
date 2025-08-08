@@ -12,13 +12,16 @@ import {
 } from 'react-native';
 import { Animated, Easing } from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
-import Entypo from 'react-native-vector-icons/Entypo';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Colors from '../../constants/colors';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
-const ParcelScreen = ({ navigation}: any) => { // Add navigation prop
+const ParcelScreen = ({ navigation }: any) => {
+  // Add navigation prop
   const [modalVisible, setModalVisible] = useState(false);
-  const slideAnim = useRef(new Animated.Value(Dimensions.get('window').width)).current;
+  const slideAnim = useRef(
+    new Animated.Value(Dimensions.get('window').width),
+  ).current;
 
   const openModal = () => {
     setModalVisible(true);
@@ -42,7 +45,9 @@ const ParcelScreen = ({ navigation}: any) => { // Add navigation prop
   };
 
   const [isSwitched, setIsSwitched] = useState(false);
-  const [pickupLocation, setPickupLocation] = useState('123, Anna Nagar, Chennai');
+  const [pickupLocation, setPickupLocation] = useState(
+    '123, Anna Nagar, Chennai',
+  );
   const [dropLocation, setDropLocation] = useState('');
 
   const handleSwitch = () => {
@@ -81,11 +86,12 @@ const ParcelScreen = ({ navigation}: any) => { // Add navigation prop
       <TouchableOpacity style={styles.locationBox} onPress={openModal}>
         <View style={styles.rowBetween}>
           <View style={styles.row}>
-            <Entypo name="location-pin" size={22} color="green" />
+            <Ionicons style={{marginRight:8}} name="location-outline" size={22} color={Colors.black} />
+
             <Text style={styles.label}>Pickup</Text>
           </View>
           <View>
-            <Feather name="edit-3" size={20} color="#000" />
+            <Feather name="edit-3" size={20} color={Colors.blue + 'a0'} />
           </View>
         </View>
 
@@ -93,7 +99,12 @@ const ParcelScreen = ({ navigation}: any) => { // Add navigation prop
           <Text style={styles.staticText}>{pickupLocation}</Text>
         ) : (
           <View style={styles.searchContainer}>
-            <Feather name="search" size={18} color="#888" style={{ marginRight: 8 }} />
+            <Feather
+              name="search"
+              size={18}
+              color="#888"
+              style={{ marginRight: 8 }}
+            />
             <TextInput
               style={styles.searchInput}
               placeholder="Search Pickup Location"
@@ -118,11 +129,12 @@ const ParcelScreen = ({ navigation}: any) => { // Add navigation prop
       <View style={styles.locationBox}>
         <View style={styles.rowBetween}>
           <View style={styles.row}>
-            <Entypo name="location-pin" size={22} color="red" />
+            <Ionicons style={{marginRight:8}} name="location-outline" size={22} color={Colors.black} />
             <Text style={styles.label}>Drop to</Text>
           </View>
           <TouchableOpacity onPress={openModal}>
-            <Feather name="edit-3" size={20} color="#000" />
+            <Feather name="edit-3" size={20} color={Colors.blue + 'a0'} />
+
           </TouchableOpacity>
         </View>
 
@@ -130,11 +142,17 @@ const ParcelScreen = ({ navigation}: any) => { // Add navigation prop
           <Text style={styles.staticText}>{dropLocation}</Text>
         ) : (
           <View style={styles.searchContainer}>
-            <Feather name="search" size={18} color="#888" style={{ marginRight: 8 }} />
+            <Feather
+              name="search"
+              size={18}
+              color={Colors.blue + 'a0'}
+
+              style={{ marginRight: 8 }}
+            />
             <TextInput
               style={styles.searchInput}
               placeholder="Search Drop Address"
-              placeholderTextColor="#999"
+              placeholderTextColor={Colors.blue + 'a0'}
               value={dropLocation}
               onChangeText={setDropLocation}
               onFocus={handleDropInputPress} // Navigate on focus
@@ -179,42 +197,62 @@ const ParcelScreen = ({ navigation}: any) => { // Add navigation prop
               <Text style={{ color: '#999' }}>Map Placeholder</Text>
             </View>
             <View style={styles.modalContent}>
-              <ScrollView style={{ padding: 16 }} keyboardShouldPersistTaps="handled">
+              <ScrollView
+                style={{ padding: 16 }}
+                keyboardShouldPersistTaps="handled"
+              >
                 <View style={styles.inputRow}>
-                  <Feather name="home" size={20} color="#666" style={styles.iconLeft} />
+                  <Feather
+                    name="home"
+                    size={20}
+                    color={Colors.blue + 'a0'}
+                    style={styles.iconLeft}
+                  />
                   <TextInput
                     style={styles.input}
                     placeholder="House No. / Building (optional)"
-                    placeholderTextColor="#999"
+                    placeholderTextColor={Colors.blue + 'a0'}
                   />
                 </View>
 
                 <Text style={styles.sectionTitle}>Add Contact Details</Text>
 
                 <View style={styles.inputRow}>
-                  <Feather name="user" size={20} color="#666" style={styles.iconLeft} />
+                  <Feather
+                    name="user"
+                    size={20}
+                    color={Colors.blue + 'a0'}
+                    style={styles.iconLeft}
+                  />
                   <TextInput
                     style={styles.input}
                     placeholder="Contact Name"
-                    placeholderTextColor="#999"
+                    placeholderTextColor={Colors.blue + 'a0'}
                   />
                   <TouchableOpacity>
-                    <MaterialIcons name="contacts" size={22} color="gray" />
+                    <MaterialIcons name="contacts" size={22} color={Colors.blue + 'a0'} />
                   </TouchableOpacity>
                 </View>
 
                 <View style={styles.inputRow}>
-                  <Feather name="phone" size={20} color="#666" style={styles.iconLeft} />
+                  <Feather
+                    name="phone"
+                    size={20}
+                    color={Colors.blue + 'a0'}
+                    style={styles.iconLeft}
+                  />
                   <TextInput
                     style={styles.input}
                     placeholder="Phone Number"
-                    placeholderTextColor="#999"
+                    placeholderTextColor={Colors.blue + 'a0'}
                     keyboardType="phone-pad"
                   />
                 </View>
 
                 <TouchableOpacity style={styles.confirmBtn}>
-                  <Text style={styles.confirmBtnText}>Confirm Pickup Details</Text>
+                  <Text style={styles.confirmBtnText}>
+                    Confirm Pickup Details
+                  </Text>
                 </TouchableOpacity>
               </ScrollView>
             </View>
@@ -238,11 +276,26 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   locationBox: {
-    backgroundColor: Colors.lightGray,
+    borderWidth: 1,
     padding: 16,
-    borderRadius: 10,
     marginBottom: 16,
+    borderColor: Colors.borderGray,
+    borderRadius: 12, // consistent with other cards
+    backgroundColor: Colors.white,
+    elevation: 2,
   },
+
+  profileRow: {
+    borderWidth: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderColor: Colors.borderGray,
+    borderRadius: 10,
+    padding: 10,
+    elevation: 2,
+    backgroundColor: Colors.white,
+  },
+
   rowBetween: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -255,12 +308,14 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: Colors.darkGray,
+    color: Colors.black,
     marginLeft: 4,
   },
   subInfo: {
     fontSize: 14,
-    color: Colors.gray,
+    fontWeight:'ultralight',
+    color: Colors.blue + 'a0',
+    paddingHorizontal: 4,
     marginTop: 4,
   },
   switchWrapper: {
@@ -272,27 +327,31 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     gap: 10,
     borderRadius: 50,
-    backgroundColor: Colors.black,
+    backgroundColor: Colors.blue,
     marginBottom: 15,
   },
   searchContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: Colors.white,
-    borderRadius: 80,
+    backgroundColor: Colors.blue + '10',
+    borderRadius: 16,
     paddingHorizontal: 12,
-    paddingVertical: 8,
-    marginTop: 8,
+    // paddingVertical: 8,
+    marginTop: 15,
     borderWidth: 1,
     borderColor: Colors.borderGray,
   },
   searchInput: {
-    flex: 1,
-    fontSize: 15,
+    fontSize: 14,
+    fontWeight: '500',
+    color: Colors.black,
+    paddingRight: 24,
+    textAlign: 'left',
   },
   staticText: {
     fontSize: 15,
-    color: Colors.black,
+    fontWeight: 'bold',
+    color:Colors.black,
     marginTop: 8,
     paddingHorizontal: 4,
   },
@@ -316,13 +375,13 @@ const styles = StyleSheet.create({
   inputRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    borderColor: Colors.borderGray,
-    borderWidth: 1,
+    backgroundColor: Colors.blue + '10',
     borderRadius: 8,
-    marginBottom: 14,
-    color: Colors.black,
-    paddingHorizontal: 10,
-    backgroundColor: Colors.lightGray,
+    paddingHorizontal: 12,
+    // paddingVertical: 8,
+    marginVertical: 15,
+    borderWidth: 1,
+    borderColor: Colors.borderGray,
   },
   iconLeft: {
     marginRight: 10,
@@ -340,7 +399,7 @@ const styles = StyleSheet.create({
     color: Colors.black,
   },
   confirmBtn: {
-    backgroundColor: Colors.black,
+    backgroundColor: Colors.blue,
     paddingVertical: 14,
     borderRadius: 10,
     alignItems: 'center',

@@ -10,6 +10,8 @@ const Colors = {
   paleYellow: '#FFF3CD',
   gold: '#FFD700',
   red: 'red',
+  blue: '#0038ff',
+  bgBlue: '#4069ff',
   lightBlue: '#D0E8FF',
   lightGreen: '#d2f8d2',
   lightYellow: '#fff8cc',

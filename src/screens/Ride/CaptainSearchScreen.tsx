@@ -62,7 +62,7 @@ const CaptainSearchScreen = ({ navigation, route }: any) => {
     const timer = setTimeout(() => {
       setIsSearching(false);
       setCaptainDetails({
-        name: 'John Doe',
+        name: 'Captain Name',
         vehicleType: selectedMode.charAt(0).toUpperCase() + selectedMode.slice(1),
         vehicleNumber: 'TN 22 AB 1234',
         eta: '5 min',
@@ -77,14 +77,15 @@ const CaptainSearchScreen = ({ navigation, route }: any) => {
     return () => clearTimeout(timer);
   }, [selectedMode]);
 
- const handleCallCaptain = () => {
+  const handleCallCaptain = () => {
     if (captainDetails?.phoneNumber) {
       Linking.openURL(`tel:${captainDetails.phoneNumber}`).catch((err) =>
         console.error('Failed to open dialpad:', err)
       );
     }
   };
-const handleShareRide = async () => {
+
+  const handleShareRide = async () => {
     if (!captainDetails) return;
 
     const shareMessage = `
@@ -109,6 +110,30 @@ ETA: ${captainDetails.eta}
     }
   };
 
+  const handleNext = () => {
+    // Navigate to Trip Completed page
+    navigation.navigate('TripCompleted', {
+      pickup: pickup,
+      drop: drop,
+      distance: '4.2 km',
+      duration: '18 minutes',
+      completedTime: '11:01:01 AM',
+      driver: {
+        name: 'Rajesh Kumar',
+        rating: '4.8',
+        vehicle: 'Honda Activa - KA 01 AB 1234',
+      },
+      fare: {
+        baseFare: 27,
+        distanceCharge: 14,
+        timeCharge: 5,
+        platformFee: 5,
+        gst: 8,
+        total: 58,
+      },
+      paymentMethod: 'Google Pay',
+    });
+  };
 
   return (
     <View style={styles.container}>
@@ -210,6 +235,14 @@ ETA: ${captainDetails.eta}
           >
             <Text style={styles.cancelText}>Cancel Ride</Text>
           </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.nextButton}
+            onPress={handleNext}
+          >
+            <Text style={styles.nextText}>Next</Text>
+          </TouchableOpacity>
+          
         </Animated.View>
       </GestureDetector>
     </View>
@@ -414,9 +447,22 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     borderRadius: 8,
     alignItems: 'center',
+    marginTop: 12,
   },
   cancelText: {
     color: Colors.white,
+    fontWeight: '600',
+    fontSize: 16,
+  },
+  nextButton: {
+    backgroundColor: '#FFD700', // Matching the yellow from the design
+    paddingVertical: 12,
+    borderRadius: 8,
+    alignItems: 'center',
+    marginTop: 12,
+  },
+  nextText: {
+    color: Colors.black,
     fontWeight: '600',
     fontSize: 16,
   },
