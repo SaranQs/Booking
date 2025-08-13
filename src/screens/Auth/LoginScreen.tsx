@@ -212,7 +212,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   btn: {
-    backgroundColor: Colors.black,
+    backgroundColor: Colors.blue,
     height: 50,
     borderRadius: 8,
     justifyContent: 'center',

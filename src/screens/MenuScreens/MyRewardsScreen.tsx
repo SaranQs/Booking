@@ -343,7 +343,7 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   pointsCard: {
-    backgroundColor: Colors.lightGray,
+    backgroundColor: Colors.blue + '0f',
     borderRadius: 12,
     padding: 20,
     alignItems: 'center',
@@ -360,7 +360,7 @@ const styles = StyleSheet.create({
     color: Colors.black,
   },
   redeemButton: {
-    backgroundColor: Colors.black,
+    backgroundColor: Colors.blue,
     paddingVertical: 8,
     paddingHorizontal: 40,
     borderRadius: 20,
@@ -420,7 +420,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   showHistoryBtn: {
-    backgroundColor: Colors.black,
+    backgroundColor: Colors.blue,
     padding: 12,
     borderRadius: 10,
     alignItems: 'center',

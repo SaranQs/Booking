@@ -86,8 +86,11 @@ const RateRideScreen = ({ route, navigation }: any) => {
   };
 
   if (isSubmitted) {
+    setTimeout(() => {
+      navigation.navigate('Home');
+    }, 2000);
     return (
-      <View style={[styles.container, { backgroundColor: Colors.lightGreen + '80' }]}>
+      <View style={[styles.container, { backgroundColor: Colors.lightGreen }]}>
         <View style={styles.successContainer}>
           <Ionicons name="checkmark-circle" size={60} color="#28A745" />
           <Text style={styles.successText}>Thank You!</Text>
@@ -95,9 +98,9 @@ const RateRideScreen = ({ route, navigation }: any) => {
             Your feedback has been submitted successfully
           </Text>
           {tip && <Text style={styles.successTip}>Tip of ₹{tip} sent to {driver.name}</Text>}
-          <TouchableOpacity style={styles.backButton} onPress={handleBack}>
+          {/* <TouchableOpacity style={styles.backButton} onPress={handleBack}>
             <Text style={styles.backText}>Back</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
       </View>
     );

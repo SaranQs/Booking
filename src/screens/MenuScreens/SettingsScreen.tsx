@@ -202,7 +202,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   item: {
-    backgroundColor: Colors.lightGray,
+    backgroundColor: Colors.white,
     paddingVertical: 14,
     paddingHorizontal: 12,
     borderRadius: 8,
@@ -210,6 +210,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    elevation: 2,
   },
   itemdel: {
     backgroundColor: Colors.lightRed,
@@ -222,7 +223,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   itemLogout: {
-    backgroundColor: Colors.lightGray, // Neutral background for Logout
+    backgroundColor: Colors.white, // Neutral background for Logout
     paddingVertical: 14,
     paddingHorizontal: 12,
     borderRadius: 8,

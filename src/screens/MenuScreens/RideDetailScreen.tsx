@@ -10,35 +10,52 @@ import Icon from 'react-native-vector-icons/Feather';
 import { useNavigation } from '@react-navigation/native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Colors from '../../constants/colors';
+import { Image } from 'react-native-animatable';
 const getRideTypeDetails = (type: string) => {
   switch (type) {
     case 'bike':
       return {
         label: 'Bike Ride',
         icon: (
-          <MaterialCommunityIcons name="motorbike" size={22} color="#000" />
+          <Image
+            source={require('../../assets/bike.png')}
+            style={{ width: 30, height: 20,}}
+          />
+
         ),
-        bgColor: '#fff',
+        bgColor: Colors.white,
       };
     case 'taxi':
       return {
         label: 'Taxi Ride',
-        icon: <MaterialCommunityIcons name="car" size={22} color="#000" />,
-        bgColor: '#fff',
+        icon: (
+          <Image
+            source={require('../../assets/taxi.png')}
+            style={{ width: 30, height: 20,}}
+          />
+        ),
+        bgColor : Colors.white,
+
       };
     case 'auto':
       return {
         label: 'Auto Ride',
-        icon: <MaterialCommunityIcons name="rickshaw" size={22} color="#000" />,
-        bgColor: '#fff',
+        icon: (
+          <Image
+            source={require('../../assets/auto.png')}
+            style={{ width: 30, height: 20,}}
+          />
+        ),
+        bgColor: Colors.white,
       };
     case 'parcel':
       return {
         label: 'Parcel Delivery',
         icon: (
-          <MaterialCommunityIcons name="cube-outline" size={22} color="#000" />
+          <MaterialCommunityIcons name="cube-outline" size={22} color={Colors.white} />
         ),
-        bgColor: '#fff',
+        bgColor: Colors.white,
+
       };
     default:
       return {
@@ -79,7 +96,7 @@ const RideDetailScreen = ({ route }: any) => {
 
       {/* Your Route */}
       <View style={styles.titleRow}>
-        <Icon name="map-pin" size={16} color="#000" />
+        <Icon name="map-pin" size={16} color={Colors.blue} />
         <Text style={styles.cardTitle}>Your Route</Text>
       </View>
       <View style={styles.card}>
@@ -103,7 +120,7 @@ const RideDetailScreen = ({ route }: any) => {
 
       {/* Ride Details */}
       <View style={styles.titleRow}>
-        <Icon name="info" size={16} color="#000" />
+        <Icon name="info" size={16} color={Colors.blue} />
         <Text style={styles.cardTitle}>Ride Details</Text>
       </View>
       <View style={styles.card}>
@@ -123,7 +140,7 @@ const RideDetailScreen = ({ route }: any) => {
 
       {/* Invoice */}
       <View style={styles.titleRow}>
-        <Icon name="file-text" size={16} color="#000" />
+        <Icon name="file-text" size={16} color={Colors.blue} />
         <Text style={styles.cardTitle}>Invoice</Text>
       </View>
       <View style={styles.card}>
@@ -151,7 +168,7 @@ const RideDetailScreen = ({ route }: any) => {
 
       {/* Support */}
       <View style={styles.titleRow}>
-        <Icon name="info" size={16} color="#000" />
+        <Icon name="info" size={16} color={Colors.blue} />
         <Text style={styles.cardTitle}>Support</Text>
       </View>
       <TouchableOpacity
@@ -176,9 +193,13 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     padding: 16,
+    borderBottomRightRadius: 40,
+    borderBottomLeftRadius: 40,
+    elevation: 4,
+
   },
   rideTypeIcon: {
-    backgroundColor: Colors.borderGray,
+    // backgroundColor: Colors.blue,
     borderRadius: 30,
     padding: 10,
     marginRight: 12,
@@ -186,11 +207,11 @@ const styles = StyleSheet.create({
   rideTitle: {
     fontSize: 16,
     fontWeight: '700',
-    color: Colors.black,
+    color: Colors.blue,
     textAlign: 'center',
   },
   rideDate: { fontSize: 12, color: Colors.gray, marginTop: 2 },
-  ridePrice: { fontSize: 20, fontWeight: 'bold', color: Colors.black },
+  ridePrice: { fontSize: 20, fontWeight: 'bold', color: Colors.blue },
 
   titleRow: {
     flexDirection: 'row',
@@ -203,7 +224,7 @@ const styles = StyleSheet.create({
   cardTitle: {
     fontSize: 16,
     fontWeight: '600',
-    color: Colors.black,
+    color: Colors.blue,
   },
 
   card: {

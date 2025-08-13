@@ -15,7 +15,7 @@ import Favourites from '../screens/MenuScreens/FavouritesScreen';
 import Preferences from '../screens/MenuScreens/PreferencesScreen';
 import RideDetails from '../screens/MenuScreens/RideDetailScreen';
 import AboutScreen from '../screens/MenuScreens/AboutScreen';
-import Parcel from '../screens/MenuScreens/ParcelScreen';
+// import Parcel from '../screens/MenuScreens/ParcelScreen';
 import AddressEntry from '../screens/Home/AddressEntryScreen';
 import Safety from '../screens/MenuScreens/SafetyScreen';
 import ReferAndEarn from '../screens/MenuScreens/ReferAndEarnScreen'; // Importing the new screen
@@ -85,7 +85,7 @@ const AppNavigator = () => {
         screenOptions={{ headerShown: false }}
       >
         <Stack.Screen name="Login" component={LoginScreen} options={{animation: 'fade'}}/>
-        <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen name="Home" component={HomeScreen} options={{animation: 'fade'}}/>
         <Stack.Screen name="Otp" component={OtpScreen} options={{animation: 'fade'}}/>
         <Stack.Screen name="Signup" component={SignupScreen} options={{animation: 'fade'}}/>
         <Stack.Screen

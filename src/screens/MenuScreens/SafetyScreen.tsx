@@ -51,13 +51,14 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   card: {
-    backgroundColor: Colors.lightGray,
+    backgroundColor: Colors.white,
     borderRadius: 12,
     padding: 14,
+    paddingVertical: 20,
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 12,
-    elevation: 1,
+    marginVertical: 20,
+    elevation: 2,
   },
   iconWrapper: {
     padding: 10,
@@ -70,7 +71,7 @@ const styles = StyleSheet.create({
   cardTitle: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#111',
+    color: Colors.black,
   },
   cardSub: {
     fontSize: 13,

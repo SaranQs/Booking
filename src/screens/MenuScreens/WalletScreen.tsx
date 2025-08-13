@@ -104,13 +104,14 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   walletCard: {
-    backgroundColor: Colors.lightGray,
+    backgroundColor: Colors.white,
     padding: 14,
     borderRadius: 10,
     marginBottom: 10,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    elevation:2,
   },
   walletTitle: {
     fontSize: 15,
@@ -127,7 +128,7 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   addMoneyBtn: {
-    backgroundColor: Colors.black,
+    backgroundColor: Colors.blue,
     paddingVertical: 4,
     marginTop: 4,
     paddingHorizontal: 8,
@@ -143,11 +144,12 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   payLaterCard: {
-    backgroundColor: Colors.lightGray,
+    backgroundColor: Colors.white,
     borderRadius: 10,
     padding: 14,
     flexDirection: 'row',
     alignItems: 'center',
+    elevation:2,
   },
   payLaterTitle: {
     fontSize: 15,
@@ -160,12 +162,13 @@ const styles = StyleSheet.create({
     maxWidth: '90%',
   },
   faqItem: {
-    backgroundColor: Colors.lightGray,
+    backgroundColor: Colors.white,
     paddingVertical: 14,
     paddingHorizontal: 12,
     borderRadius: 8,
     marginBottom: 10,
     flexDirection: 'row',
+    elevation:2,
     justifyContent: 'space-between',
     alignItems: 'center',
   },

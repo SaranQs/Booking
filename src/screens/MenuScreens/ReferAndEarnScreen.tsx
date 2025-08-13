@@ -96,13 +96,13 @@ const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: Colors.white, padding: 16 },
 
   banner: {
-    backgroundColor: Colors.lightGray,
+    backgroundColor: Colors.white,
     borderRadius: 12,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     padding: 16,
-    elevation: 1,
+    elevation: 2,
   },
   bannerTitle: { fontSize: 20, fontWeight: 'bold', color: Colors.black },
   bannerSubtitle: { fontSize: 14, color: Colors.gray },
@@ -148,10 +148,10 @@ const styles = StyleSheet.create({
 
   howItWorks: {
     marginTop: 40,
-    backgroundColor: Colors.backgroundWhite,
+    backgroundColor: Colors.white,
     borderRadius: 12,
     padding: 16,
-    elevation: 1,
+    elevation: 2,
   },
   howHeader: {
     flexDirection: 'row',
@@ -192,7 +192,7 @@ const styles = StyleSheet.create({
 findBtn: {
   flex: 1,
   borderWidth: 1,
-  borderColor: Colors.black,
+  borderColor: Colors.blue,
   paddingVertical: 12,
   borderRadius: 8,
   alignItems: 'center',

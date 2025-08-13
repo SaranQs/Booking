@@ -544,6 +544,8 @@ const styles = StyleSheet.create({
   safetyContainer: {
     paddingHorizontal: 8,
     marginTop: 8,
+    marginBottom: 12,
+
   },
   safetyTitle: {
     fontSize: 16,

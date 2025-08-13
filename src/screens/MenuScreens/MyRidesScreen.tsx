@@ -10,6 +10,7 @@ import { Modal } from 'react-native';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Colors from '../../constants/colors';
+import { Image } from 'react-native-animatable';
 // Sample data structured as you'd receive from backend
 const rideHistory = [
   {
@@ -119,15 +120,42 @@ const rideHistory = [
 const renderIcon = (type: string) => {
   switch (type) {
     case 'bike':
-      return <MaterialCommunityIcons name="motorbike" size={30} />;
+      return (
+        <Image
+          source={require('../../assets/bike.png')}
+          style={{ width: 30, height: 25, marginRight:10}}
+        />
+      );
+
     case 'taxi':
-      return <MaterialCommunityIcons name="car" size={30} />;
+      return (
+        <Image
+          source={require('../../assets/taxi.png')}
+          style={{ width: 30, height: 20, marginRight:10}}
+        />
+      );
     case 'parcel':
-      return <MaterialCommunityIcons name="cube-outline" size={30} />;
+      return (
+        <Image
+          source={require('../../assets/parcel.png')}
+          style={{ width: 30, height: 30,  marginRight:10}}
+        />
+      );
+
     case 'auto':
-      return <MaterialCommunityIcons name="rickshaw" size={30} />;
+      return (
+        <Image
+          source={require('../../assets/auto.png')}
+          style={{ width: 30, height: 20,  marginRight:10}}
+        />
+      );
     default:
-      return <FeatherIcon name="box" size={30} color="#aaa" />;
+      return (
+        <Image
+          source={require('../../assets/auto.png')}
+          style={{ width: 30, height: 20,  marginRight:10}}
+        />
+      );
   }
 };
 
@@ -202,7 +230,7 @@ const renderItem = ({ item }: any) => (
         </View>
         <FeatherIcon
           name="chevron-right"
-          size={20}
+          size={25}
           color="#888"
           style={{ marginLeft: 'auto' }}
         />
@@ -211,19 +239,20 @@ const renderItem = ({ item }: any) => (
 
     {/* Star Rating Row - visible and aligned below */}
     <View style={styles.ratingRow}>
+      <Text>Rate this ride  </Text>
       {[1, 2, 3, 4, 5].map((star) => (
         <TouchableOpacity
-          key={star}
-          onPress={() => openRatingModal(item)}
-          // disabled={item.rating > 0}
-          hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+        key={star}
+        onPress={() => openRatingModal(item)}
+        // disabled={item.rating > 0}
+        hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
         >
           <MaterialCommunityIcons
             name={star <= item.rating ? 'star' : 'star-outline'}
             size={20}
             color={item.rating > 0 ? '#FFD700' : '#999'}
             style={{ marginRight: 4 }}
-          />
+            />
         </TouchableOpacity>
       ))}
     </View>
@@ -245,7 +274,7 @@ return (
           <MaterialCommunityIcons
             name={tab.icon}
             size={18}
-            color={activeTab === tab.label ? Colors.black : Colors.gray}
+            color={activeTab === tab.label ? Colors.white : Colors.gray}
             style={{ marginRight: 6 }}
           />
           <Text
@@ -320,7 +349,9 @@ const styles = StyleSheet.create({
 ratingRow: {
   flexDirection: 'row',
   marginTop: 8,
-  paddingLeft: 32, // Align with text start
+  // textAlign: 'center',
+  width: '100%',
+  // paddingLeft: 35, // Align with text start
 },
 
 modalContent: {
@@ -331,7 +362,7 @@ modalContent: {
   width: '80%',
 },
 submitButton: {
-  backgroundColor: Colors.black,
+  backgroundColor: Colors.blue,
   paddingVertical: 10,
   paddingHorizontal: 30,
   borderRadius: 12,
@@ -354,7 +385,9 @@ submitButton: {
     paddingBottom: 16,
   },
 rideItem: {
-  backgroundColor: Colors.backgroundWhite,
+  backgroundColor: Colors.white,
+  borderColor: Colors.bgBlue,
+  borderWidth: 1,
   borderRadius: 10,
   padding: 14,
   marginBottom: 12,
@@ -400,7 +433,7 @@ rideItem: {
     backgroundColor: Colors.lightGray,
   },
   activeTab: {
-    backgroundColor: Colors.yellow,
+    backgroundColor: Colors.bgBlue,
   },
   tabLabel: {
     fontSize: 14,
@@ -408,7 +441,7 @@ rideItem: {
     color: Colors.gray,
   },
   activeTabLabel: {
-    color: Colors.black,
+    color: Colors.white,
   },
   emptyText: {
     textAlign: 'center',
