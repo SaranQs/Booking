@@ -168,7 +168,8 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   tripSummary: {
-    backgroundColor: '#F7F7F7',
+    backgroundColor: Colors.white,
+    elevation:2,
     borderRadius: 8,
     padding: 12,
     margin: 16,
@@ -201,8 +202,9 @@ const styles = StyleSheet.create({
   driverContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#F7F7F7',
+    backgroundColor: Colors.white,
     borderRadius: 8,
+    elevation:2,
     padding: 12,
     margin: 16,
   },
@@ -219,10 +221,11 @@ const styles = StyleSheet.create({
     color: '#666666',
   },
   fareContainer: {
-    backgroundColor: '#F7F7F7',
+    backgroundColor: Colors.white,
     borderRadius: 8,
     padding: 12,
     margin: 16,
+    elevation:2,
   },
   fareTitle: {
     fontSize: 16,
@@ -263,6 +266,7 @@ const styles = StyleSheet.create({
     padding: 12,
     margin: 16,
     alignItems: 'center',
+    elevation:2, 
   },
   rateText: {
     fontSize: 16,
@@ -274,11 +278,12 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#666666',
     textAlign: 'center',
-    marginBottom: 8,
+    // marginBottom: 8,
   },
   ratingStars: {
     flexDirection: 'row',
-    marginBottom: 12,
+    gap:20,
+    marginVertical: 20,
   },
   rateButton: {
     backgroundColor: '#FFC107',
@@ -301,7 +306,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#F7F7F7',
+    backgroundColor: Colors.blue + '0f',
     borderRadius: 8,
     padding: 12,
     marginHorizontal: 4,

@@ -5,12 +5,11 @@ import {
   StyleSheet,
   TouchableOpacity,
   FlatList,
-  Dimensions,
+  Alert,
+  // Dimensions,
 } from 'react-native';
 import Colors from '../../constants/colors';
 import Feather from 'react-native-vector-icons/Feather';
-
-const { height } = Dimensions.get('window');
 
 const ObjectSelectionScreen = ({ route, navigation }: any) => {
   const { pickup, drop, selectedMode } = route.params;
@@ -36,7 +35,7 @@ const ObjectSelectionScreen = ({ route, navigation }: any) => {
   const handleConfirm = () => {
     const selectedItems = items.filter(item => item.quantity > 0);
     if (selectedItems.length === 0) {
-      alert('Please select at least one item.');
+      Alert.alert('Please select at least one item.');
       return;
     }
     navigation.navigate('CaptainSearch', {

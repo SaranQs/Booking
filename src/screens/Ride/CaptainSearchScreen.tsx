@@ -14,7 +14,11 @@ import Animated, {
   useAnimatedStyle,
   withSpring,
 } from 'react-native-reanimated';
-import { Gesture, GestureDetector } from 'react-native-gesture-handler';
+import {
+  Gesture,
+  GestureDetector,
+  ScrollView,
+} from 'react-native-gesture-handler';
 import Colors from '../../constants/colors';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Feather from 'react-native-vector-icons/Feather';
@@ -40,7 +44,7 @@ const CaptainSearchScreen = ({ navigation, route }: any) => {
   }));
 
   const panGesture = Gesture.Pan()
-    .onUpdate((event) => {
+    .onUpdate(event => {
       const newHeight = bottomSheetHeight.value - event.translationY;
       if (newHeight >= MIN_HEIGHT && newHeight <= MAX_HEIGHT) {
         translateY.value = event.translationY;
@@ -48,9 +52,15 @@ const CaptainSearchScreen = ({ navigation, route }: any) => {
     })
     .onEnd(() => {
       let snapHeight = MID_HEIGHT;
-      if (bottomSheetHeight.value - translateY.value < (MIN_HEIGHT + MID_HEIGHT) / 2) {
+      if (
+        bottomSheetHeight.value - translateY.value <
+        (MIN_HEIGHT + MID_HEIGHT) / 2
+      ) {
         snapHeight = MIN_HEIGHT;
-      } else if (bottomSheetHeight.value - translateY.value > (MID_HEIGHT + MAX_HEIGHT) / 2) {
+      } else if (
+        bottomSheetHeight.value - translateY.value >
+        (MID_HEIGHT + MAX_HEIGHT) / 2
+      ) {
         snapHeight = MAX_HEIGHT;
       }
       bottomSheetHeight.value = withSpring(snapHeight);
@@ -62,14 +72,16 @@ const CaptainSearchScreen = ({ navigation, route }: any) => {
     const timer = setTimeout(() => {
       setIsSearching(false);
       setCaptainDetails({
-        name: 'Captain Name',
-        vehicleType: selectedMode.charAt(0).toUpperCase() + selectedMode.slice(1),
-        vehicleNumber: 'TN 22 AB 1234',
-        eta: '5 min',
+        name: 'Rajesh Kumar',
+        vehicleType:
+          selectedMode.charAt(0).toUpperCase() + selectedMode.slice(1),
+        vehicleNumber: 'KA 01 AB 1234',
+        eta: '11 min',
         rating: '4.8',
         otp: '1234',
-        distance: '3.5 km',
-        estimatedCost: selectedMode === 'bike' ? 45 : selectedMode === 'auto' ? 60 : 90,
+        distance: '2.8 km',
+        estimatedCost:
+          selectedMode === 'bike' ? 45 : selectedMode === 'auto' ? 60 : 90,
         phoneNumber: '+919876543210',
       });
     }, 3000); // 3-second delay to simulate search
@@ -79,8 +91,8 @@ const CaptainSearchScreen = ({ navigation, route }: any) => {
 
   const handleCallCaptain = () => {
     if (captainDetails?.phoneNumber) {
-      Linking.openURL(`tel:${captainDetails.phoneNumber}`).catch((err) =>
-        console.error('Failed to open dialpad:', err)
+      Linking.openURL(`tel:${captainDetails.phoneNumber}`).catch(err =>
+        console.error('Failed to open dialpad:', err),
       );
     }
   };
@@ -144,6 +156,7 @@ ETA: ${captainDetails.eta}
           <View style={styles.searchOverlay}>
             <ActivityIndicator size={50} color={Colors.black} />
             <Text style={styles.searchText}>Finding nearby captains...</Text>
+            
           </View>
         )}
       </View>
@@ -153,23 +166,38 @@ ETA: ${captainDetails.eta}
         <Animated.View style={[styles.bottomSheet, animatedStyle]}>
           <View style={styles.handle} />
           {isSearching ? (
-            <View style={styles.searchContainer}>
+            <ScrollView contentContainerStyle={styles.searchContainer}>
               <Text style={styles.searchTitle}>Searching for Your Captain</Text>
               <Text style={styles.searchSubtitle}>
                 Connecting you with the nearest available captain.
               </Text>
-            </View>
+              <TouchableOpacity
+                style={styles.searchCancelButton}
+                onPress={() => navigation.goBack()}
+              >
+                <Text style={styles.cancelText}>Cancel Ride</Text>
+              </TouchableOpacity>
+            </ScrollView>
           ) : (
-            <View style={styles.captainContainer}>
+            <ScrollView contentContainerStyle={styles.captainContainer}>
               <Text style={styles.captainTitle}>Your Captain is Here!</Text>
               <View style={styles.captainCard}>
-                <Feather name="user" size={40} color={Colors.black} style={styles.user} />
+                <Feather
+                  name="user"
+                  size={40}
+                  color={Colors.blue}
+                  style={styles.user}
+                />
                 <View style={styles.captainDetails}>
                   <View style={styles.captainInfoRow}>
-                    <Text style={styles.captainName}>{captainDetails.name}</Text>
+                    <Text style={styles.captainName}>
+                      {captainDetails.name}
+                    </Text>
                     <View style={styles.ratingContainer}>
                       <Ionicons name="star" size={14} color={Colors.gold} />
-                      <Text style={styles.ratingText}>{captainDetails.rating}</Text>
+                      <Text style={styles.ratingText}>
+                        {captainDetails.rating}
+                      </Text>
                     </View>
                   </View>
                   <View style={styles.vehicleRow}>
@@ -181,29 +209,40 @@ ETA: ${captainDetails.eta}
                           ? require('../../assets/auto.png')
                           : captainDetails.vehicleType.toLowerCase() === 'taxi'
                           ? require('../../assets/taxi.png')
-                          :captainDetails.vehicleType.toLowerCase() === 'truck small'
+                          : captainDetails.vehicleType.toLowerCase() ===
+                            'truck small'
                           ? require('../../assets/truck_s.png')
-                          :captainDetails.vehicleType.toLowerCase() === 'truck large'
+                          : captainDetails.vehicleType.toLowerCase() ===
+                            'truck large'
                           ? require('../../assets/truck_l.png')
                           : require('../../assets/taxi.png')
                       }
                       style={styles.vehicleIcon}
                     />
                     <Text style={styles.vehicleInfo}>
-                      {captainDetails.vehicleType} • {captainDetails.vehicleNumber}
+                      {captainDetails.vehicleType} •{' '}
+                      {captainDetails.vehicleNumber}
                     </Text>
                   </View>
-                  <Text style={styles.eta}>Arriving in {captainDetails.eta}</Text>
+                  <Text style={styles.eta}>
+                    Arriving in {captainDetails.eta}
+                  </Text>
                   <Text style={styles.otp}>OTP: {captainDetails.otp}</Text>
                 </View>
               </View>
 
-              <View style={styles.actionButtons} >
-                <TouchableOpacity style={styles.actionButton} onPress={handleCallCaptain}>
+              <View style={styles.actionButtons}>
+                <TouchableOpacity
+                  style={styles.actionButton}
+                  onPress={handleCallCaptain}
+                >
                   <Feather name="phone" size={20} color={Colors.black} />
                   <Text style={styles.actionButtonText}>Call Captain</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.actionButton} onPress={handleShareRide}>
+                <TouchableOpacity
+                  style={styles.actionButton}
+                  onPress={handleShareRide}
+                >
                   <MaterialIcons name="share" size={20} color={Colors.black} />
                   <Text style={styles.actionButtonText}>Share Ride</Text>
                 </TouchableOpacity>
@@ -215,40 +254,93 @@ ETA: ${captainDetails.eta}
                 <Text style={styles.summaryTitle}>Trip Summary</Text>
                 <View style={styles.routeInfo}>
                   <View style={styles.routeRow}>
-                    <Ionicons name="location-outline" size={16} color={Colors.gray} />
+                    <Ionicons
+                      name="location-outline"
+                      size={16}
+                      color={Colors.gray}
+                    />
                     <Text style={styles.routeLabel}>From: {pickup}</Text>
                   </View>
                   <View style={styles.routeRow}>
-                    <Ionicons name="flag-outline" size={16} color={Colors.gray} />
+                    <Ionicons
+                      name="flag-outline"
+                      size={16}
+                      color={Colors.gray}
+                    />
                     <Text style={styles.routeLabel}>To: {drop}</Text>
                   </View>
-                  {/* <View style={styles.routeRow}>
+                  <View style={styles.routeRow}>
                     <Feather name="map" size={16} color={Colors.gray} />
-                    <Text style={styles.routeLabel}>Distance: {captainDetails?.distance}</Text>
-                  </View> */}
+                    <Text style={styles.routeLabel}>
+                      Distance: {captainDetails?.distance}
+                    </Text>
+                  </View>
+                  <View style={styles.routeRow}>
+                    <Feather name="clock" size={16} color={Colors.gray} />
+                    <Text style={styles.routeLabel}>
+                      Time Remaining: {captainDetails?.eta}
+                    </Text>
+                  </View>
                   <View style={styles.routeRow}>
                     <Feather name="dollar-sign" size={16} color={Colors.gray} />
-                    <Text style={styles.routeLabel}>Est. Cost: ₹{captainDetails?.estimatedCost}</Text>
+                    <Text style={styles.routeLabel}>
+                      Est. Cost: ₹{captainDetails?.estimatedCost}
+                    </Text>
                   </View>
                 </View>
               </View>
-            </View>
+
+              <View style={styles.divider} />
+
+              <View style={styles.safetyContainer}>
+                <Text style={styles.safetyTitle}>Safety</Text>
+                <View style={styles.safetyButtons}>
+                  <TouchableOpacity style={styles.safetyButton}>
+                    <Feather name="share" size={20} color={Colors.black} />
+                    <Text style={styles.safetyButtonText}>Share Trip</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={[styles.safetyButton, styles.emergencyButton]}
+                  >
+                    <MaterialIcons
+                      name="warning"
+                      size={20}
+                      color={Colors.white}
+                    />
+                    <Text style={styles.emergencyButtonText}>Emergency</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+
+              <View style={styles.divider} />
+
+              <View style={styles.fareContainer}>
+                <Text style={styles.fareTitle}>Fare Details</Text>
+                <View style={styles.fareInfo}>
+                  <Text style={styles.fareLabel}>Base Fare</Text>
+                  <Text style={styles.fareValue}>₹31</Text>
+                </View>
+                <View style={styles.fareInfo}>
+                  <Text style={styles.fareLabel}>Distance Charge</Text>
+                  <Text style={styles.fareValue}>₹14</Text>
+                </View>
+                <View style={styles.fareInfo}>
+                  <Text style={styles.fareLabel}>Total</Text>
+                  <Text style={styles.fareValue}>₹45</Text>
+                </View>
+              </View>
+              <TouchableOpacity
+                style={styles.cancelButton}
+                onPress={() => navigation.goBack()}
+              >
+                <Text style={styles.cancelText}>Cancel Ride</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity style={styles.nextButton} onPress={handleNext}>
+                <Text style={styles.nextText}>Next</Text>
+              </TouchableOpacity>
+            </ScrollView>
           )}
-
-          <TouchableOpacity
-            style={styles.cancelButton}
-            onPress={() => navigation.goBack()}
-          >
-            <Text style={styles.cancelText}>Cancel Ride</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={styles.nextButton}
-            onPress={handleNext}
-          >
-            <Text style={styles.nextText}>Next</Text>
-          </TouchableOpacity>
-          
         </Animated.View>
       </GestureDetector>
     </View>
@@ -298,7 +390,7 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     paddingHorizontal: 16,
     paddingTop: 8,
-    paddingBottom: 16,
+    // paddingBottom: 16,
   },
   handle: {
     width: 36,
@@ -327,7 +419,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   captainContainer: {
-    paddingVertical: 12,
+    paddingVertical: 10,
   },
   captainTitle: {
     fontSize: 18,
@@ -339,7 +431,7 @@ const styles = StyleSheet.create({
   captainCard: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#f7f7f7',
+    backgroundColor: Colors.blue + '0f',
     borderRadius: 12,
     padding: 12,
     marginBottom: 12,
@@ -408,10 +500,11 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#f0f0f0',
     borderRadius: 8,
     paddingVertical: 10,
-    paddingHorizontal: 12,
+    borderColor: Colors.blue,
+    borderWidth: 1,
+    justifyContent: 'center',
     marginHorizontal: 4,
   },
   actionButtonText: {
@@ -448,6 +541,78 @@ const styles = StyleSheet.create({
     marginLeft: 8,
     flex: 1,
   },
+  safetyContainer: {
+    paddingHorizontal: 8,
+    marginTop: 8,
+  },
+  safetyTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: Colors.black,
+    marginBottom: 8,
+  },
+  safetyButtons: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  safetyButton: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#f0f0f0',
+    borderRadius: 8,
+    paddingVertical: 10,
+    justifyContent: 'center',
+    marginHorizontal: 4,
+  },
+  safetyButtonText: {
+    fontSize: 14,
+    fontWeight: '500',
+    color: Colors.black,
+    marginLeft: 8,
+  },
+  emergencyButton: {
+    backgroundColor: Colors.red,
+  },
+  emergencyButtonText: {
+    fontSize: 14,
+    fontWeight: '500',
+    color: Colors.white,
+    marginLeft: 8,
+  },
+  fareContainer: {
+    paddingHorizontal: 8,
+    marginTop: 8,
+    marginBottom: 20,
+  },
+  fareTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: Colors.black,
+    marginBottom: 8,
+  },
+  fareInfo: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 6,
+  },
+  fareLabel: {
+    fontSize: 13,
+    color: Colors.gray,
+  },
+  fareValue: {
+    fontSize: 13,
+    color: Colors.black,
+    fontWeight: '500',
+  },
+  searchCancelButton:{
+    backgroundColor: Colors.red,
+    paddingVertical: 12,
+    width:'90%',
+    borderRadius: 8,
+    alignItems: 'center',
+    marginTop: 30,
+  },
   cancelButton: {
     backgroundColor: Colors.red,
     paddingVertical: 12,
@@ -461,7 +626,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   nextButton: {
-    backgroundColor: '#FFD700', // Matching the yellow from the design
+    backgroundColor: '#FFD700',
     paddingVertical: 12,
     borderRadius: 8,
     alignItems: 'center',

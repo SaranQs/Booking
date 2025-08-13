@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity,TextInput, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, TextInput, ScrollView } from 'react-native';
 import Colors from '../../constants/colors';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Feather from 'react-native-vector-icons/Feather';
 
 const RateRideScreen = ({ route, navigation }: any) => {
-  const { driver} = route.params; //pickup, drop
-  const [rating, setRating] = useState<number | null>(null);
+  const { driver } = route.params; //pickup, drop
+  const [rating, setRating] = useState<number | null>(1);
   const [tip, setTip] = useState<number | null>(null);
   const [feedback, setFeedback] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [selectedLikes, setSelectedLikes] = useState<string[]>([]);
 
   const handleBack = () => {
     navigation.navigate('Home');
@@ -26,8 +27,7 @@ const RateRideScreen = ({ route, navigation }: any) => {
   const handleSubmit = () => {
     if (rating) {
       setIsSubmitted(true);
-      // Simulate submission (in a real app, this would send data to a server)
-      console.log('Rating:', rating, 'Tip:', tip, 'Feedback:', feedback);
+      console.log('Rating:', rating, 'Tip:', tip, 'Feedback:', feedback, 'Likes:', selectedLikes);
     }
   };
 
@@ -38,14 +38,19 @@ const RateRideScreen = ({ route, navigation }: any) => {
         {stars.map((star) => (
           <TouchableOpacity key={star} onPress={() => handleRating(star)}>
             <Ionicons
-              name={star <= (rating || 0) ? 'star' : 'star-outline'}
+              name={star <= (rating || 1) ? 'star' : 'star-outline'}
               size={24}
               color="#FFD700"
             />
           </TouchableOpacity>
         ))}
-        <Text style={styles.ratingText}>Very Good</Text>
       </View>
+    );
+  };
+
+  const handleLikeSelect = (label: string) => {
+    setSelectedLikes((prev) =>
+      prev.includes(label) ? prev.filter((like) => like !== label) : [...prev, label]
     );
   };
 
@@ -57,16 +62,22 @@ const RateRideScreen = ({ route, navigation }: any) => {
       { icon: 'people', label: 'Helpful' },
       { icon: 'briefcase', label: 'Professional' },
       { icon: 'thumbs-up', label: 'Good Service' },
-
     ];
     return (
       <View style={styles.likeContainer}>
         <Text style={styles.likeTitle}>What did you like?</Text>
         <View style={styles.likeOptions}>
           {options.map((option, index) => (
-            <TouchableOpacity key={index} style={styles.likeOption}>
-              <Ionicons name={option.icon} size={20} color={Colors.gray} />
-              <Text style={styles.likeText}>{option.label}</Text>
+            <TouchableOpacity
+              key={index}
+              style={[
+                styles.likeOption,
+                selectedLikes.includes(option.label) && styles.selectedLikeOption,
+              ]}
+              onPress={() => handleLikeSelect(option.label)}
+            >
+              <Ionicons name={option.icon} size={20} color={selectedLikes.includes(option.label) ? Colors.white : Colors.bgBlue} />
+              <Text style={[styles.likeText, selectedLikes.includes(option.label) && styles.selectedLikeText]}>{option.label}</Text>
             </TouchableOpacity>
           ))}
         </View>
@@ -76,7 +87,7 @@ const RateRideScreen = ({ route, navigation }: any) => {
 
   if (isSubmitted) {
     return (
-      <View style={styles.container}>
+      <View style={[styles.container, { backgroundColor: Colors.lightGreen + '80' }]}>
         <View style={styles.successContainer}>
           <Ionicons name="checkmark-circle" size={60} color="#28A745" />
           <Text style={styles.successText}>Thank You!</Text>
@@ -94,11 +105,8 @@ const RateRideScreen = ({ route, navigation }: any) => {
 
   return (
     <ScrollView style={styles.container}>
-
-      <Text style={styles.headerText}>Rate Your Trip</Text>
-
       <View style={styles.driverContainer}>
-        <Feather name="user" size={50} color={Colors.gray} />
+        <Feather name="user" size={50} color={Colors.blue} />
         <View style={styles.driverInfo}>
           <Text style={styles.driverName}>{driver.name}</Text>
           <Text style={styles.driverVehicle}>
@@ -116,7 +124,7 @@ const RateRideScreen = ({ route, navigation }: any) => {
       {renderWhatDidYouLike()}
 
       <View style={styles.tipContainer}>
-        <Text style={styles.sectionTitle}>💖 Show your appreciation</Text>
+        <Text style={styles.sectionTitle}>Show your appreciation</Text>
         <Text style={styles.tipSubText}>
           Your driver went above and beyond. Consider adding a tip!
         </Text>
@@ -127,7 +135,7 @@ const RateRideScreen = ({ route, navigation }: any) => {
               style={[styles.tipButton, tip === amount && styles.selectedTip]}
               onPress={() => handleTipSelect(amount)}
             >
-              <Text style={styles.tipText}>₹{amount}</Text>
+              <Text style={[styles.tipText, tip === amount && styles.selectedTipText]}>₹{amount}</Text>
             </TouchableOpacity>
           ))}
         </View>
@@ -135,7 +143,7 @@ const RateRideScreen = ({ route, navigation }: any) => {
       </View>
 
       <View style={styles.feedbackContainer}>
-        <Text style={styles.sectionTitle}>📝 Additional Feedback (Optional)</Text>
+        <Text style={styles.sectionTitle}>Additional Feedback (Optional)</Text>
         <TextInput
           style={styles.feedbackInput}
           placeholder="Share your experience with other riders..."
@@ -158,7 +166,6 @@ const RateRideScreen = ({ route, navigation }: any) => {
         <Text style={styles.skipText}>Skip for now</Text>
       </TouchableOpacity>
     </ScrollView>
-
   );
 };
 
@@ -179,9 +186,16 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   driverContainer: {
-    flexDirection: 'row',
+    flexDirection: 'column',
+    textAlign: 'center',
     alignItems: 'center',
     marginBottom: 20,
+    elevation: 2,
+    borderRadius: 8,
+    padding: 10,
+    paddingVertical: 30,
+    marginHorizontal: 5,
+    backgroundColor: Colors.white,
   },
   driverImage: {
     width: 50,
@@ -191,13 +205,23 @@ const styles = StyleSheet.create({
   },
   driverInfo: {
     flex: 1,
+    marginTop: 10,
+    alignItems: 'center',
   },
   backButton: {
+    backgroundColor: 'green',
+    paddingVertical: 10,
+    position: 'absolute',
+    bottom: 0,
+    width: '95%',
+    paddingHorizontal: 20,
+    borderRadius: 8,
     marginBottom: 10,
   },
   backText: {
-    color: '#007BFF',
+    textAlign: 'center',
     fontSize: 16,
+    color: Colors.white,
     fontWeight: '600',
   },
   driverName: {
@@ -211,37 +235,53 @@ const styles = StyleSheet.create({
   },
   ratingSection: {
     marginBottom: 20,
+    elevation: 2,
+    borderRadius: 8,
+    padding: 10,
+    marginHorizontal: 5,
+    backgroundColor: Colors.white,
+    alignItems: 'center',
   },
   sectionTitle: {
     fontSize: 16,
+    justifyContent: 'center',
     fontWeight: '600',
-    color: '#000000',
+    flexDirection: 'row',
+    alignItems: 'center',
+    color: Colors.blue,
     marginBottom: 10,
   },
   ratingContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
+    gap: 10,
+    marginVertical: 10,
   },
   ratingText: {
     fontSize: 14,
-    color: '#666666',
+    color: Colors.gray,
     marginLeft: 10,
   },
   tapToRate: {
     fontSize: 12,
-    color: '#666666',
+    color: Colors.gray,
     textAlign: 'center',
     marginTop: 5,
   },
   likeContainer: {
     marginBottom: 20,
+    elevation: 2,
+    borderRadius: 8,
+    padding: 10,
+    marginHorizontal: 5,
+    backgroundColor: Colors.white,
   },
   likeTitle: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#000000',
-    marginBottom: 10,
+    color: Colors.blue,
+    marginBottom: 20,
   },
   likeOptions: {
     flexDirection: 'row',
@@ -249,85 +289,105 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   likeOption: {
-    flexDirection: 'row',
+    flexDirection: 'column',
     alignItems: 'center',
-    backgroundColor: '#F7F7F7',
-    padding: 10,
+    backgroundColor: Colors.white,
+    paddingVertical: 20,
+    borderColor: Colors.bgBlue,
+    borderWidth: 1,
     borderRadius: 8,
     marginBottom: 10,
     width: '48%',
   },
+  selectedLikeOption: {
+    backgroundColor: Colors.blue,
+    borderColor: Colors.blue,
+  },
   likeText: {
     fontSize: 14,
-    color: '#666666',
+    color: Colors.black,
     marginLeft: 5,
   },
+  selectedLikeText: {
+    color: Colors.white,
+  },
   tipContainer: {
-    backgroundColor: '#FFF0F5',
-    padding: 15,
+    backgroundColor: Colors.white,
+    elevation: 2,
     borderRadius: 8,
+    padding: 10,
+    marginHorizontal: 5,
     marginBottom: 20,
   },
   tipSubText: {
     fontSize: 14,
-    color: '#666666',
+    color: Colors.gray,
     marginBottom: 10,
   },
   tipOptions: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 10,
+    marginVertical: 10,
   },
   tipButton: {
-    backgroundColor: '#E6E6FA',
+    backgroundColor: Colors.borderGray,
     paddingVertical: 10,
     paddingHorizontal: 15,
     borderRadius: 8,
   },
   selectedTip: {
-    backgroundColor: '#DDA0DD',
+    backgroundColor: Colors.blue,
   },
   tipText: {
     fontSize: 16,
-    color: '#000000',
+    color: Colors.gray,
+  },
+  selectedTipText: {
+    color: Colors.white,
   },
   tipAdded: {
     fontSize: 12,
-    color: '#666666',
+    color: Colors.gray,
+    marginVertical: 10,
     textAlign: 'center',
   },
   feedbackContainer: {
     marginBottom: 20,
+    elevation: 2,
+    borderRadius: 8,
+    padding: 10,
+    marginHorizontal: 5,
+    backgroundColor: Colors.white,
   },
   feedbackInput: {
     borderWidth: 1,
-    borderColor: '#E0E0E0',
+    borderColor: Colors.borderGray,
     borderRadius: 8,
     padding: 10,
     textAlignVertical: 'top',
     minHeight: 80,
   },
   submitButton: {
-    backgroundColor: '#007BFF',
+    backgroundColor: Colors.bgBlue,
     paddingVertical: 12,
     borderRadius: 8,
     alignItems: 'center',
     marginBottom: 10,
   },
   disabledButton: {
-    backgroundColor: '#B0C4DE',
+    backgroundColor: Colors.borderGray,
   },
   submitText: {
-    color: '#FFFFFF',
+    color: Colors.white,
     fontSize: 16,
     fontWeight: '600',
   },
   skipButton: {
     alignItems: 'center',
-    marginBottom:30,
+    marginBottom: 30,
   },
   skipText: {
-    color: '#007BFF',
+    color: Colors.blue,
     fontSize: 16,
     fontWeight: '600',
   },
@@ -340,14 +400,15 @@ const styles = StyleSheet.create({
   successText: {
     fontSize: 20,
     fontWeight: '700',
-    color: '#000000',
+    color: 'green',
     marginTop: 10,
   },
   successSubText: {
     fontSize: 14,
-    color: '#666666',
+    color: 'green',
     textAlign: 'center',
     marginTop: 5,
+    marginBottom: 10,
   },
   successTip: {
     fontSize: 14,

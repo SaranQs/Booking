@@ -44,40 +44,40 @@ import OffersScreen from '../Ride/OffersScreen';
 
 const ConfirmRideScreen = ({ route, navigation }: any) => {
   const { pickup, drop, rideType } = route.params;
-  const [selectedMode, setSelectedMode] = useState<string>('bike');
+  const [selectedMode, setSelectedMode] = useState<string>('Bike');
   const [walletVisible, setWalletVisible] = useState(false);
   const [offersVisible, setOffersVisible] = useState(false);
 
   const rideOptions = useMemo(() => ({
     ride: {
-      bike: {
+      Bike: {
         cost: 45,
         time: 10,
         image: require('../../assets/bike.png'),
       },
-      auto: {
+      Auto: {
         cost: 60,
         time: 15,
         image: require('../../assets/auto.png'),
       },
-      taxi: {
+      Taxi: {
         cost: 90,
         time: 20,
         image: require('../../assets/taxi.png'),
       },
     },
     parcel: {
-      bike: {
+      Bike: {
         cost: 45,
         time: 10,
         image: require('../../assets/bike.png'),
       },
-      'truck small': {
+      'Truck Small': {
         cost: 60,
         time: 15,
         image: require('../../assets/truck_s.png'),
       },
-      'truck large': {
+      'Truck Large': {
         cost: 90,
         time: 20,
         image: require('../../assets/truck_l.png'),
@@ -151,7 +151,7 @@ const ConfirmRideScreen = ({ route, navigation }: any) => {
           <TouchableOpacity
             style={styles.optionBlock}
             onPress={() => {
-              console.log('Opening Wallet Modal, walletVisible:', walletVisible);
+              // console.log('Opening Wallet Modal, walletVisible:', walletVisible);
               setWalletVisible(true);
             }}
           >
@@ -163,7 +163,7 @@ const ConfirmRideScreen = ({ route, navigation }: any) => {
           <TouchableOpacity
             style={styles.optionBlock}
             onPress={() => {
-              console.log('Opening Offers Modal, offersVisible:', offersVisible);
+              // console.log('Opening Offers Modal, offersVisible:', offersVisible);
               setOffersVisible(true);
             }}
           >
@@ -181,7 +181,7 @@ const ConfirmRideScreen = ({ route, navigation }: any) => {
       <WalletModalWrapper
         visible={walletVisible}
         onClose={() => {
-          console.log('Closing Wallet Modal');
+          // console.log('Closing Wallet Modal');
           setWalletVisible(false);
         }}
       >
@@ -191,7 +191,7 @@ const ConfirmRideScreen = ({ route, navigation }: any) => {
       <WalletModalWrapper
         visible={offersVisible}
         onClose={() => {
-          console.log('Closing Offers Modal');
+          // console.log('Closing Offers Modal');
           setOffersVisible(false);
         }}
       >
@@ -205,12 +205,11 @@ const { height } = Dimensions.get('window');
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // padding: 16,
     backgroundColor: Colors.white,
   },
   mapPlaceholder: {
     height: height * 0.6,
-    backgroundColor: '#e0e0e0',
+    backgroundColor: Colors.lightGray,
     borderRadius: 8,
     alignItems: 'center',
     justifyContent: 'center',
@@ -251,14 +250,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: '#ddd',
+    borderColor: Colors.borderGray,
     borderRadius: 8,
     padding: 12,
     marginBottom: 10,
   },
   selectedCard: {
-    borderColor: Colors.black,
-    backgroundColor: '#f2f2f2',
+    borderColor: Colors.blue,
+    backgroundColor: Colors.blue + '0f',
   },
   icon: {
     width: 40,
@@ -288,7 +287,7 @@ const styles = StyleSheet.create({
   },
   optionBlock: {
     flex: 0.48,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: Colors.blue + '0f',
     borderRadius: 8,
     padding: 12,
     flexDirection: 'row',
@@ -297,12 +296,8 @@ const styles = StyleSheet.create({
   },
   optionTitle: {
     fontWeight: '500',
+    marginLeft:4,
     color: Colors.black,
-    marginLeft: 4,
-  },
-  optionArrow: {
-    fontSize: 18,
-    color: '#888',
   },
   confirmButton: {
     backgroundColor: Colors.black,
