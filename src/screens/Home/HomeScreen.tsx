@@ -1,4 +1,3 @@
-// HomeScreen.tsx
 import React, { useState, useRef } from 'react';
 import {
   View,
@@ -15,7 +14,6 @@ import Colors from '../../constants/colors';
 import * as Animatable from 'react-native-animatable';
 import Feather from 'react-native-vector-icons/Feather';
 import LinearGradient from 'react-native-linear-gradient';
-// import RideTypeSwitcher from './RideTypeSwitcher';
 import { useFavorites } from '../../context/FavouritesContext';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useUser } from '../../context/UserContext';
@@ -35,22 +33,23 @@ type RootStackParamList = {
   Preferences: undefined;
   RideDetails: undefined;
   About: undefined;
-  Parcel: undefined;
-  AddressEntry: { initialAddress: string; field: string } | undefined;
+  AddressEntry: { initialAddress?: string; field?: string; rideType: 'ride' | 'parcel' } | undefined;
   Safety: undefined;
   Notification: undefined;
   MyRewards: undefined;
   ReferAndEarn: undefined;
+  ConfirmRide: { pickup: string; drop: string; rideType: 'ride' | 'parcel' };
+  ObjectSelection: { pickup: string; drop: string; selectedMode: string };
+  CaptainSearch: { pickup: string; drop: string; selectedMode: string; items?: { name: string; quantity: number }[] };
 };
 
 const HomeScreen = () => {
-  // const [selectedRide, setSelectedRide] = useState('Bike');
   const [showDrawer, setShowDrawer] = useState(false);
   const drawerRef = useRef<any>(null);
   const navigation =
     useNavigation<NativeStackScreenProps<RootStackParamList>['navigation']>();
   const { addFavorite, favorites } = useFavorites();
-  const { userName } = useUser(); // Access userName from context
+  const { userName } = useUser();
 
   const [recentRides, setRecentRides] = useState([
     {
@@ -73,12 +72,8 @@ const HomeScreen = () => {
     },
   ]);
 
-  const handleRideTypeSelect = (type: string) => {
-    if (type === 'Parcel') {
-      navigation.navigate('Parcel');
-    } else {
-      navigation.navigate('AddressEntry');
-    }
+  const handleRideTypeSelect = (type: 'ride' | 'parcel') => {
+    navigation.navigate('AddressEntry', { rideType: type });
   };
 
   const closeDrawer = () => {
@@ -93,14 +88,12 @@ const HomeScreen = () => {
     address: string;
     liked: boolean;
   }) => {
-    // Toggle liked state
     setRecentRides(prev =>
       prev.map(item =>
         item.id === ride.id ? { ...item, liked: !item.liked } : item,
       ),
     );
 
-    // If liked, add to favorites
     if (!ride.liked) {
       const isAlreadyFavorite = favorites.some(
         fav => fav.address === ride.address,
@@ -108,7 +101,7 @@ const HomeScreen = () => {
       if (!isAlreadyFavorite) {
         addFavorite({
           id: Date.now().toString(),
-          type: 'other', // Default type, can be customized based on place
+          type: 'other',
           label: ride.place,
           address: ride.address,
         });
@@ -128,7 +121,6 @@ const HomeScreen = () => {
         style={styles.container}
       >
         <View style={styles.scroll}>
-          {/* Header */}
           <View style={styles.header}>
             <TouchableOpacity
               onPress={() => setShowDrawer(true)}
@@ -148,7 +140,6 @@ const HomeScreen = () => {
             </TouchableOpacity>
           </View>
 
-          {/* Current Location */}
           <View style={styles.locationContainer}>
             <MaterialCommunityIcons
               name="crosshairs-gps"
@@ -162,9 +153,7 @@ const HomeScreen = () => {
             </Text>
           </View>
 
-          {/* How can we help you today? */}
           <Text style={styles.helpText}>How can we help you today?</Text>
-          {/* Ride Options */}
           <ScrollView
             showsVerticalScrollIndicator={false}
             contentContainerStyle={styles.scrollableContent}
@@ -175,7 +164,7 @@ const HomeScreen = () => {
                   styles.rideOptionCard,
                   { borderColor: Colors.lightBlue },
                 ]}
-                onPress={() => handleRideTypeSelect('Bike')}
+                onPress={() => handleRideTypeSelect('ride')}
               >
                 <View
                   style={[styles.iconCircle, { backgroundColor: '#e6f0ff' }]}
@@ -193,7 +182,7 @@ const HomeScreen = () => {
 
               <TouchableOpacity
                 style={[styles.rideOptionCard, { borderColor: '#ffe3ccff' }]}
-                onPress={() => handleRideTypeSelect('Parcel')}
+                onPress={() => handleRideTypeSelect('parcel')}
               >
                 <View
                   style={[styles.iconCircle, { backgroundColor: '#fff0e6ff' }]}
@@ -209,7 +198,6 @@ const HomeScreen = () => {
                 </View>
               </TouchableOpacity>
             </View>
-            {/* Quick Book */}
             <View style={styles.quickBookContainer}>
               <Text style={styles.quickBookText}>Quick Book</Text>
               <Text style={styles.quickBookSubText}>
@@ -222,10 +210,11 @@ const HomeScreen = () => {
                     navigation.navigate('AddressEntry', {
                       initialAddress: '456 Serenity Lane, Suburbia, New Delhi',
                       field: 'drop',
+                      rideType: 'ride',
                     })
                   }
                 >
-                  <Ionicons name="home-outline" size={15} color={Colors.blue}/>
+                  <Ionicons name="home-outline" size={15} color={Colors.blue} />
                   <Text style={styles.quickBookButtonText}>Home</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
@@ -235,10 +224,11 @@ const HomeScreen = () => {
                       initialAddress:
                         '123 Business Park, Tech Road, City Center',
                       field: 'drop',
+                      rideType: 'ride',
                     })
                   }
                 >
-                  <Ionicons name="business-outline" size={15} color={Colors.blue}/>
+                  <Ionicons name="business-outline" size={15} color={Colors.blue} />
                   <Text style={styles.quickBookButtonText}>
                     Office
                   </Text>
@@ -250,16 +240,16 @@ const HomeScreen = () => {
                       initialAddress:
                         '789 Fitness Avenue, Wellness Block, Bangalore',
                       field: 'drop',
+                      rideType: 'ride',
                     })
                   }
                 >
-                  <Ionicons name="barbell-outline" size={15} color={Colors.blue}/>
+                  <Ionicons name="barbell-outline" size={15} color={Colors.blue} />
                   <Text style={styles.quickBookButtonText}>Gym</Text>
                 </TouchableOpacity>
               </View>
             </View>
 
-            {/* Recent Rides */}
             <View style={styles.recentContainer}>
               <Text style={styles.recentTitle}>Recent Rides</Text>
               {recentRides.map(ride => (
@@ -270,6 +260,7 @@ const HomeScreen = () => {
                     navigation.navigate('AddressEntry', {
                       initialAddress: ride.address,
                       field: 'drop',
+                      rideType: 'ride',
                     });
                   }}
                 >
@@ -303,7 +294,6 @@ const HomeScreen = () => {
         </View>
       </KeyboardAvoidingView>
 
-      {/* Drawer */}
       {showDrawer && (
         <View style={styles.drawerOverlay}>
           <Animatable.View
@@ -359,7 +349,7 @@ const HomeScreen = () => {
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.drawerItem}
-                onPress={() => navigation.navigate('Parcel')}
+                onPress={() => navigation.navigate('AddressEntry', { rideType: 'parcel' })}
               >
                 <Feather
                   name="package"
@@ -509,14 +499,13 @@ const HomeScreen = () => {
   );
 };
 
-// Styles
 const styles = StyleSheet.create({
   scrollableContent: {
     paddingBottom: 40,
   },
   gradient: { flex: 1 },
   container: { flex: 1, backgroundColor: Colors.white },
-  scroll: { flex:1, padding: 16},
+  scroll: { flex: 1, padding: 16 },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -540,20 +529,47 @@ const styles = StyleSheet.create({
   helpText: { fontSize: 18, fontWeight: '600', marginBottom: 15 },
   rideOptions: {
     flexDirection: 'column',
-    // justifyContent: 'space-between',
     alignItems: 'center',
     gap: 15,
     marginBottom: 20,
   },
-  rideOption: {
-    backgroundColor: Colors.lightGray,
-    padding: 15,
-    borderRadius: 10,
-    width: '100%',
+  rideOptionCard: {
+    flexDirection: 'row',
     alignItems: 'center',
-    elevation: 5,
+    backgroundColor: Colors.white,
+    borderRadius: 12,
+    borderWidth: 1,
+    padding: 16,
+    width: '100%',
+    justifyContent: 'space-between',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
+    elevation: 2,
   },
-  rideOptionText: { textAlign: 'center', fontSize: 14, color: '#000' },
+  iconCircle: {
+    width: 40,
+    height: 40,
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 12,
+  },
+  textContainer: {
+    flex: 1,
+    justifyContent: 'center',
+  },
+  optionTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: Colors.black,
+  },
+  optionSubtitle: {
+    fontSize: 13,
+    color: Colors.gray,
+  },
+  timePill: {},
   quickBookContainer: {
     backgroundColor: Colors.blue + 'c0',
     padding: 15,
@@ -574,7 +590,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     flex: 1,
     flexDirection: 'row',
-    gap:10,
+    gap: 10,
     justifyContent: 'center',
     marginHorizontal: 5,
     alignItems: 'center',
@@ -596,7 +612,6 @@ const styles = StyleSheet.create({
     padding: 12,
     borderRadius: 12,
     marginBottom: 10,
-    // elevation: 2,
   },
   ridePlace: {
     fontSize: 15,
@@ -643,15 +658,14 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
   profileRow: {
-    borderWidth:1,
+    borderWidth: 1,
     flexDirection: 'row',
     alignItems: 'center',
     borderColor: Colors.borderGray,
-    borderRadius:10,
-    padding:10,
+    borderRadius: 10,
+    padding: 10,
     elevation: 2,
     backgroundColor: Colors.white,
-
   },
   profileText: {
     flex: 1,
@@ -687,52 +701,6 @@ const styles = StyleSheet.create({
   },
   drawerIcon: {
     marginRight: 12,
-  },
-  rideOptionCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: Colors.white,
-    borderRadius: 12,
-    borderWidth: 1,
-    padding: 16,
-    width: '100%',
-    justifyContent: 'space-between',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 4,
-    elevation: 2,
-  },
-  iconCircle: {
-    width: 40,
-    height: 40,
-    borderRadius: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginRight: 12,
-  },
-  textContainer: {
-    flex: 1,
-    justifyContent: 'center',
-  },
-  optionTitle: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: Colors.black,
-  },
-  optionSubtitle: {
-    fontSize: 13,
-    color: Colors.gray,
-  },
-  timePill: {
-    // borderRadius: 10,
-    // paddingVertical: 4,
-    // paddingHorizontal: 10,
-  },
-  timeText: {
-    fontSize: 12,
-    color: Colors.blue,
-    fontWeight: '600',
   },
 });
 

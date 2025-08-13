@@ -14,7 +14,7 @@ import Feather from 'react-native-vector-icons/Feather';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Colors from '../../constants/colors';
 import { useUser } from '../../context/UserContext';
-
+import { TouchableWithoutFeedback } from 'react-native';
 const ProfileScreen = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [modalType, setModalType] = useState('');
@@ -232,16 +232,20 @@ const ProfileScreen = () => {
       />
 
       {/* Modal */}
-      <Modal visible={modalVisible} transparent animationType="slide">
-        <View style={styles.modalOverlay}>
-  <TouchableOpacity
-    activeOpacity={1}
-    style={styles.modalContainer}
-    onPress={() => {}}
-  >
-    {renderModalContent()}
-  </TouchableOpacity>
-</View>
+      <Modal
+        visible={modalVisible}
+        transparent
+        animationType="slide"
+        onRequestClose={() => setModalVisible(false)} // Android back button support
+      >
+        <TouchableWithoutFeedback onPress={() => setModalVisible(false)}>
+          <View style={styles.modalOverlay}>
+            {/* Stop tap propagation for sheet content */}
+            <TouchableWithoutFeedback onPress={() => {}}>
+              <View style={styles.modalContainer}>{renderModalContent()}</View>
+            </TouchableWithoutFeedback>
+          </View>
+        </TouchableWithoutFeedback>
         {customAlert.visible && (
           <View style={styles.absoluteAlert}>
             <View style={styles.customAlert}>

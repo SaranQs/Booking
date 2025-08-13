@@ -22,11 +22,12 @@ import ReferAndEarn from '../screens/MenuScreens/ReferAndEarnScreen'; // Importi
 import MyRewards from '../screens/MenuScreens/MyRewardsScreen';
 import Notification from '../screens/MenuScreens/NotificationScreen';
 import ConfirmRide from '../screens/Ride/ConfirmRideScreen';
-import ParcelEntry from '../screens/Home/ParcelAddressEntryScreen';
-import ParcelRide from '../screens/Ride/ConfirmParcelRideScreen';
+// import ParcelEntry from '../screens/Home/ParcelAddressEntryScreen';
+// import ParcelRide from '../screens/Ride/ConfirmParcelRideScreen';
 import CaptainSearch from '../screens/Ride/CaptainSearchScreen';
 import RateRide from '../screens/Ride/RateRideScreen';
 import TripCompleted from '../screens/Ride/TripCompletedScreen';
+import ObjectSelection from '../screens/Ride/ObjectSelectionScreen';
 
 
 import { FavoritesProvider } from '../context/FavouritesContext';
@@ -46,15 +47,15 @@ export type RootStackParamList = {
   Preferences: undefined;
   RideDetails: undefined;
   About: undefined;
-  Parcel: undefined;
+  // Parcel: undefined;
   AddressEntry: { initialAddress?: string; field?: string } | undefined;
   Safety: undefined;
   ReferAndEarn: undefined;
   MyRewards: undefined;
   Notification: undefined;
   ConfirmRide: { pickup: string; drop: string };
-  ParcelEntry: undefined;
-  ParcelRide: undefined;
+  // ParcelEntry: undefined;
+  // ParcelRide: undefined;
   CaptainSearch: { pickup: string; drop: string; selectedMode: string };
   TripCompleted: {
     pickup: string;
@@ -67,6 +68,8 @@ export type RootStackParamList = {
     paymentMethod: string;
   };
   RateRide: undefined; 
+  ObjectSelection: undefined;
+
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -200,7 +203,7 @@ const AppNavigator = () => {
             headerTitle: 'About',
           }}
         />
-        <Stack.Screen
+        {/* <Stack.Screen
           name="Parcel"
           component={Parcel}
           options={{
@@ -211,7 +214,7 @@ const AppNavigator = () => {
             headerTitle: 'Parcel - Send Items',
             animation: 'slide_from_right',
           }}
-        />
+        /> */}
         <Stack.Screen
           name="Safety"
           component={Safety}
@@ -286,7 +289,7 @@ const AppNavigator = () => {
             headerTitle: 'Confirm Your Ride',
           }}
         />
-        <Stack.Screen
+        {/* <Stack.Screen
           name="ParcelEntry"
           component={ParcelEntry}
           options={{
@@ -307,7 +310,7 @@ const AppNavigator = () => {
             headerTitleStyle: { color: '#000' },
             headerTitle: 'Pick your Vehicle',
           }}
-        />
+        /> */}
         <Stack.Screen
           name="TripCompleted"
           component={TripCompleted}
@@ -330,6 +333,17 @@ const AppNavigator = () => {
             headerTitleStyle: { color: '#000' },
             headerTitle: 'Rate & Tip',
 
+          }}
+        />
+        <Stack.Screen
+          name="ObjectSelection"
+          component={ObjectSelection}
+          options={{
+            headerShown: true,
+            // headerTransparent: true,
+            headerShadowVisible:false,
+            headerTitleStyle: { color: '#000' },
+            headerTitle: 'Object Selection',
           }}
         />
 

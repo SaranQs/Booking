@@ -24,7 +24,7 @@ const WalletScreen = () => {
         <View style={styles.walletCard}>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <Icon name="credit-card" size={20} color="#333" />
-            <Text style={styles.walletTitle}>  Rapido Wallet</Text>
+            <Text style={styles.walletTitle}>  Wallet</Text>
           </View>
           <View style={styles.walletRight}>
             <Text style={styles.balanceText}>₹120.00</Text>

@@ -8,12 +8,39 @@ import {
   TextInput,
   Alert,
 } from 'react-native';
+// import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Feather from 'react-native-vector-icons/Feather';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Colors from '../../constants/colors';
 import { useFavorites } from '../../context/FavouritesContext';
+
+// type RootStackParamList = {
+//   Login: undefined;
+//   Otp: undefined;
+//   Signup: undefined;
+//   Home: undefined;
+//   MyRides: undefined;
+//   Wallet: undefined;
+//   Settings: undefined;
+//   Support: undefined;
+//   Profile: undefined;
+//   Favourites: undefined;
+//   Preferences: undefined;
+//   RideDetails: undefined;
+//   About: undefined;
+//   AddressEntry: { initialAddress?: string; field?: string; rideType: 'ride' | 'parcel' } | undefined;
+//   Safety: undefined;
+//   Notification: undefined;
+//   MyRewards: undefined;
+//   ReferAndEarn: undefined;
+//   ConfirmRide: { pickup: string; drop: string; rideType: 'ride' | 'parcel' };
+//   ObjectSelection: { pickup: string; drop: string; selectedMode: string };
+//   CaptainSearch: { pickup: string; drop: string; selectedMode: string; items?: { name: string; quantity: number }[] };
+// };
+
+// type Props = NativeStackScreenProps<RootStackParamList, 'AddressEntry'>;
 
 const data = [
   {
@@ -116,10 +143,11 @@ const data = [
 ];
 
 const AddressEntryScreen = ({ navigation, route }: any) => {
-  const { initialAddress, field } = route.params || {};
+
+  const { initialAddress, field, rideType = 'ride' } = route.params || {};
   const { favorites, addFavorite, deleteFavorite } = useFavorites();
-  const [pickup, setPickup] = useState(field === 'pickup' ? initialAddress : '157, S W Boag Rd, T Nagar, CIT Nagar East');
-  const [drop, setDrop] = useState(field === 'drop' ? initialAddress : '');
+  const [pickup, setPickup] = useState(field === 'pickup' ? initialAddress || '' : '157, S W Boag Rd, T Nagar, CIT Nagar East');
+  const [drop, setDrop] = useState(field === 'drop' ? initialAddress || '' : '');
   const [stops, setStops] = useState<string[]>([]);
   const [filteredData, setFilteredData] = useState(data);
   const [focusedField, setFocusedField] = useState<'pickup' | 'drop' | null>('drop');
@@ -131,6 +159,7 @@ const AddressEntryScreen = ({ navigation, route }: any) => {
   );
 
   const addStop = () => {
+    if (rideType === 'parcel') return; // Disable stops for parcel flow
     if (stops.length >= 3) return;
     setStops([...stops, '']);
   };
@@ -200,7 +229,6 @@ const AddressEntryScreen = ({ navigation, route }: any) => {
           const finalPickup = focusedField === 'pickup' ? item.subtitle : pickup;
           const finalDrop = focusedField === 'drop' ? item.subtitle : drop;
 
-          // Check if pickup and drop are the same
           if (finalPickup && finalDrop && finalPickup.trim().toLowerCase() === finalDrop.trim().toLowerCase()) {
             Alert.alert(
               'Invalid Input',
@@ -214,6 +242,7 @@ const AddressEntryScreen = ({ navigation, route }: any) => {
             navigation.navigate('ConfirmRide', {
               pickup: finalPickup,
               drop: finalDrop,
+              rideType,
             });
           }
         }, 200);
@@ -242,15 +271,13 @@ const AddressEntryScreen = ({ navigation, route }: any) => {
     }
   }, [pickup, drop]);
 
-  function getCurrentLocation(){
+  function getCurrentLocation() {
     console.log('getCurrentLocation');
   }
 
   return (
     <View style={styles.container}>
-      {/* Pickup/Drop Input Card */}
       <View style={styles.addressCard}>
-        {/* Pickup */}
         <View style={styles.addressRow}>
           <View style={[styles.dotOuter, { backgroundColor: '#4CAF50' }]}>
             <View style={styles.dotInner} />
@@ -274,47 +301,45 @@ const AddressEntryScreen = ({ navigation, route }: any) => {
             )}
           </View>
           <TouchableOpacity style={styles.locationIcon} onPress={getCurrentLocation}>
-              <MaterialCommunityIcons name="crosshairs-gps" size={20} color={Colors.blue} />
-
-            </TouchableOpacity>
+            <MaterialCommunityIcons name="crosshairs-gps" size={20} color={Colors.blue} />
+          </TouchableOpacity>
         </View>
 
-        {/* Stops */}
-        {stops.map((stop, index) => (
-          <View key={index}>
-            <View style={styles.dashedLine} />
-            <View style={styles.addressRow}>
-              <View style={[styles.dotOuter, { backgroundColor: '#FF9800' }]}>
-                <View style={styles.dotInner} />
+        {rideType === 'ride' &&
+          stops.map((stop, index) => (
+            <View key={index}>
+              <View style={styles.dashedLine} />
+              <View style={styles.addressRow}>
+                <View style={[styles.dotOuter, { backgroundColor: '#FF9800' }]}>
+                  <View style={styles.dotInner} />
+                </View>
+                <View style={styles.inputWrapper}>
+                  <TextInput
+                    style={styles.input}
+                    value={stops[index]}
+                    onChangeText={text => updateStop(text, index)}
+                    placeholder={`Stop ${index + 1}`}
+                    placeholderTextColor="#aaa"
+                  />
+                  {stop.length > 0 && (
+                    <TouchableOpacity
+                      onPress={() => updateStop('', index)}
+                      style={styles.clearIcon}
+                    >
+                      <Feather name="x" size={16} color="#888" />
+                    </TouchableOpacity>
+                  )}
+                </View>
+                <TouchableOpacity
+                  onPress={() => removeStop(index)}
+                  style={{ padding: 8 }}
+                >
+                  <Feather name="minus-circle" size={18} color="#f00" />
+                </TouchableOpacity>
               </View>
-              <View style={styles.inputWrapper}>
-                <TextInput
-                  style={styles.input}
-                  value={stops[index]}
-                  onChangeText={text => updateStop(text, index)}
-                  placeholder={`Stop ${index + 1}`}
-                  placeholderTextColor="#aaa"
-                />
-                {stop.length > 0 && (
-                  <TouchableOpacity
-                    onPress={() => updateStop('', index)}
-                    style={styles.clearIcon}
-                  >
-                    <Feather name="x" size={16} color="#888" />
-                  </TouchableOpacity>
-                )}
-              </View>
-              <TouchableOpacity
-                onPress={() => removeStop(index)}
-                style={{ padding: 8 }}
-              >
-                <Feather name="minus-circle" size={18} color="#f00" />
-              </TouchableOpacity>
             </View>
-          </View>
-        ))}
+          ))}
 
-        {/* Drop */}
         <View style={styles.dashedLine} />
         <View style={styles.addressRow}>
           <View style={[styles.dotOuter, { backgroundColor: '#F44336' }]}>
@@ -341,19 +366,19 @@ const AddressEntryScreen = ({ navigation, route }: any) => {
         </View>
       </View>
 
-      {/* Action Buttons */}
       <View style={styles.actionsRow}>
         <TouchableOpacity style={styles.actionButton}>
           <Ionicons name="location-outline" size={18} color={Colors.black} />
           <Text style={styles.actionText}>Select on map</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.actionButton} onPress={addStop}>
-          <MaterialIcons name="add" size={18} color={Colors.black}  />
-          <Text style={styles.actionText}>Add stop</Text>
-        </TouchableOpacity>
+        {rideType === 'ride' && (
+          <TouchableOpacity style={styles.actionButton} onPress={addStop}>
+            <MaterialIcons name="add" size={18} color={Colors.black} />
+            <Text style={styles.actionText}>Add stop</Text>
+          </TouchableOpacity>
+        )}
       </View>
 
-      {/* List */}
       <FlatList
         data={filteredData}
         keyExtractor={item => item.id}
@@ -369,18 +394,17 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.white,
     padding: 16,
   },
-addressCard: {
-  backgroundColor: Colors.white,
-  borderRadius: 12,
-  padding: 16,
-  marginBottom: 16,
-  shadowColor: '#000',
-  shadowOffset: { width: 0, height: 2 },
-  shadowOpacity: 0.05,
-  shadowRadius: 4,
-  elevation: 2,
-},
-
+  addressCard: {
+    backgroundColor: Colors.white,
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
+    elevation: 2,
+  },
   addressRow: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -423,19 +447,16 @@ addressCard: {
     paddingRight: 24,
     textAlign: 'left',
   },
-  
   clearIcon: {
     position: 'absolute',
     right: 8,
     top: 13,
   },
-  locationIcon:{
+  locationIcon: {
     backgroundColor: Colors.blue + '10',
     borderRadius: 6,
     padding: 10,
     marginLeft: 5,
-
-
   },
   actionsRow: {
     flexDirection: 'row',

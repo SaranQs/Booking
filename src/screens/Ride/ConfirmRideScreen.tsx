@@ -8,6 +8,7 @@ import {
   ScrollView,
   Dimensions,
 } from 'react-native';
+// import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import Colors from '../../constants/colors';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Feather from 'react-native-vector-icons/Feather';
@@ -15,35 +16,79 @@ import WalletModalWrapper from './WalletModalWrapper';
 import WalletScreen from '../MenuScreens/WalletScreen';
 import OffersScreen from '../Ride/OffersScreen';
 
+// type RootStackParamList = {
+//   Login: undefined;
+//   Otp: undefined;
+//   Signup: undefined;
+//   Home: undefined;
+//   MyRides: undefined;
+//   Wallet: undefined;
+//   Settings: undefined;
+//   Support: undefined;
+//   Profile: undefined;
+//   Favourites: undefined;
+//   Preferences: undefined;
+//   RideDetails: undefined;
+//   About: undefined;
+//   AddressEntry: { initialAddress?: string; field?: string; rideType: 'ride' | 'parcel' } | undefined;
+//   Safety: undefined;
+//   Notification: undefined;
+//   MyRewards: undefined;
+//   ReferAndEarn: undefined;
+//   ConfirmRide: { pickup: string; drop: string; rideType: 'ride' | 'parcel' };
+//   ObjectSelection: { pickup: string; drop: string; selectedMode: string };
+//   CaptainSearch: { pickup: string; drop: string; selectedMode: string; items?: { name: string; quantity: number }[] };
+// };
+
+// type Props = NativeStackScreenProps<RootStackParamList, 'ConfirmRide'>;
+
 const ConfirmRideScreen = ({ route, navigation }: any) => {
-  const { pickup, drop } = route.params;
-  const [selectedMode, setSelectedMode] = useState<'bike' | 'auto' | 'taxi'>('bike');
+  const { pickup, drop, rideType } = route.params;
+  const [selectedMode, setSelectedMode] = useState<string>('bike');
   const [walletVisible, setWalletVisible] = useState(false);
   const [offersVisible, setOffersVisible] = useState(false);
 
-  const rideOptions = {
-    bike: {
-      cost: 45,
-      time: 10,
-      image: require('../../assets/bike.png'),
+  const rideOptions = useMemo(() => ({
+    ride: {
+      bike: {
+        cost: 45,
+        time: 10,
+        image: require('../../assets/bike.png'),
+      },
+      auto: {
+        cost: 60,
+        time: 15,
+        image: require('../../assets/auto.png'),
+      },
+      taxi: {
+        cost: 90,
+        time: 20,
+        image: require('../../assets/taxi.png'),
+      },
     },
-    auto: {
-      cost: 60,
-      time: 15,
-      image: require('../../assets/auto.png'),
+    parcel: {
+      bike: {
+        cost: 45,
+        time: 10,
+        image: require('../../assets/bike.png'),
+      },
+      'truck small': {
+        cost: 60,
+        time: 15,
+        image: require('../../assets/truck_s.png'),
+      },
+      'truck large': {
+        cost: 90,
+        time: 20,
+        image: require('../../assets/truck_l.png'),
+      },
     },
-    taxi: {
-      cost: 90,
-      time: 20,
-      image: require('../../assets/taxi.png'),
-    },
-  };
+  }), []);
 
-  // Memoize drop times for each ride option on component mount
   const dropTimes = useMemo(() => {
     const date = new Date();
     return Object.fromEntries(
-      Object.entries(rideOptions).map(([key, option]) => {
+      Object.entries(rideOptions[rideType as 'ride' | 'parcel']).map(([key, option]) => {
         const dropDate = new Date(date.getTime() + option.time * 60 * 1000);
         return [
           key,
@@ -55,41 +100,38 @@ const ConfirmRideScreen = ({ route, navigation }: any) => {
         ];
       })
     );
-  }, []); // Empty dependency array ensures this runs only once on mount
+  }, [rideType, rideOptions]);
 
   const handleConfirm = () => {
-    navigation.navigate('CaptainSearch', {
-      pickup,
-      drop,
-      selectedMode,
-    });
+    const params = { pickup, drop, selectedMode };
+    if (rideType === 'ride') {
+      navigation.navigate('CaptainSearch', params);
+    } else {
+      navigation.navigate('ObjectSelection', params);
+    }
   };
 
   return (
     <View style={styles.container}>
-      {/* Map Placeholder */}
       <View style={styles.mapPlaceholder}>
         <Text style={styles.placeholderText}>[Map View Placeholder]</Text>
       </View>
 
-      {/* Bottom Sheet */}
       <View style={styles.bottomSheet}>
-        {/* Drag Handle */}
         <View style={styles.handle} />
 
-        {/* Scrollable Transport Section */}
         <ScrollView
           style={styles.transportScroll}
           showsVerticalScrollIndicator={false}
         >
-          {Object.entries(rideOptions).map(([key, option]) => (
+          {Object.entries(rideOptions[rideType as 'ride' | 'parcel']).map(([key, option]) => (
             <TouchableOpacity
               key={key}
               style={[
                 styles.transportCard,
                 selectedMode === key && styles.selectedCard,
               ]}
-              onPress={() => setSelectedMode(key as 'bike' | 'auto' | 'taxi')}
+              onPress={() => setSelectedMode(key)}
             >
               <Image source={option.image} style={styles.icon} />
               <View style={{ flex: 1 }}>
@@ -105,45 +147,53 @@ const ConfirmRideScreen = ({ route, navigation }: any) => {
           ))}
         </ScrollView>
 
-        {/* Mode of Payment & Offers */}
         <View style={styles.optionsRow}>
           <TouchableOpacity
             style={styles.optionBlock}
-            onPress={() => setWalletVisible(true)}
+            onPress={() => {
+              console.log('Opening Wallet Modal, walletVisible:', walletVisible);
+              setWalletVisible(true);
+            }}
           >
             <Ionicons name="cash-outline" size={20} color={Colors.black} />
             <Text style={styles.optionTitle}>Mode of Payment</Text>
-            <Text style={styles.optionArrow}>›</Text>
+            <Feather name="chevron-right" size={13} color={Colors.black} />
           </TouchableOpacity>
 
           <TouchableOpacity
             style={styles.optionBlock}
-            onPress={() => setOffersVisible(true)}
+            onPress={() => {
+              console.log('Opening Offers Modal, offersVisible:', offersVisible);
+              setOffersVisible(true);
+            }}
           >
             <Feather name="gift" size={20} color={Colors.black} />
             <Text style={styles.optionTitle}>Offers</Text>
-            <Text style={styles.optionArrow}>›</Text>
+            <Feather name="chevron-right" size={13} color={Colors.black} />
           </TouchableOpacity>
         </View>
 
-        {/* Confirm Button */}
         <TouchableOpacity style={styles.confirmButton} onPress={handleConfirm}>
           <Text style={styles.confirmText}>Book {selectedMode}</Text>
         </TouchableOpacity>
       </View>
 
-      {/* Wallet Modal */}
       <WalletModalWrapper
         visible={walletVisible}
-        onClose={() => setWalletVisible(false)}
+        onClose={() => {
+          console.log('Closing Wallet Modal');
+          setWalletVisible(false);
+        }}
       >
         <WalletScreen />
       </WalletModalWrapper>
 
-      {/* Offers Modal */}
       <WalletModalWrapper
         visible={offersVisible}
-        onClose={() => setOffersVisible(false)}
+        onClose={() => {
+          console.log('Closing Offers Modal');
+          setOffersVisible(false);
+        }}
       >
         <OffersScreen />
       </WalletModalWrapper>
@@ -248,6 +298,7 @@ const styles = StyleSheet.create({
   optionTitle: {
     fontWeight: '500',
     color: Colors.black,
+    marginLeft: 4,
   },
   optionArrow: {
     fontSize: 18,

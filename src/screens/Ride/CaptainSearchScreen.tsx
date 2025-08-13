@@ -32,7 +32,7 @@ const CaptainSearchScreen = ({ navigation, route }: any) => {
 
   // Bottom sheet animation
   const translateY = useSharedValue(0);
-  const bottomSheetHeight = useSharedValue(MIN_HEIGHT);
+  const bottomSheetHeight = useSharedValue(MID_HEIGHT);
 
   const animatedStyle = useAnimatedStyle(() => ({
     height: bottomSheetHeight.value,
@@ -47,7 +47,7 @@ const CaptainSearchScreen = ({ navigation, route }: any) => {
       }
     })
     .onEnd(() => {
-      let snapHeight = MIN_HEIGHT;
+      let snapHeight = MID_HEIGHT;
       if (bottomSheetHeight.value - translateY.value < (MIN_HEIGHT + MID_HEIGHT) / 2) {
         snapHeight = MIN_HEIGHT;
       } else if (bottomSheetHeight.value - translateY.value > (MID_HEIGHT + MAX_HEIGHT) / 2) {
@@ -179,6 +179,12 @@ ETA: ${captainDetails.eta}
                           ? require('../../assets/bike.png')
                           : captainDetails.vehicleType.toLowerCase() === 'auto'
                           ? require('../../assets/auto.png')
+                          : captainDetails.vehicleType.toLowerCase() === 'taxi'
+                          ? require('../../assets/taxi.png')
+                          :captainDetails.vehicleType.toLowerCase() === 'truck small'
+                          ? require('../../assets/truck_s.png')
+                          :captainDetails.vehicleType.toLowerCase() === 'truck large'
+                          ? require('../../assets/truck_l.png')
                           : require('../../assets/taxi.png')
                       }
                       style={styles.vehicleIcon}
@@ -216,10 +222,10 @@ ETA: ${captainDetails.eta}
                     <Ionicons name="flag-outline" size={16} color={Colors.gray} />
                     <Text style={styles.routeLabel}>To: {drop}</Text>
                   </View>
-                  <View style={styles.routeRow}>
+                  {/* <View style={styles.routeRow}>
                     <Feather name="map" size={16} color={Colors.gray} />
                     <Text style={styles.routeLabel}>Distance: {captainDetails?.distance}</Text>
-                  </View>
+                  </View> */}
                   <View style={styles.routeRow}>
                     <Feather name="dollar-sign" size={16} color={Colors.gray} />
                     <Text style={styles.routeLabel}>Est. Cost: ₹{captainDetails?.estimatedCost}</Text>
@@ -417,7 +423,7 @@ const styles = StyleSheet.create({
   divider: {
     height: 1,
     backgroundColor: '#e0e0e0',
-    marginVertical: 12,
+    marginVertical: 5,
   },
   tripSummary: {
     paddingHorizontal: 8,
