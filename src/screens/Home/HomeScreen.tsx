@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   View,
   Text,
@@ -7,6 +7,9 @@ import {
   ScrollView,
   Platform,
   KeyboardAvoidingView,
+  Modal,
+  TextInput,
+  Alert,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -18,6 +21,8 @@ import { useFavorites } from '../../context/FavouritesContext';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useUser } from '../../context/UserContext';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { fetchQuickBookAddresses } from '../../services/address_type.service';
+import { getAllUserAddresses, saveUserAddress } from '../../services/quick_book.service';
 
 type RootStackParamList = {
   Login: undefined;
@@ -33,14 +38,21 @@ type RootStackParamList = {
   Preferences: undefined;
   RideDetails: undefined;
   About: undefined;
-  AddressEntry: { initialAddress?: string; field?: string; rideType: 'ride' | 'parcel' } | undefined;
+  AddressEntry:
+    | { initialAddress?: string; field?: string; rideType: 'ride' | 'parcel' }
+    | undefined;
   Safety: undefined;
   Notification: undefined;
   MyRewards: undefined;
   ReferAndEarn: undefined;
   ConfirmRide: { pickup: string; drop: string; rideType: 'ride' | 'parcel' };
   ObjectSelection: { pickup: string; drop: string; selectedMode: string };
-  CaptainSearch: { pickup: string; drop: string; selectedMode: string; items?: { name: string; quantity: number }[] };
+  CaptainSearch: {
+    pickup: string;
+    drop: string;
+    selectedMode: string;
+    items?: { name: string; quantity: number }[];
+  };
 };
 
 const HomeScreen = () => {
@@ -49,7 +61,7 @@ const HomeScreen = () => {
   const navigation =
     useNavigation<NativeStackScreenProps<RootStackParamList>['navigation']>();
   const { addFavorite, favorites } = useFavorites();
-  const { userName } = useUser();
+  const { userName } = useUser(); // userId not available; using hardcoded value
 
   const [recentRides, setRecentRides] = useState([
     {
@@ -71,6 +83,31 @@ const HomeScreen = () => {
       liked: false,
     },
   ]);
+
+  const [quickBookAddresses, setQuickBookAddresses] = useState<
+    { id: string; address: string; place: string }[]
+  >([]);
+  const [userAddresses, setUserAddresses] = useState<
+    { id: string; add_type_id: string; address_line1: string; address_line2: string; city_id: string; is_active: string; pincode: string; status: boolean; user_id: string }[]
+  >([]);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [selectedPlace, setSelectedPlace] = useState<{ id: string; place: string } | null>(null);
+  const [addressInput, setAddressInput] = useState('');
+
+  const userId = '1234fdg5fg678gj9s'; // Hardcoded user ID; replace with dynamic value
+
+  useEffect(() => {
+    const loadQuickBookAddresses = async () => {
+      const addresses = await fetchQuickBookAddresses();
+      setQuickBookAddresses(addresses);
+    };
+    const loadUserAddresses = async () => {
+      const addresses = await getAllUserAddresses();
+      setUserAddresses(addresses);
+    };
+    loadQuickBookAddresses();
+    loadUserAddresses();
+  }, [userId]);
 
   const handleRideTypeSelect = (type: 'ride' | 'parcel') => {
     navigation.navigate('AddressEntry', { rideType: type });
@@ -106,6 +143,62 @@ const HomeScreen = () => {
           address: ride.address,
         });
       }
+    }
+  };
+
+  const handleQuickBookPress = async (address: { id: string; place: string }) => {
+    setSelectedPlace(address);
+    const existingAddress = userAddresses.find(a => a.add_type_id === address.id && a.user_id === userId);
+    if (existingAddress && existingAddress.address_line1) {
+      // Navigate to AddressEntryScreen with the existing address
+      navigation.navigate('AddressEntry', {
+        initialAddress: `${existingAddress.address_line1}${existingAddress.address_line2 ? `, ${existingAddress.address_line2}` : ''}`,
+        field: 'drop',
+        rideType: 'ride',
+      });
+    } else {
+      // Open modal for new address input
+      setAddressInput('');
+      setModalVisible(true);
+    }
+  };
+
+  const handleSaveAddress = async () => {
+    if (!selectedPlace || !addressInput.trim()) {
+      Alert.alert('Error', 'Please enter an address.');
+      return;
+    }
+
+    const addressData = {
+      add_type_id: selectedPlace.id,
+      address_line1: addressInput.split(',')[0] || addressInput,
+      address_line2: (addressInput.split(',').slice(1).join(',') || '').trim(),
+      city_id: '', // Placeholder; replace with actual city ID logic
+      id: Date.now().toString(), // Temporary unique ID
+      is_active: 'true',
+      pincode: '123456', // Placeholder; replace with actual pincode logic
+      status: true,
+      user_id: userId,
+    };
+
+    try {
+      const response = await saveUserAddress(addressData);
+      if (response.success) {
+        Alert.alert('Success', 'Address saved successfully.');
+        setModalVisible(false);
+        // Update userAddresses and quickBookAddresses
+        setUserAddresses(prev => [...prev, addressData]);
+        setQuickBookAddresses(prev =>
+          prev.map(item =>
+            item.id === selectedPlace.id ? { ...item, address: addressInput } : item
+          )
+        );
+      } else {
+        Alert.alert('Error', response.message || 'Failed to save address.');
+      }
+    } catch (error) {
+      console.error('Error saving address:', error);
+      Alert.alert('Error', 'An error occurred while saving the address.');
     }
   };
 
@@ -203,51 +296,34 @@ const HomeScreen = () => {
               <Text style={styles.quickBookSubText}>
                 Book your most frequent rides instantly
               </Text>
-              <View style={styles.quickBookButtons}>
-                <TouchableOpacity
-                  style={styles.quickBookButton}
-                  onPress={() =>
-                    navigation.navigate('AddressEntry', {
-                      initialAddress: '456 Serenity Lane, Suburbia, New Delhi',
-                      field: 'drop',
-                      rideType: 'ride',
-                    })
-                  }
-                >
-                  <Ionicons name="home-outline" size={15} color={Colors.blue} />
-                  <Text style={styles.quickBookButtonText}>Home</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={styles.quickBookButton}
-                  onPress={() =>
-                    navigation.navigate('AddressEntry', {
-                      initialAddress:
-                        '123 Business Park, Tech Road, City Center',
-                      field: 'drop',
-                      rideType: 'ride',
-                    })
-                  }
-                >
-                  <Ionicons name="business-outline" size={15} color={Colors.blue} />
-                  <Text style={styles.quickBookButtonText}>
-                    Office
-                  </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={styles.quickBookButton}
-                  onPress={() =>
-                    navigation.navigate('AddressEntry', {
-                      initialAddress:
-                        '789 Fitness Avenue, Wellness Block, Bangalore',
-                      field: 'drop',
-                      rideType: 'ride',
-                    })
-                  }
-                >
-                  <Ionicons name="barbell-outline" size={15} color={Colors.blue} />
-                  <Text style={styles.quickBookButtonText}>Gym</Text>
-                </TouchableOpacity>
-              </View>
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={styles.quickBookButtons}
+              >
+                {quickBookAddresses.map(address => (
+                  <TouchableOpacity
+                    key={address.id}
+                    style={styles.quickBookButton}
+                    onPress={() => handleQuickBookPress(address)}
+                  >
+                    <Ionicons
+                      name={
+                        address.place.toLowerCase() === 'home'
+                          ? 'home-outline'
+                          : address.place.toLowerCase() === 'office'
+                          ? 'business-outline'
+                          : 'location-outline'
+                      }
+                      size={15}
+                      color={Colors.blue}
+                    />
+                    <Text style={styles.quickBookButtonText}>
+                      {address.place}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </ScrollView>
             </View>
 
             <View style={styles.recentContainer}>
@@ -349,7 +425,9 @@ const HomeScreen = () => {
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.drawerItem}
-                onPress={() => navigation.navigate('AddressEntry', { rideType: 'parcel' })}
+                onPress={() =>
+                  navigation.navigate('AddressEntry', { rideType: 'parcel' })
+                }
               >
                 <Feather
                   name="package"
@@ -495,6 +573,38 @@ const HomeScreen = () => {
           </Animatable.View>
         </View>
       )}
+
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.bottomSheet}>
+            <View style={styles.handle} />
+            <View style={styles.mapPlaceholder}>
+              <Text style={styles.mapText}>Map Placeholder (Tap to select location)</Text>
+            </View>
+            {selectedPlace && (
+              <Text style={styles.placeText}>{selectedPlace.place}</Text>
+            )}
+            <TextInput
+              style={styles.addressInput}
+              value={addressInput}
+              onChangeText={setAddressInput}
+              placeholder="Enter address"
+              placeholderTextColor="#aaa"
+            />
+            <TouchableOpacity style={styles.saveButton} onPress={handleSaveAddress}>
+              <Text style={styles.saveButtonText}>Save</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.closeButton} onPress={() => setModalVisible(false)}>
+              <Text style={styles.closeButtonText}>Close</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </LinearGradient>
   );
 };
@@ -579,8 +689,9 @@ const styles = StyleSheet.create({
   quickBookText: { color: Colors.white, fontSize: 16, fontWeight: '600' },
   quickBookSubText: { color: Colors.white, fontSize: 12, marginTop: 5 },
   quickBookButtons: {
+    paddingHorizontal: 15,
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'space-evenly',
     marginTop: 10,
   },
   quickBookButton: {
@@ -701,6 +812,75 @@ const styles = StyleSheet.create({
   },
   drawerIcon: {
     marginRight: 12,
+  },
+  modalOverlay: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  bottomSheet: {
+    backgroundColor: Colors.white,
+    padding: 16,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    maxHeight: '70%',
+  },
+  handle: {
+    width: 40,
+    height: 5,
+    backgroundColor: '#ccc',
+    borderRadius: 2.5,
+    alignSelf: 'center',
+    marginBottom: 10,
+  },
+  mapPlaceholder: {
+    height: 150,
+    backgroundColor: '#e0e0e0',
+    borderRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  mapText: {
+    color: '#666',
+    fontSize: 14,
+  },
+  placeText: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: Colors.black,
+    marginBottom: 10,
+  },
+  addressInput: {
+    height: 40,
+    borderColor: Colors.blue + '70',
+    borderWidth: 1,
+    borderRadius: 8,
+    paddingHorizontal: 10,
+    marginBottom: 10,
+    fontSize: 14,
+  },
+  saveButton: {
+    backgroundColor: Colors.blue,
+    paddingVertical: 10,
+    borderRadius: 8,
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  saveButtonText: {
+    color: Colors.white,
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  closeButton: {
+    paddingVertical: 10,
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  closeButtonText: {
+    color: Colors.blue,
+    fontSize: 16,
+    fontWeight: '600',
   },
 });
 
